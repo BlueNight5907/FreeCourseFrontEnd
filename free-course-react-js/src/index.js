@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 
 import rootSaga from "./store/sagas";
 import store, { sagaMiddleware } from "./store";
+import { BrowserRouter } from "react-router-dom";
 
 //Run saga
 sagaMiddleware.run(rootSaga);
@@ -14,7 +15,9 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App tab="home" />
+      <BrowserRouter>
+        <App tab="home" />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

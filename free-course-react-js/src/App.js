@@ -1,21 +1,25 @@
 import {
-  Button,
+  Box,
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-import { useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import "./app.scss";
-import { POST } from "./constants/services-constant";
-import request from "./services/axios-client/request";
-import { LOGIN_REQUEST } from "./store/types/data-types/auth-types";
+import SamplePage from "./pages/sample-page/SamplePage";
+
 import theme from "./theme";
 
 function App() {
+  const setting = useSelector((state) => state.setting);
   const [mode, setMode] = useState("light");
-  const dispatch = useDispatch();
+
+  //Site effect
+  useEffect(() => {
+    setMode(setting.mode);
+  }, [setting]);
+
   //Change app theme
   const appTheme = useMemo(() => {
     if (mode === "light") {
@@ -24,35 +28,18 @@ function App() {
     return theme.darkMode;
   }, [mode]);
 
-  const fetch = async () => {
-    try {
-      await request(POST, "/", {
-        params: { app: "abc", foo: "bar" },
-        body: { app: "abc", foo: "bar" },
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  fetch();
-
-  const login = () => {
-    dispatch({
-      type: LOGIN_REQUEST,
-      payload: {
-        username: 123,
-        password: 123,
-      },
-    });
+  const boxStyle = {
+    backgroundColor: (theme) => theme.palette.background.main,
+    minHeight: "100vh",
   };
 
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
-        <BrowserRouter>
-          <div className="app"></div>
-        </BrowserRouter>
+        <Box sx={boxStyle} className="app">
+          <SamplePage />
+        </Box>
       </ThemeProvider>
     </StyledEngineProvider>
   );

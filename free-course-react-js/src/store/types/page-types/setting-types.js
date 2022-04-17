@@ -1,0 +1,1 @@
+export const TOGGLE_PAGE_MODE = "TOGGLE_PAGE_MODE";
