@@ -7,9 +7,13 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import "./app.scss";
-import SamplePage from "./pages/sample-page/SamplePage";
-
 import theme from "./theme";
+import Routes from "./pages/routes";
+
+const boxStyle = {
+  backgroundColor: (theme) => theme.palette.background.main,
+  minHeight: "100vh",
+};
 
 function App() {
   const setting = useSelector((state) => state.setting);
@@ -28,17 +32,12 @@ function App() {
     return theme.darkMode;
   }, [mode]);
 
-  const boxStyle = {
-    backgroundColor: (theme) => theme.palette.background.main,
-    minHeight: "100vh",
-  };
-
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
         <Box sx={boxStyle} className="app">
-          <SamplePage />
+          <Routes />
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>

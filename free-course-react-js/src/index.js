@@ -2,10 +2,14 @@ import React from "react";
 import App from "./App";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-
 import rootSaga from "./store/sagas";
 import store, { sagaMiddleware } from "./store";
 import { BrowserRouter } from "react-router-dom";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 //Run saga
 sagaMiddleware.run(rootSaga);

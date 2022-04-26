@@ -10,6 +10,9 @@ const lightMode = createTheme({
   typography: typography,
   spacing: 10,
   breakpoints: breakpoints,
+  shape: {
+    borderRadius: 10,
+  },
 });
 
 const darkMode = createTheme({
@@ -20,6 +23,9 @@ const darkMode = createTheme({
   typography: typography,
   spacing: 10,
   breakpoints: breakpoints,
+  shape: {
+    borderRadius: 10,
+  },
 });
 
 const theme = {

@@ -5,15 +5,23 @@ export const lightPalette = {
   },
   warning: {
     main: "#F2C21B",
+    dark: "#EEBC08",
   },
   tomato: {
     main: "#F6465D",
+    dark: "#F62A45",
+  },
+  puple: {
+    main: "#D657DF",
   },
   mintygreen: {
     main: "#1EB972",
   },
   text: {
     main: "#1E2329",
+  },
+  textwhite: {
+    main: "#fff",
   },
   text2: {
     main: "#79818E",
@@ -38,6 +46,9 @@ export const lightPalette = {
   },
   select: {
     main: "#E5F3FF",
+  },
+  overlay: {
+    main: "rgba(0,0,0,0.9)",
   },
   special_blue: {
     main: "linear-gradient(90deg, #6AB5FF 0%, #0A5DFF 90.21%)",
@@ -65,15 +76,23 @@ export const darkPalette = {
   },
   warning: {
     main: "#F2C21B",
+    dark: "#EEBC08",
   },
   tomato: {
     main: "#F6465D",
+    dark: "#F62A45",
+  },
+  puple: {
+    main: "#D36ADA",
   },
   mintygreen: {
     main: "#1EB972",
   },
   text: {
     main: "#EAECEF",
+  },
+  textwhite: {
+    main: "#000",
   },
   text2: {
     main: "#A2A2A2",
@@ -91,13 +110,13 @@ export const darkPalette = {
     main: "#ECECEC",
   },
   hover: {
-    main: "#E1E1E1",
+    main: "#605F5F",
   },
   disabled: {
     main: "#1A1A1A",
   },
   select: {
-    main: "#E5F3FF",
+    main: "#42474A",
   },
   special_blue: {
     main: "linear-gradient(90deg, #6AB5FF 0%, #0A5DFF 90.21%)",
@@ -113,6 +132,9 @@ export const darkPalette = {
   },
   subbackground: {
     main: "#848E9C",
+  },
+  overlay: {
+    main: "rgba(255,255,255,0.9)",
   },
   contrastThreshold: 3,
   tonalOffset: 0.2,
