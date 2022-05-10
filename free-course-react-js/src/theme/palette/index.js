@@ -30,7 +30,7 @@ export const lightPalette = {
     main: "#05042C",
   },
   background: {
-    main: "#F4F4F4",
+    main: "#f0f2f5",
   },
   foreground: {
     main: "#FFFFFF",
@@ -71,7 +71,7 @@ export const lightPalette = {
 
 export const darkPalette = {
   primary: {
-    main: "#007EFC",
+    main: "#2592FF",
     dark: "#0059B2",
   },
   warning: {
@@ -101,10 +101,10 @@ export const darkPalette = {
     main: "#ABAAFD",
   },
   background: {
-    main: "#1B2025",
+    main: "#18191a",
   },
   foreground: {
-    main: "#181A20",
+    main: "#242526",
   },
   shadow: {
     main: "#ECECEC",

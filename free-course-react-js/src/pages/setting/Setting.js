@@ -68,6 +68,11 @@ const Setting = () => {
         sx={{
           flexShrink: 0,
           mb: 2,
+          height: "fit-content",
+          ...(matchLg && {
+            position: "sticky",
+            top: 80,
+          }),
         }}
       >
         <Tab

@@ -33,9 +33,16 @@ function Button(props) {
     textTransform: "unset",
     paddingTop: 1,
     paddingBottom: 1,
+    gap: 0.8,
     background: specialBg && specialBackground[specialBg],
     "& .button-content": {
       flexGrow: 1,
+    },
+    "& .MuiButton-startIcon": {
+      marginRight: 0,
+    },
+    "& .MuiButton-endIcon": {
+      marginLeft: 0,
     },
   };
   return (

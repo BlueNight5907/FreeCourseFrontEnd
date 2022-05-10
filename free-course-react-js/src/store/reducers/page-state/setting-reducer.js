@@ -9,7 +9,7 @@ import {
 } from "../../types/page-types/setting-types";
 
 const initState = {
-  mode: "dark",
+  mode: "light",
   sideOpen: false,
   courseOpen: false,
   subMenu: null,

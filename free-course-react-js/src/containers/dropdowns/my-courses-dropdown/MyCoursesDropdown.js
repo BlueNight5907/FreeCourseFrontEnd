@@ -15,10 +15,9 @@ function MyCourseDropdown(props) {
   return (
     <Dropdown>
       <DropdownToggle
-        variant="contained"
-        width={140}
         height="100%"
         sx={{
+          paddingX: 1,
           color: (theme) => theme.palette.text.main,
           backgroundColor: (theme) => theme.palette.foreground.main,
           "&:hover": {
@@ -26,7 +25,7 @@ function MyCourseDropdown(props) {
           },
         }}
       >
-        My Courses
+        Khóa học
       </DropdownToggle>
       <DropdownMenu
         shadow={8}

@@ -28,14 +28,14 @@ import DropdownMenu from "../dropdown/DropdownMenu";
 import DropdownToggle from "../dropdown/DropdownToggle";
 
 function Comment(props) {
-  const { owner, data } = props;
+  const { owner, data, disableLikeCount } = props;
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
   const styles = {
     box: {
       padding: {
         xs: 1,
-        md: 2,
+        md: disableLikeCount ? 1 : 2,
       },
       borderRadius: 1,
       backgroundColor: (theme) => theme.palette.foreground.main,
@@ -90,7 +90,7 @@ function Comment(props) {
   };
   return (
     <Box sx={styles.box} className="relative gap-4 flex flex-row">
-      {matchMd && (
+      {!disableLikeCount && matchMd && (
         <Box
           sx={styles.likeCount}
           className="flex flex-col justify-between items-center"
@@ -108,15 +108,15 @@ function Comment(props) {
             sx={{
               flexDirection: {
                 xs: "column",
-                md: "row",
+                md: disableLikeCount ? "column" : "row",
               },
               gap: {
                 xs: 0.3,
-                md: 1,
+                md: disableLikeCount ? 0.3 : 1,
               },
               alignItems: {
                 xs: "flex-start",
-                md: "center",
+                md: disableLikeCount ? "flex-start" : "center",
               },
             }}
           >
@@ -139,12 +139,13 @@ function Comment(props) {
           hic facilis voluptatem eligendi!
         </Typography>
         <div className="flex flex-row items-center gap-5">
-          {!matchMd && (
+          {(!matchMd || disableLikeCount) && (
             <Typography
               sx={styles.action}
-              className="leading-none no-underline flex items-center gap-2 align-middle"
+              className="leading-none no-underline flex items-end gap-2 align-middle"
             >
-              <ThumbUpRounded fontSize="small" /> 756
+              <ThumbUpRounded fontSize="small" sx={{ width: 16, height: 16 }} />{" "}
+              756
             </Typography>
           )}
           <Typography sx={styles.action}>Thích</Typography>

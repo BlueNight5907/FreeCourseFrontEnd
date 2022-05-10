@@ -7,6 +7,7 @@ import { Drawer as MuiDrawer } from "../styled-components";
 import logo from "../../../assets/icons/logo.png";
 import MainMenu from "../menu/MainMenu";
 import SubMenu from "../menu/SubMenu";
+import { scrollSetting } from "../../../utils/classUltis";
 const Drawer = () => {
   const { sideOpen, subMenu } = useSelector((state) => state.setting);
   const dispatch = useDispatch();
@@ -32,17 +33,7 @@ const Drawer = () => {
           width: "100%",
           overflowY: "overlay",
           overflowX: "hidden",
-          "&::-webkit-scrollbar": {
-            WebkitAppearance: "none",
-          },
-          "&::-webkit-scrollbar:vertical": {
-            width: 4,
-          },
-
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: (theme) => theme.palette.shadow.main + "50",
-            borderRadius: 1,
-          },
+          ...scrollSetting({ width: 4 }),
           mt: {
             xs: "unset",
             md: `${sideOpen ? NAVBAR_HEIGHT : NAVBAR_HEIGHT + 5}px`,

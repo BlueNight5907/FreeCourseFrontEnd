@@ -67,7 +67,8 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(0.5, 0),
 }));
 
-export default function GroupList() {
+export default function GroupList(props) {
+  const { editMode } = props;
   const [expanded, setExpanded] = React.useState(false);
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -81,69 +82,79 @@ export default function GroupList() {
         onChange={handleChange("panel1")}
         expanded={expanded === "panel1"}
       >
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+        <AccordionSummary
+          sx={{
+            minHeight: 55,
+          }}
+          aria-controls="panel1d-content"
+          id="panel1d-header"
+        >
           <div className="flex flex-row w-full items-center justify-between">
             <Typography className="grow h-full flex items-center">
               Collapsible Group Item #1
             </Typography>
-            <div className="flex flex-row items-center gap-3">
-              {matchMd && (
-                <>
-                  <IconButton variant="contained">
-                    <AddRounded />
-                  </IconButton>
-                  <IconButton onClick={() => console.log("hello")}>
-                    <ArrowUpwardRounded />
-                  </IconButton>
-                  <IconButton>
-                    <ArrowDownwardRounded />
-                  </IconButton>
-                </>
-              )}
-              <Dropdown>
-                <DropdownToggle
-                  render={({ toggleDropdown }) => {
-                    return (
-                      <IconButton onClick={toggleDropdown}>
-                        <MoreVertRounded />
-                      </IconButton>
-                    );
-                  }}
-                />
-                <DropdownMenu direction="right" width={300} shadow={10}>
-                  <DropdownItem>
-                    <ListItemIcon>
-                      <ArrowUpwardRounded />
-                    </ListItemIcon>
-                    <ListItemText>Di chuyển lên trên</ListItemText>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <ListItemIcon>
-                      <ArrowDownwardRounded />
-                    </ListItemIcon>
-                    <ListItemText>Di chuyển xuống dưới</ListItemText>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <ListItemIcon>
+            {editMode ? (
+              <div className="flex flex-row items-center gap-3">
+                {matchMd && (
+                  <>
+                    <IconButton variant="contained">
                       <AddRounded />
-                    </ListItemIcon>
-                    <ListItemText>Thêm một module mới</ListItemText>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <ListItemIcon>
-                      <DriveFileRenameOutline />
-                    </ListItemIcon>
-                    <ListItemText>Chỉnh sửa</ListItemText>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <ListItemIcon>
-                      <ClearRounded />
-                    </ListItemIcon>
-                    <ListItemText>Xóa nhóm module</ListItemText>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
+                    </IconButton>
+                    <IconButton onClick={() => console.log("hello")}>
+                      <ArrowUpwardRounded />
+                    </IconButton>
+                    <IconButton>
+                      <ArrowDownwardRounded />
+                    </IconButton>
+                  </>
+                )}
+                <Dropdown>
+                  <DropdownToggle
+                    render={({ toggleDropdown }) => {
+                      return (
+                        <IconButton onClick={toggleDropdown}>
+                          <MoreVertRounded />
+                        </IconButton>
+                      );
+                    }}
+                  />
+                  <DropdownMenu direction="right" width={300} shadow={10}>
+                    <DropdownItem>
+                      <ListItemIcon>
+                        <ArrowUpwardRounded />
+                      </ListItemIcon>
+                      <ListItemText>Di chuyển lên trên</ListItemText>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <ListItemIcon>
+                        <ArrowDownwardRounded />
+                      </ListItemIcon>
+                      <ListItemText>Di chuyển xuống dưới</ListItemText>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <ListItemIcon>
+                        <AddRounded />
+                      </ListItemIcon>
+                      <ListItemText>Thêm một module mới</ListItemText>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <ListItemIcon>
+                        <DriveFileRenameOutline />
+                      </ListItemIcon>
+                      <ListItemText>Chỉnh sửa</ListItemText>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <ListItemIcon>
+                        <ClearRounded />
+                      </ListItemIcon>
+                      <ListItemText>Xóa nhóm module</ListItemText>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
+            ) : (
+              <Typography>8 bài học</Typography>
+            )}
           </div>
         </AccordionSummary>
         <AccordionDetails>

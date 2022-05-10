@@ -31,9 +31,10 @@ const CourseCard = (props) => {
       maxWidth: fullWidth
         ? "unset"
         : {
-            xs: 280,
-            sm: 330,
+            xs: 300,
+            sm: 340,
             md: 380,
+            lg: 420,
           },
       minWidth: 280,
       backgroundColor: (theme) => theme.palette.foreground.main,
@@ -73,9 +74,10 @@ const CourseCard = (props) => {
       maxWidth: fullWidth
         ? "unset"
         : {
-            xs: 280,
-            sm: 360,
-            md: 410,
+            xs: 300,
+            sm: 340,
+            md: 380,
+            lg: 420,
           },
       minWidth: 280,
     },
@@ -110,7 +112,10 @@ const CourseCard = (props) => {
     return (
       <Box className="course-card" sx={style.card2}>
         <Card className="w-full">
-          <CardActionArea className="relative" component="div">
+          <CardActionArea
+            className="relative"
+            onClick={() => console.log("hello")}
+          >
             <CardMedia
               component="img"
               className="aspect-[18/10]"
@@ -140,6 +145,7 @@ const CourseCard = (props) => {
                 </Link>
 
                 <Button
+                  component="div"
                   width={72}
                   height={33}
                   sx={{
@@ -189,7 +195,7 @@ const CourseCard = (props) => {
         <CardActionArea disableTouchRipple onClick={toggleDetail}>
           <CardMedia
             component="img"
-            className="aspect-[16/8]"
+            className="aspect-[18/8]"
             image={courseImage}
             alt="green iguana"
           />

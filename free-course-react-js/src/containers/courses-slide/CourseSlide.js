@@ -130,25 +130,27 @@ function CourseSlide(props) {
         >
           {title}
         </Typography>
-        <Typography
-          component={Link}
-          to={href || "./"}
-          sx={{
-            "&:hover": {
-              textDecoration: "underline",
-            },
-            flexShrink: 0,
-            color: (theme) => theme.palette.primary.main,
-            fontSize: {
-              xs: 14,
-              md: 16,
-            },
-            fontWeight: 400,
-          }}
-          className="flex flex-row items-center gap-2"
-        >
-          Xem tất cả <ArrowForwardIosRounded fontSize="small" />
-        </Typography>
+        {href && (
+          <Typography
+            component={Link}
+            to={href || "./"}
+            sx={{
+              "&:hover": {
+                textDecoration: "underline",
+              },
+              flexShrink: 0,
+              color: (theme) => theme.palette.primary.main,
+              fontSize: {
+                xs: 14,
+                md: 16,
+              },
+              fontWeight: 400,
+            }}
+            className="flex flex-row items-center gap-2"
+          >
+            Xem tất cả <ArrowForwardIosRounded fontSize="small" />
+          </Typography>
+        )}
       </div>
       <Swiper
         slidesPerView="auto"

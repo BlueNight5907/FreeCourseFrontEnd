@@ -32,12 +32,6 @@ const Home = () => {
       <Grid item xs={12}>
         <CourseSlide title="Khóa học cơ bản" />
       </Grid>
-      <Grid item xs={12}>
-        <CourseSlide title="Lập trình Web" />
-      </Grid>
-      <Grid item xs={12}>
-        <CourseSlide title="Data analystics" />
-      </Grid>
     </Grid>
   );
 };

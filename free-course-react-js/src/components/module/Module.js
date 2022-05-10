@@ -6,20 +6,15 @@ import {
   EditRounded,
   SlowMotionVideoRounded,
 } from "@mui/icons-material";
-import {
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Typography,
-} from "@mui/material";
+import { IconButton, ListItem, ListItemIcon, Typography } from "@mui/material";
 import React from "react";
 
 const Module = (props) => {
-  const { component, type = "default", mode, title } = props;
+  const { component, type = "default", editMode, title } = props;
   const styles = {
     box: {
       padding: (theme) => theme.spacing(0.5, 1.5, 0.5, 1.2),
+      minHeight: 50,
       borderRadius: 0.8,
       "&:hover p": {
         color: (theme) => theme.palette.primary.main,
@@ -88,12 +83,16 @@ const Module = (props) => {
           <Typography sx={styles.content} variant="body2">
             11:20
           </Typography>
-          <IconButton color="primary">
-            <EditRounded />
-          </IconButton>
-          <IconButton color="tomato">
-            <DeleteRounded />
-          </IconButton>
+          {editMode && (
+            <>
+              <IconButton color="primary">
+                <EditRounded />
+              </IconButton>
+              <IconButton color="tomato">
+                <DeleteRounded />
+              </IconButton>
+            </>
+          )}
         </div>
       </div>
     </ListItem>

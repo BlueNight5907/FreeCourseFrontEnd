@@ -12,6 +12,7 @@ const Wrapper = (props) => {
     sx,
     flexDirection,
     marginY,
+    ...others
   } = props;
   const theme = useTheme();
   const styles = {
@@ -40,7 +41,7 @@ const Wrapper = (props) => {
     },
   };
   return (
-    <Paper sx={styles.paper} elevation={elevation}>
+    <Paper {...others} sx={styles.paper} elevation={elevation}>
       {title ? (
         <>
           <Box className="flex flex-row items-center justify-between mb-5">

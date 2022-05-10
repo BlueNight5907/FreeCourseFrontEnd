@@ -193,7 +193,7 @@ function UserDropdown(props) {
           <Box
             component={Link}
             className="user-dropdown flex-row items-center gap-3 cursor-pointer flex"
-            to="./"
+            to="/my-courses"
           >
             <Avatar
               sx={{

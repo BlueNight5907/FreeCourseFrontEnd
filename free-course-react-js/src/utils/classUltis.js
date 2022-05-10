@@ -15,14 +15,14 @@ export const centerItems = () => {
   };
 };
 
-export const scrollSetting = (
+export const scrollSetting = (options) => {
   options = {
     overflowX: "hidden",
     overflowY: "overlay",
     width: 8,
     scrollThumbColor: (theme) => theme.palette.shadow.main + "50",
-  }
-) => {
+    ...options,
+  };
   return {
     overflowX: options.overflowX,
     overflowY: options.overflowY,
