@@ -1,4 +1,4 @@
-import { Avatar, Box, Checkbox, Typography } from "@mui/material";
+import { Avatar, Box, Checkbox } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const Answer = (props) => {
@@ -9,17 +9,15 @@ const Answer = (props) => {
     answer,
     error,
     success,
-    disable,
-    index,
+    disabled,
   } = props;
   const [mode, setMode] = useState("default");
-
   useEffect(() => {
     if (error) {
       setMode("error");
     } else if (success) {
       setMode("success");
-    } else if (value && answer === value) {
+    } else if (value && (answer === value || value.includes(answer))) {
       setMode("checked");
     } else {
       setMode("default");
@@ -45,22 +43,29 @@ const Answer = (props) => {
       gap: 1,
       borderRadius: 1,
       cursor: "pointer",
-      "&:hover": {
-        backgroundColor: (theme) => theme.palette.select.main,
-      },
-      ...(mode !== "default" && {
-        backgroundColor: (theme) => theme.palette.foreground.main,
-        borderWidth: 1,
-        borderColor: setColor(mode),
-        borderStyle: "solid",
-      }),
+      ...(mode !== "default"
+        ? {
+            backgroundColor: (theme) => theme.palette.foreground.main,
+            borderWidth: 1,
+            borderColor: setColor(mode),
+            borderStyle: "solid",
+          }
+        : {
+            "&:hover": {
+              backgroundColor: (theme) => theme.palette.select.main,
+            },
+            borderWidth: 1,
+            borderColor: (theme) => theme.palette.foreground.main,
+            borderStyle: "solid",
+          }),
     },
     content: {
       color: mode !== "default" && setColor(mode),
     },
     answer: {
       ...(mode !== "default" && {
-        color: (theme) => theme.palette.foreground.main,
+        color: "#fff",
+        border: "1px solid #fff",
         backgroundColor: setColor(mode),
       }),
     },
@@ -71,18 +76,23 @@ const Answer = (props) => {
     },
   };
   return (
-    <Box sx={styles.box} className="flex flex-row" onClick={onClick && onClick}>
+    <Box
+      sx={styles.box}
+      className="flex flex-row"
+      onClick={() => !disabled && onClick(answer)}
+    >
       {type === "radio" ? (
         <Avatar sx={styles.answer}>A</Avatar>
       ) : (
         <Checkbox
-          onChange={onClick && onClick}
-          checked={value && value === answer}
+          disabled={disabled}
+          checked={value ? (value.includes(answer) ? true : false) : false}
+          onChange={() => {}}
           sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
         />
       )}
-      <Box sx={styles.content} className="flex flex-row items-center">
-        Mot con vit xoe ra 3 con than lan
+      <Box sx={styles.content} className="content flex flex-row items-center">
+        {answer}
       </Box>
     </Box>
   );

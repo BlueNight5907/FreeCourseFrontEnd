@@ -10,6 +10,7 @@ const Wrapper = (props) => {
     flex,
     rounded = 1,
     sx,
+    titleVariant,
     flexDirection,
     marginY,
     ...others
@@ -45,7 +46,7 @@ const Wrapper = (props) => {
       {title ? (
         <>
           <Box className="flex flex-row items-center justify-between mb-5">
-            <Typography variant="h5" className=" ml-3">
+            <Typography variant={titleVariant || "h5"} className=" ml-3">
               {title}
             </Typography>
             {actions}

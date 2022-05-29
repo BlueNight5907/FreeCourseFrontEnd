@@ -7,7 +7,7 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Answer from "../../components/answer/Answer";
 import Button, { buttonBg } from "../../components/button/Button";
@@ -19,18 +19,22 @@ import MiniSearch from "../../components/search/MiniSearch";
 import Tag from "../../components/tag/Tag";
 import TextField from "../../components/text-field/TextField";
 import CourseSlide from "../../containers/courses-slide/CourseSlide";
-import FeatureCourse from "../../containers/courses-slide/FeatureCourse";
+import FeatureCourse from "../../containers/courses-slide/CategorySlide";
 import MyCourseDropdown from "../../containers/dropdowns/my-courses-dropdown/MyCoursesDropdown";
 import UserDropdown from "../../containers/dropdowns/user-dropdown/UserDropdown";
 import ChatGroupIntroduction from "../../containers/introduction/ChatGroupIntroduction";
 import SocialNetworkIntroduction from "../../containers/introduction/SocialNetworkIntroduction";
 import { TOGGLE_PAGE_MODE } from "../../store/types/page-types/setting-types";
+import Dialog from "../../components/dialog/dialog";
+import AlertDialog from "../../components/dialog/alert-dialog";
+import ConfirmDialog from "./../../components/dialog/confirm-dialog";
 
 function SamplePage() {
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch({ type: TOGGLE_PAGE_MODE });
   };
+  const [open, setOpen] = useState(false);
   return (
     <Container maxWidth="xl">
       <Grid container spacing={1}>
@@ -42,8 +46,17 @@ function SamplePage() {
               backgroundColor: (theme) => theme.palette.foreground.main,
             }}
           >
-            hello
+            <Button onClick={() => setOpen(true)}>Open</Button>
           </Box>
+          <ConfirmDialog
+            title="Hủy tham gia lớp học"
+            open={open}
+            setOpen={setOpen}
+          >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
+            deserunt magni fugiat harum rerum! Quia vel quo sunt temporibus rem
+            totam maiores animi inventore, qui possimus nemo earum illo numquam!
+          </ConfirmDialog>
         </Grid>
         <Grid item xs={12}>
           <Stack direction="row" gap={1} alignItems="center">

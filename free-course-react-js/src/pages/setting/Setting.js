@@ -49,54 +49,47 @@ const Setting = () => {
       title="Cài đặt"
       rounded={1.5}
       flexDirection={!matchLg ? "column" : "row"}
-      // actions={
-      //   <Stack direction="row" gap={1}>
-      //     <Button variant="contained" color="tomato" sx={{ color: "#fff" }}>
-      //       Hủy
-      //     </Button>
-      //     <Button variant="contained">Lưu</Button>
-      //   </Stack>
-      // }
     >
-      <Tabs
-        orientation={!matchLg ? "horizontal" : "vertical"}
-        variant="scrollable"
-        value={selected}
-        onChange={handleSelectedChange}
-        allowScrollButtonsMobile
-        aria-label="Vertical tabs example"
-        sx={{
-          flexShrink: 0,
-          mb: 2,
-          height: "fit-content",
-          ...(matchLg && {
-            position: "sticky",
-            top: 80,
-          }),
-        }}
-      >
-        <Tab
-          label="Thông tin cá nhân"
-          className="capitalize items-start"
-          {...a11yProps(0)}
-        />
-        <Tab
-          label="Bảo mật và đăng nhập"
-          className="capitalize items-start"
-          {...a11yProps(1)}
-        />
-        <Tab
-          label="Các quyền trong tài khoản"
-          className="capitalize items-start"
-          {...a11yProps(2)}
-        />
+      <div>
+        <Tabs
+          orientation={!matchLg ? "horizontal" : "vertical"}
+          variant="scrollable"
+          value={selected}
+          onChange={handleSelectedChange}
+          allowScrollButtonsMobile
+          sx={{
+            flexShrink: 0,
+            mb: 2,
+            height: "fit-content",
+            ...(matchLg && {
+              position: "sticky",
+              top: 80,
+            }),
+          }}
+        >
+          <Tab
+            label="Thông tin cá nhân"
+            className="capitalize items-start"
+            {...a11yProps(0)}
+          />
+          <Tab
+            label="Bảo mật và đăng nhập"
+            className="capitalize items-start"
+            {...a11yProps(1)}
+          />
+          <Tab
+            label="Các quyền trong tài khoản"
+            className="capitalize items-start"
+            {...a11yProps(2)}
+          />
 
-        <Tab
-          label="Chế độ nền tối"
-          className="capitalize items-start"
-          {...a11yProps(2)}
-        />
-      </Tabs>
+          <Tab
+            label="Chế độ nền tối"
+            className="capitalize items-start"
+            {...a11yProps(2)}
+          />
+        </Tabs>
+      </div>
 
       <TabPanel value={selected} index={0}>
         <AccountSetting />

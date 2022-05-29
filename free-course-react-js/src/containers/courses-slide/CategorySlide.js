@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
-function FeatureCourse(props) {
+function CategorySlide(props) {
   const { href, title } = props;
 
   const style = {
@@ -99,4 +99,4 @@ function FeatureCourse(props) {
   );
 }
 
-export default FeatureCourse;
+export default CategorySlide;

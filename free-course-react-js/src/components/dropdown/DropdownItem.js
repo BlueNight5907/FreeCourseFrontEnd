@@ -7,6 +7,7 @@ function DropdownItem(props) {
     sx,
     toggleDropdown,
     component,
+    square,
     disabledClick,
     selected,
     disabled = false,
@@ -14,12 +15,15 @@ function DropdownItem(props) {
   } = props;
 
   const style = {
-    borderRadius: 1,
+    borderRadius: square ? 0 : 1,
     ...(selected && {
       backgroundColor: (theme) => theme.palette.select.main,
     }),
     "&:hover": {
       backgroundColor: (theme) => theme.palette.select.main,
+      "":{
+        borderRadius: square ? 0 : 1,
+      }
     },
     padding: (theme) => theme.spacing(1),
   };

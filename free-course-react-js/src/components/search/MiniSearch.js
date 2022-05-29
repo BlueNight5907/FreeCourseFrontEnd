@@ -18,6 +18,7 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
   padding: theme.spacing(0.8, 0),
+  cursor: "pointer",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -25,7 +26,6 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   color: theme.palette.text.main + "99",
   height: "100%",
   position: "absolute",
-  pointerEvents: "none",
   top: 0,
   display: "flex",
   alignItems: "center",
@@ -37,9 +37,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: theme.palette.text.main + "99",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
+    cursor: "pointer",
   },
 }));
 
@@ -51,7 +51,7 @@ const MiniSearch = (props) => {
         width: width,
         maxWidth: maxWidth,
       }}
-      onClick={!onChange ? (onClick ? onClick : null) : null}
+      onClick={!onChange ? (onClick ? onClick : null) : onChange}
     >
       <SearchIconWrapper>
         <SearchIcon />

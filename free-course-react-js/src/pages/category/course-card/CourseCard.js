@@ -10,37 +10,57 @@ import React from "react";
 import Button from "../../../components/button/Button";
 import Image from "../../../components/image/Image";
 import courseImg from "../../../assets/background/course-slide-bg.jpg";
-const CourseCard = () => {
+import { Link } from "react-router-dom";
+const CourseCard = (props) => {
+  const { gridView } = props;
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <Box
       sx={{
-        "&:not(:last-child)": {
-          borderBottom: "1px solid #d1d7dc",
-        },
+        ...(!gridView && {
+          "&:not(:last-child)": {
+            borderBottom: "1px solid #d1d7dc",
+          },
+        }),
         cursor: "pointer",
         "&:hover .overlay": {
           display: "block",
         },
-        paddingY: 2,
+        paddingY: gridView ? 0.8 : 2,
+        paddingX: gridView ? (matchSm ? 0.8 : 0.4) : 0,
+        borderRadius: gridView ? 1 : 0,
+        ...(gridView && {
+          backgroundColor: theme.palette.foreground.main,
+          "&:hover": {
+            backgroundColor: theme.palette.select.main,
+          },
+        }),
       }}
     >
-      <Stack flexDirection="row" gap={1.5} mb={1}>
+      <Stack
+        flexDirection={gridView ? "column" : "row"}
+        gap={gridView ? 1 : 1.5}
+        mb={gridView ? 0 : 1}
+      >
         <Box
-          className="relative overflow-hidden flex-shrink-0"
+          className="relative overflow-hidden flex-shrink-0 flex items-center"
           borderRadius={0.5}
-          sx={{
-            width: matchSm ? 260 : 80,
-            height: matchSm ? 145 : 80,
-          }}
           alignSelf="flex-start"
         >
           <Image
             src={courseImg}
-            width={matchSm ? 260 : 80}
-            height={matchSm ? 145 : 80}
+            {...(!gridView
+              ? {
+                  width: matchSm ? 260 : 80,
+                  height: matchSm ? 145 : 80,
+                }
+              : {
+                  className: "aspect-video",
+                  width: "100%",
+                })}
             alt="course"
             style={{ objectFit: "cover" }}
             border={"0.5px solid #d1d7dc"}
@@ -52,16 +72,27 @@ const CourseCard = () => {
             flexGrow={1}
             display="flex"
             flexDirection="column"
-            gap={0.2}
+            gap={gridView ? 0.3 : 0.2}
             alignItems="flex-start"
           >
-            <Typography fontFamily="Roboto" className="font-semibold">
+            <Typography
+              component={Link}
+              to="./"
+              sx={{
+                "&:hover": {
+                  color: theme.palette.primary.main,
+                },
+              }}
+              fontFamily="Roboto"
+              variant={gridView && !matchSm ? "body2" : "body1"}
+              className="font-semibold"
+            >
               Cấu trúc dữ liệu và giải thuật
             </Typography>
-            {matchSm && (
+            {!gridView && matchSm && (
               <Typography
                 fontFamily="Roboto"
-                variant="button"
+                variant={gridView && !matchSm ? "caption" : "button"}
                 className="font-normal block"
               >
                 Go Beyond the Basics with Project-Based Building Information
@@ -71,8 +102,8 @@ const CourseCard = () => {
 
             <Typography
               fontFamily="Roboto"
-              variant="button"
-              className="font-light block"
+              variant={gridView && !matchSm ? "caption" : "subtitle2"}
+              className="font-normal block"
             >
               Nguyễn Văn Huy
             </Typography>
@@ -108,7 +139,7 @@ const CourseCard = () => {
               Recommend
             </Typography>
           </Box>
-          {matchMd && (
+          {!gridView && matchMd && (
             <Box flexShrink={0} className="flex flex-col gap-1">
               <Button>Xem chi tiết</Button>
             </Box>

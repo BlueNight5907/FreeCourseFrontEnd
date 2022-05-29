@@ -1,11 +1,4 @@
 import {
-  Chat,
-  ClearRounded,
-  DownloadRounded,
-  DriveFileRenameOutline,
-  NoteAltRounded,
-} from "@mui/icons-material";
-import {
   Box,
   Divider,
   Drawer,
@@ -20,93 +13,112 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../components/button/Button";
-import { scrollSetting } from "../../../utils/classUltis";
-import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
-import { buttonBg } from "./../../../components/button/Button";
-import Comment from "./../../../components/comment/Comment";
+import Wrapper from "components/wrapper/Wrapper";
+import Button, { buttonBg } from "components/button/Button";
+import TeacherAvatar from "components/teacher-avatar/TeacherAvatar";
+import {
+  Chat,
+  ClearRounded,
+  DriveFileRenameOutline,
+  NoteAltRounded,
+} from "@mui/icons-material";
+import { scrollSetting } from "utils/classUltis";
+import { useNavigate } from "react-router-dom";
+import Comment from "components/comment/Comment";
 
-const Lesson = () => {
+const TestInformation = () => {
   const { courseOpen } = useSelector((state) => state.setting);
   const dispatch = useDispatch();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
+  const matchMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
+  // state
+
   const [open, setOpen] = useState(false);
   const [openComment, setOpenComment] = useState(false);
   const handleClick = () => setOpen((s) => !s);
   const toggleComment = () => setOpenComment((s) => !s);
+
+  const doTest = () => {
+    navigate("/learning/test/dosomething");
+  };
+
   return (
     <>
-      <Stack flexDirection="row" gap={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Paper className="aspect-[19/10] bg-black"></Paper>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
+      <Stack flexDirection="row" gap={2} alignItems="flex-start">
+        <Box flexGrow={1}>
+          <Wrapper elevation={0} sx={{ mb: 1 }}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Paper sx={{ padding: 1 }} elevation={0}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <Stack className="flex-row justify-between">
-                        <Box>
-                          <Typography variant="body1" className="font-semibold">
-                            Lập trình OOP
-                          </Typography>
-                          <Typography variant="caption">
-                            287.623 lượt xem - 18 thg 2, 2022
-                          </Typography>
-                        </Box>
-                        <Stack gap={1} flexDirection="row">
-                          <Button startIcon={<DownloadRounded />}>
-                            {matchSm && "Tải bài học"}
-                          </Button>
-                          <Button
-                            startIcon={<DriveFileRenameOutline />}
-                            onClick={handleClick}
-                          >
-                            {matchSm && "Ghi chú"}
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            startIcon={<Chat />}
-                            onClick={toggleComment}
-                          >
-                            {matchSm && "Thảo luận"}
-                          </Button>
-                        </Stack>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Stack className="flex-row justify-between items-center">
-                        <TeacherAvatar />
-                        <Button variant="contained" specialBg={buttonBg.red}>
-                          Đi đến trang chủ
-                        </Button>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </Paper>
+                <Stack className="flex-row justify-between items-center">
+                  <Typography variant="body1" className="font-semibold">
+                    Lập trình OOP
+                  </Typography>
+                  <Stack gap={1} flexDirection="row">
+                    <Button
+                      startIcon={<DriveFileRenameOutline />}
+                      onClick={handleClick}
+                    >
+                      {matchSm && "Ghi chú"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<Chat />}
+                      onClick={toggleComment}
+                    >
+                      {matchSm && "Thảo luận"}
+                    </Button>
+                  </Stack>
+                </Stack>
               </Grid>
               <Grid item xs={12}>
-                <Box height={2200}></Box>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Stack className="flex-row justify-between">
+                  <TeacherAvatar />
+                  <Button variant="contained" specialBg={buttonBg.red}>
+                    Đi đến trang chủ
+                  </Button>
+                </Stack>
               </Grid>
             </Grid>
-            <Paper elevation={0} sx={{ padding: 1 }}></Paper>
-          </Grid>
-        </Grid>
-        <Box width={400} flexShrink={0} display={{ xs: "none", xl: "block" }}>
+          </Wrapper>
+          <Wrapper elevation={0} sx={{ mb: 1 }}>
+            <Stack className="flex-row justify-between items-center" mb={2}>
+              <Typography>Làm bài kiểm tra</Typography>
+              <Button variant="contained" onClick={doTest}>
+                Bắt đầu làm bài
+              </Button>
+            </Stack>
+            <Divider />
+            <Stack className="flex-row items-center" my={2}>
+              <Box flexGrow={1}>
+                <Typography fontWeight={500} gutterBottom>
+                  Tổng số câu hỏi: 35
+                </Typography>
+                <Typography variant="body2">
+                  Số câu đúng tối thiểu: 80%
+                </Typography>
+              </Box>
+              <Divider flexItem orientation="vertical" />
+              <Box padding={theme.spacing(2, 3)}>
+                <Typography fontWeight={500} gutterBottom>
+                  Điểm của bạn
+                </Typography>
+                <Typography>____</Typography>
+              </Box>
+            </Stack>
+            <Divider />
+          </Wrapper>
+        </Box>
+        <Box width={400} display={{ xs: "none", xl: "block" }}>
           <Box
             sx={{
               position: "sticky",
-              maxHeight: "800px",
+              maxHeight: "400px",
               height: "70vh",
               top: 80,
             }}
@@ -266,4 +278,4 @@ const Lesson = () => {
   );
 };
 
-export default Lesson;
+export default TestInformation;

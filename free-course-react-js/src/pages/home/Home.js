@@ -1,12 +1,14 @@
 import React from "react";
 import HeroSlide from "../../containers/courses-slide/HeroSLide";
-import FeatureCourse from "../../containers/courses-slide/FeatureCourse";
+import CategorySlide from "../../containers/courses-slide/CategorySlide";
 import { Grid, Stack } from "@mui/material";
 import ChatGroupIntroduction from "../../containers/introduction/ChatGroupIntroduction";
 import SocialNetworkIntroduction from "../../containers/introduction/SocialNetworkIntroduction";
 import CourseSlide from "../../containers/courses-slide/CourseSlide";
 import TeacherRanking from "./teacher-ranking/TeacherRanking";
-
+import FeatureCourseSlide from "../../containers/courses-slide/FeatureCourseSlide";
+import TabsCourseSlide from "../../containers/courses-slide/TabsCourseSlide";
+import DetailCourseSlide from "../../containers/courses-slide/DetailCourseSlide";
 const Home = () => {
   return (
     <Grid container spacing={2} minHeight={0}>
@@ -14,7 +16,10 @@ const Home = () => {
         <HeroSlide />
       </Grid>
       <Grid item xs={12}>
-        <FeatureCourse title="Danh mục khóa học" href="/category" />
+        <CategorySlide title="Danh mục khóa học" href="/category" />
+      </Grid>
+      <Grid item xs={12}>
+        <TabsCourseSlide />
       </Grid>
       <Grid item xs={12} lg={7.5} xl={8.5}>
         <Stack direction="column" gap={2}>
@@ -27,7 +32,10 @@ const Home = () => {
         <TeacherRanking />
       </Grid>
       <Grid item xs={12}>
-        <CourseSlide title="Học nhiều trong tuần" />
+        <FeatureCourseSlide />
+      </Grid>
+      <Grid item xs={12}>
+        <DetailCourseSlide title="Học nhiều trong tuần" />
       </Grid>
       <Grid item xs={12}>
         <CourseSlide title="Khóa học cơ bản" />

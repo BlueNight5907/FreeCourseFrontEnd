@@ -11,6 +11,8 @@ import SamplePage from "./sample-page/SamplePage";
 import SamplePage2 from "./sample-page/SamplePage2";
 import Setting from "./setting/Setting";
 import Category from "./category/Category";
+import Test from "./learning/test/Test";
+import TestInformation from "./learning/test/TestInformation";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -50,7 +52,11 @@ const Routes = () => {
         },
         {
           path: "test",
-          element: <CourseDetail />,
+          element: <TestInformation />,
+        },
+        {
+          path: "test/dosomething",
+          element: <Test />,
         },
       ],
     },

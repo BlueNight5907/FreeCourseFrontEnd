@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import "./app.scss";
 import theme from "./theme";
 import Routes from "./pages/routes";
+import PageLoading from "./containers/loading/PageLoading";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,
@@ -31,13 +32,22 @@ function App() {
     }
     return theme.darkMode;
   }, [mode]);
-
+  appTheme.components = {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: appTheme.palette.foreground.main,
+        },
+      },
+    },
+  };
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
         <Box sx={boxStyle} className="app">
           <Routes />
+          <PageLoading />
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>

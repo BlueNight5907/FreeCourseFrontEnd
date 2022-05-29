@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": ["react-app", "plugin:import/errors", "plugin:import/warnings"],
+  "plugins": ["react"]
+}

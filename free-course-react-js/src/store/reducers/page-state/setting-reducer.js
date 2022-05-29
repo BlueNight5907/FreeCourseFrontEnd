@@ -1,6 +1,8 @@
 import {
   CLOSE_HOME_DRAWER_SUB_MENU,
+  CLOSE_PAGE_SETTING,
   OPEN_HOME_DRAWER_SUB_MENU,
+  OPEN_PAGE_SETTING,
   SET_GO_BACK_NAV_BAR,
   SET_HEADER_TITLE,
   TOGGLE_COURSE_DRAWER,
@@ -15,6 +17,7 @@ const initState = {
   subMenu: null,
   goBack: false,
   headerTitle: "",
+  pageLoading: false,
 };
 
 const settingReducer = (state = initState, action) => {
@@ -54,6 +57,16 @@ const settingReducer = (state = initState, action) => {
       return {
         ...state,
         headerTitle: payload?.value,
+      };
+    case OPEN_PAGE_SETTING:
+      return {
+        ...state,
+        pageLoading: true,
+      };
+    case CLOSE_PAGE_SETTING:
+      return {
+        ...state,
+        pageLoading: false,
       };
     default:
       return state;

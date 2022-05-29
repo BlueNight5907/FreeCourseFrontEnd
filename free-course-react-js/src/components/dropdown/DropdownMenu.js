@@ -13,6 +13,7 @@ function DropdownMenu(props) {
     sx,
     shadow,
     maxHeight,
+    disabledPadding,
     minHeight,
     direction = "auto",
     ...others
@@ -62,7 +63,7 @@ function DropdownMenu(props) {
       overflowX: "hidden",
       overflowY: "overlay",
       height: "100%",
-      padding: (theme) => theme.spacing(0, 1.5),
+      padding: (theme) => (disabledPadding ? 0 : theme.spacing(0, 1.5)),
       "&::-webkit-scrollbar": {
         WebkitAppearance: "none",
       },

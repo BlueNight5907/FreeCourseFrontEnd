@@ -43,7 +43,7 @@ function MyCourseDropdown(props) {
               marginBottom: 1,
             }}
           >
-            <Typography sx={{}}>Lớp học của tôi</Typography>
+            <Typography>Lớp học của tôi</Typography>
             <MuiLink
               component={Link}
               to="/"

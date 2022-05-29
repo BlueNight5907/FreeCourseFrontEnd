@@ -35,6 +35,7 @@ function Button(props) {
     paddingBottom: 1,
     gap: 0.8,
     background: specialBg && specialBackground[specialBg],
+
     "& .button-content": {
       flexGrow: 1,
     },
