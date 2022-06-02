@@ -13,7 +13,7 @@ import {
 
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, matchPath } from "react-router-dom";
 
 const MenuItem = ({
   selected,
@@ -33,17 +33,20 @@ const MenuItem = ({
   const { sideOpen } = useSelector((state) => state.setting);
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const match = matchPath({ path: href || "./", end: true }, pathname);
   const styles = {
     menuItem: {
       height: 50,
       borderRadius: 1,
-      opacity: selected ? 1 : 0.9,
+      opacity: !!match ? 1 : 0.9,
       mb: 0.5,
       ...additional,
     },
     listItemText: {
       color: (theme) =>
-        selected ? theme.palette.primary.main : theme.palette.text2.main,
+        !!match ? theme.palette.primary.main : theme.palette.text2.main,
       "& .MuiListItemText-primary": {
         fontWeight: 400,
         fontSize: 18,
@@ -57,10 +60,10 @@ const MenuItem = ({
     },
     icon: {
       color: (theme) =>
-        selected ? theme.palette.primary.main : theme.palette.text2.main,
+        !!match ? theme.palette.primary.main : theme.palette.text2.main,
     },
   };
-  const navigate = useNavigate();
+
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -108,7 +111,7 @@ const MenuItem = ({
         ...styles.menuItem,
         ...menuItemStyle,
       }}
-      selected={selected}
+      selected={!!match}
       onClick={handleClick}
     >
       {Icon && (

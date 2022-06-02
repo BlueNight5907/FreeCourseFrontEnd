@@ -106,7 +106,6 @@ export default function MainMenu(props) {
             icon={item.icon}
             badge={item.badge}
             key={index}
-            selected={item.selected}
             href={item.href}
             additional={item.additional}
             onClick={

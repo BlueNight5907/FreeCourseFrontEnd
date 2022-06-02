@@ -19,7 +19,6 @@ const mainMenuList = [
     name: "Trang chủ",
     icon: HomeRounded,
     href: "/",
-    selected: true,
   },
   {
     name: "Tìm kiếm",
@@ -116,22 +115,22 @@ export const teacherSubMenuList = [
   {
     name: "Tạo khóa học",
     icon: MenuBookRounded,
-    href: "/my-courses",
+    href: "/manage-course/create",
   },
   {
     name: "Dashboard",
     icon: GridViewRounded,
-    href: "/manage/dashboard",
+    href: "/manage-course/dashboard",
   },
   {
     name: "Danh sách khóa học",
     icon: ViewListRounded,
-    href: "/manage/course-list",
+    href: "/manage-course/category",
   },
   {
     name: "Danh hiệu",
     icon: EmojiEventsRounded,
-    href: "/category",
+    href: "/manage-course/awards",
   },
 ];
 

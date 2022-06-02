@@ -1,8 +1,6 @@
 import { Box } from "@mui/material";
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+function TabPanel({ children, value, index, ...other }) {
   return (
     <Box
       role="tabpanel"

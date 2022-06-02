@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React from "react";
 import App from "./App";
 import { createRoot } from "react-dom/client";

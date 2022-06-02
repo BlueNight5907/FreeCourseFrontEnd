@@ -2,21 +2,49 @@ import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NAVBAR_HEIGHT } from "../../../config";
-import { TOGGLE_HOME_DRAWER } from "../../../store/types/page-types/setting-types";
+import {
+  CLOSE_HOME_DRAWER_SUB_MENU,
+  OPEN_HOME_DRAWER_SUB_MENU,
+  TOGGLE_HOME_DRAWER,
+} from "../../../store/types/page-types/setting-types";
 import { Drawer as MuiDrawer } from "../styled-components";
 import logo from "../../../assets/icons/logo.png";
 import MainMenu from "../menu/MainMenu";
 import SubMenu from "../menu/SubMenu";
 import { scrollSetting } from "../../../utils/classUltis";
+import { teacherSubMenuList } from "../menu/menu-list";
+import { matchPath, useLocation } from "react-router-dom";
 const Drawer = () => {
   const { sideOpen, subMenu } = useSelector((state) => state.setting);
   const dispatch = useDispatch();
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+  const { pathname } = useLocation();
   const toggleDrawer = () => {
     dispatch({ type: TOGGLE_HOME_DRAWER });
   };
   const containerRef = useRef();
+  React.useEffect(() => {
+    let hasSubMenu = false;
+    teacherSubMenuList.every((item) => {
+      const match = matchPath({ path: item.href || "./", end: true }, pathname);
+      if (match) {
+        hasSubMenu = true;
+        dispatch({
+          type: OPEN_HOME_DRAWER_SUB_MENU,
+          payload: {
+            subMenu: teacherSubMenuList,
+          },
+        });
+      }
+      return !match;
+    });
+    if (!hasSubMenu) {
+      dispatch({
+        type: CLOSE_HOME_DRAWER_SUB_MENU,
+      });
+    }
+  }, [dispatch, pathname]);
   return (
     <MuiDrawer
       variant={matchMd ? "permanent" : "temporary"}

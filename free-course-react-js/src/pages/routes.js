@@ -13,9 +13,12 @@ import Setting from "./setting/Setting";
 import Category from "./category/Category";
 import Test from "./learning/test/Test";
 import TestInformation from "./learning/test/TestInformation";
+import Login from "./auth/login/Login";
+import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 
 const Routes = () => {
   const routes = useRoutes([
+    { path: "/login", element: <Login /> },
     {
       path: "/",
       element: <HomeLayout />,
@@ -39,6 +42,10 @@ const Routes = () => {
         {
           path: "/category",
           element: <Category />,
+        },
+        {
+          path: "/manage-course/dashboard",
+          element: <CourseDashboard />,
         },
       ],
     },

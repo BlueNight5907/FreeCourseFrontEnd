@@ -14,6 +14,8 @@ import PageLoading from "./containers/loading/PageLoading";
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,
   minHeight: "100vh",
+  display: "flex",
+  flexDirection: "column",
 };
 
 function App() {

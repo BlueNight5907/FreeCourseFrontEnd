@@ -1,7 +1,7 @@
-import { Box, IconButton, Typography } from "@mui/material";
+/* eslint-disable import/no-unresolved */
+import { Box, Typography } from "@mui/material";
 import React from "react";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-// import required modules
+import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 import Tag from "../../components/tag/Tag";
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";

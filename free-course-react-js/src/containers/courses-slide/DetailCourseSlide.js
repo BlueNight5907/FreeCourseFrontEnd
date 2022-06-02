@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
