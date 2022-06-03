@@ -27,7 +27,7 @@ function RenderTable(props) {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data, totalRows } = await getData();
+        const { data, totalRows } = await getData(searchParams);
         setTotalRows(totalRows);
         setRows(data);
         setError("");
