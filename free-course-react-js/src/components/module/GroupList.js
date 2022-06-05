@@ -22,12 +22,12 @@ import {
   DriveFileRenameOutline,
   ClearRounded,
 } from "@mui/icons-material";
-import Button from "../button/Button";
 import Module from "./Module";
 import Dropdown from "../dropdown/Dropdown";
 import DropdownToggle from "../dropdown/DropdownToggle";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import DropdownItem from "../dropdown/DropdownItem";
+import Button from "components/button/Button";
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -72,16 +72,13 @@ export default function GroupList(props) {
   const [expanded, setExpanded] = React.useState(false);
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+  const handleChange = () => {
+    setExpanded((s) => !s);
   };
 
   return (
     <Box className="flex flex-col gap-2">
-      <Accordion
-        onChange={handleChange("panel1")}
-        expanded={expanded === "panel1"}
-      >
+      <Accordion expanded={expanded === true}>
         <AccordionSummary
           sx={{
             minHeight: 55,
@@ -90,16 +87,24 @@ export default function GroupList(props) {
           id="panel1d-header"
         >
           <div className="flex flex-row w-full items-center justify-between">
-            <Typography className="grow h-full flex items-center">
-              Collapsible Group Item #1
-            </Typography>
+            <div className="grow h-full flex items-center relative">
+              <Typography
+                className="absolute left-0 w-full pr-3"
+                noWrap
+                onClick={() => handleChange()}
+              >
+                Collapsible Group Item #1 fdskj sfdk jhfdskj hfkdsj hkjvdsh
+                ksjdh
+              </Typography>
+            </div>
+
             {editMode ? (
               <div className="flex flex-row items-center gap-3">
                 {matchMd && (
                   <>
-                    <IconButton variant="contained">
-                      <AddRounded />
-                    </IconButton>
+                    <Button disableElevation variant="contained">
+                      Thêm bài học
+                    </Button>
                     <IconButton onClick={() => console.log("hello")}>
                       <ArrowUpwardRounded />
                     </IconButton>

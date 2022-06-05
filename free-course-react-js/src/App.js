@@ -42,6 +42,14 @@ function App() {
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          height: "unset",
+          fontSize: appTheme.typography.body1.fontSize,
+        },
+      },
+    },
   };
   return (
     <StyledEngineProvider injectFirst>
