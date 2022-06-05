@@ -33,7 +33,9 @@ export const scrollSetting = (options) => {
     "&::-webkit-scrollbar:vertical": {
       width: options.width,
     },
-
+    "&::-webkit-scrollbar:horizontal": {
+      height: options.width,
+    },
     "&::-webkit-scrollbar-thumb": {
       backgroundColor: options.scrollThumbColor,
       borderRadius: 1,

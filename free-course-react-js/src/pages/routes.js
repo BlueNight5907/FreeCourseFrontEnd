@@ -15,6 +15,7 @@ import Test from "./learning/test/Test";
 import TestInformation from "./learning/test/TestInformation";
 import Login from "./auth/login/Login";
 import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
+import CreateCourse from "./manage-course/create-course/CreateCourse";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -46,6 +47,10 @@ const Routes = () => {
         {
           path: "/manage-course/dashboard",
           element: <CourseDashboard />,
+        },
+        {
+          path: "/manage-course/create",
+          element: <CreateCourse />,
         },
       ],
     },

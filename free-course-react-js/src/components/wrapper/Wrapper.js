@@ -10,7 +10,9 @@ const Wrapper = ({
   rounded = 1,
   sx,
   titleVariant,
+  titleIcon,
   flexDirection,
+  BoxProps,
   marginY,
   ...others
 }) => {
@@ -48,12 +50,21 @@ const Wrapper = ({
       {title ? (
         <>
           <Box className="flex flex-row items-center justify-between mb-1">
-            <Typography variant={titleVariant || "h5"} className=" ml-3">
+            <Typography
+              variant={titleVariant || "h5"}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              ml={0.2}
+            >
+              {titleIcon}
               {title}
             </Typography>
             {actions}
           </Box>
-          <Box sx={styles.box}>{children}</Box>
+          <Box sx={styles.box} {...BoxProps}>
+            {children}
+          </Box>
         </>
       ) : (
         children
