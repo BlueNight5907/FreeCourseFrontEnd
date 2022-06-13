@@ -15,6 +15,7 @@ import Test from "./learning/test/Test";
 import TestInformation from "./learning/test/TestInformation";
 import Login from "./auth/login/Login";
 import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
+import MessageLayout from "layouts/message-layout/MessageLayout";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -66,6 +67,10 @@ const Routes = () => {
           element: <Test />,
         },
       ],
+    },
+    {
+      path: "/message",
+      element: <MessageLayout />,
     },
     {
       path: "/sample1",
