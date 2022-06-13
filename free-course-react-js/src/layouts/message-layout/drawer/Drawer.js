@@ -44,14 +44,14 @@ const AvatarSuccess = styled(Avatar)(
     `
 );
 
-const MeetingBox = styled(Box)(
-    ({ theme }) => `
-          background-color: ${/*lighten(theme.palette.foreground.main, 0.5)*/"green"};
-          margin: ${theme.spacing(2)} 0;
-          border-radius: ${/*theme.general.borderRadius*/"10px"};
-          padding: ${theme.spacing(2)};
-    `
-);
+// const MeetingBox = styled(Box)(
+//     ({ theme }) => `
+//           background-color: ${/*lighten(theme.palette.foreground.main, 0.5)*/"green"};
+//           margin: ${theme.spacing(2)} 0;
+//           border-radius: ${/*theme.general.borderRadius*/"10px"};
+//           padding: ${theme.spacing(2)};
+//     `
+// );
 
 const RootWrapper = styled(Box)(
     ({ theme }) => `
@@ -86,9 +86,6 @@ const TabsContainerWrapper = styled(Box)(
                 }
             }
             &.Mui-selected:hover,
-            &.Mui-selected {
-                color: red;
-            }
         }
   `
 );
@@ -126,6 +123,17 @@ const chats = [
         name: "TADA",
         last: "Hello nice to meet you",
         unread: 10
+    },
+    {
+        avatar: avt,
+        name: "TADA",
+        last: "Hello nice to meet you",
+        unread: 10
+    },
+    {
+        avatar: avt,
+        name: "TADA",
+        last: "Hello nice to meet you",
     },
 
 ];
@@ -264,6 +272,7 @@ const Drawer = () => {
                                     }}
                                     secondaryTypographyProps={{
                                         color: 'textSecondary',
+                                        variant: 'subtitle2',
                                         noWrap: true
                                     }}
                                     primary={item.name}
@@ -300,6 +309,7 @@ const Drawer = () => {
                                             }}
                                             secondaryTypographyProps={{
                                                 color: 'textSecondary',
+                                                variant: 'subtitle1',
                                                 noWrap: true
                                             }}
                                             primary={item.name}
@@ -342,142 +352,6 @@ const Drawer = () => {
                     </Box>
                 )}
             </Box>
-            <Box display="flex" pb={1} mt={2} alignItems="center">
-                <Typography
-                    sx={{
-                        mr: 1
-                    }}
-                    variant="h3"
-                >
-                    Meetings
-                </Typography>
-                <Label color="success">
-                    <b>2</b>
-                </Label>
-            </Box>
-            <MeetingBox>
-                <Typography variant="h4">Daily Design Meeting</Typography>
-
-                <Box py={3} display="flex" alignItems="flex-start">
-                    <AlarmTwoToneIcon />
-                    <Box pl={1}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                lineHeight: 1
-                            }}
-                            color="text.primary"
-                        >
-                            10:00 - 11:30
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            {formatDistance(subMinutes(new Date(), 12), new Date(), {
-                                addSuffix: true
-                            })}
-                        </Typography>
-                    </Box>
-                </Box>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <AvatarGroup>
-                        <Tooltip arrow title="View profile for Remy Sharp">
-                            <Avatar
-                                sx={{
-                                    width: 28,
-                                    height: 28
-                                }}
-                                component={RouterLink}
-                                to="#"
-                                alt="Remy Sharp"
-                                src="/static/images/avatars/1.jpg"
-                            />
-                        </Tooltip>
-                        <Tooltip arrow title="View profile for Travis Howard">
-                            <Avatar
-                                sx={{
-                                    width: 28,
-                                    height: 28
-                                }}
-                                component={RouterLink}
-                                to="#"
-                                alt="Travis Howard"
-                                src="/static/images/avatars/2.jpg"
-                            />
-                        </Tooltip>
-                        <Tooltip arrow title="View profile for Craig Vaccaro">
-                            <Avatar
-                                sx={{
-                                    width: 28,
-                                    height: 28
-                                }}
-                                component={RouterLink}
-                                to="#"
-                                alt="Craig Vaccaro"
-                                src="/static/images/avatars/3.jpg"
-                            />
-                        </Tooltip>
-                    </AvatarGroup>
-
-                    <Button variant="contained" size="small">
-                        Attend
-                    </Button>
-                </Box>
-            </MeetingBox>
-
-            <MeetingBox>
-                <Typography variant="h4">Investors Council Meeting</Typography>
-
-                <Box py={3} display="flex" alignItems="flex-start">
-                    <AlarmTwoToneIcon />
-                    <Box pl={1}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                lineHeight: 1
-                            }}
-                            color="text.primary"
-                        >
-                            14:30 - 16:15
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            {formatDistance(subHours(new Date(), 4), new Date(), {
-                                addSuffix: true
-                            })}
-                        </Typography>
-                    </Box>
-                </Box>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <AvatarGroup>
-                        <Tooltip arrow title="View profile for Travis Howard">
-                            <Avatar
-                                sx={{
-                                    width: 28,
-                                    height: 28
-                                }}
-                                component={RouterLink}
-                                to="#"
-                                alt="Travis Howard"
-                                src="/static/images/avatars/4.jpg"
-                            />
-                        </Tooltip>
-                        <Tooltip arrow title="View profile for Craig Vaccaro">
-                            <Avatar
-                                sx={{
-                                    width: 28,
-                                    height: 28
-                                }}
-                                component={RouterLink}
-                                to="#"
-                                alt="Craig Vaccaro"
-                                src="/static/images/avatars/5.jpg"
-                            />
-                        </Tooltip>
-                    </AvatarGroup>
-
-                    <Button variant="contained" size="small">
-                        Attend
-                    </Button>
-                </Box>
-            </MeetingBox>
         </RootWrapper>
     );
 }

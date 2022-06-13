@@ -1,41 +1,49 @@
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import { Box } from '@mui/material';
 
-// import PropTypes from 'prop-types';
-// import { Scrollbars } from 'react-custom-scrollbars-2';
+const RootStyle = styled('div')({
+    flexGrow: 1,
+    height: '100%',
+    marginRight: '0.1em',
+    overflowY: 'auto',
+    '&::-webkit-scrollbar': {
+        width: '0.4em',
+    },
+    '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(1,1,0,0.00)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#E8EAED',
+        borderRadius: '12px',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+        backgroundColor: '#BCC1CB',
+    }
+});
 
-// import { Box, useTheme } from '@mui/material';
+Scrollbar.propTypes = {
+    children: PropTypes.node.isRequired,
+    sx: PropTypes.object
+};
 
-// const Scrollbar = (props) => {
-//   const theme = useTheme();
-//   const { className, children, ...rest } = props;
-//   return (
-//     <Scrollbars
-//       autoHide
-//       renderThumbVertical={() => {
-//         return (
-//           <Box
-//             sx={{
-//               width: 5,
-//               background: `${theme.colors.alpha.black[10]}`,
-//               borderRadius: `${theme.general.borderRadiusLg}`,
-//               transition: `${theme.transitions.create(['background'])}`,
+export default function Scrollbar({ children, sx, ...other }) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+    );
 
-//               '&:hover': {
-//                 background: `${theme.colors.alpha.black[30]}`
-//               }
-//             }}
-//           />
-//         );
-//       }}
-//       {...rest}
-//     >
-//       {children}
-//     </Scrollbars>
-//   );
-// };
+    if (isMobile) {
+        return (
+            <Box sx={{ overflowX: 'auto', ...sx }} {...other}>
+                {children}
+            </Box>
+        );
+    }
 
-// Scrollbar.propTypes = {
-//   children: PropTypes.node,
-//   className: PropTypes.string
-// };
-
-// export default Scrollbar;
+    return (
+        <RootStyle>
+            {children}
+        </RootStyle>
+    );
+}

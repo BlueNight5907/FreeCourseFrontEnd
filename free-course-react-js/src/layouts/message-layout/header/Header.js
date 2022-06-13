@@ -1,4 +1,4 @@
-import { useState, SyntheticEvent } from 'react';
+import { useState } from 'react';
 import {
     Box,
     IconButton,
@@ -17,7 +17,7 @@ import {
     styled,
     useTheme
 } from '@mui/material';
-import { formatDistance, subMinutes } from 'date-fns';
+// import { formatDistance, subMinutes } from 'date-fns';
 import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
 import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
@@ -30,6 +30,7 @@ import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
+import { formatDistance, subMinutes } from 'date-fns';
 
 const RootWrapper = styled(Box)(
     ({ theme }) => `
@@ -44,7 +45,7 @@ const RootWrapper = styled(Box)(
 const ListItemIconWrapper = styled(ListItemIcon)(
     ({ theme }) => `
         min-width: 36px;
-        color: ${theme.colors.primary.light};
+        color: ${theme.palette.foreground.main};
 `
 );
 
@@ -56,9 +57,6 @@ const AccordionSummaryWrapper = styled(AccordionSummary)(
         .MuiAccordionSummary-content.Mui-expanded {
           margin: 12px 0;
         }
-        .MuiSvgIcon-root {
-          transition: ${theme.transitions.create(['color'])};
-        }
         &.MuiButtonBase-root {
           margin-bottom: ${theme.spacing(0.5)};
           &:last-child {
@@ -66,10 +64,6 @@ const AccordionSummaryWrapper = styled(AccordionSummary)(
           }
           &.Mui-expanded,
           &:hover {
-            background: ${theme.colors.alpha.black[10]};
-            .MuiSvgIcon-root {
-              color: ${theme.colors.primary.main};
-            }
           }
         }
 `
@@ -84,10 +78,10 @@ const Header = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    const [expanded, setExpanded] = useState('section1');
+    const [expanded, setExpanded] = useState(false);
 
-    const handleChange = (section) => {
-        setExpanded(section);
+    const handleChange = (section) => (event, isExpanded) => {
+        setExpanded(isExpanded ? section : false);
     };
 
     return (
@@ -95,17 +89,17 @@ const Header = () => {
             <RootWrapper>
                 <Box display="flex" alignItems="center">
                     <Avatar
-                        variant="rounded"
+                        variant="circular"
                         sx={{
                             width: 48,
                             height: 48
                         }}
-                        alt="Zain Baptista"
-                        src="/static/images/avatars/1.jpg"
+                        alt=""
+                        src=""
                     />
                     <Box ml={1}>
-                        <Typography variant="h4">Zain Baptista</Typography>
-                        <Typography variant="subtitle1">
+                        <Typography variant="h6">Zain Baptista</Typography>
+                        <Typography variant="caption">
                             {formatDistance(subMinutes(new Date(), 8), new Date(), {
                                 addSuffix: true
                             })}
@@ -117,17 +111,17 @@ const Header = () => {
                         display: { xs: 'none', lg: 'flex' }
                     }}
                 >
-                    <Tooltip placement="bottom" title="Start a voice call">
+                    <Tooltip placement="bottom" title="Voice call">
                         <IconButton color="primary">
                             <CallTwoToneIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip placement="bottom" title="Start a video call">
+                    <Tooltip placement="bottom" title="Video call">
                         <IconButton color="primary">
                             <VideoCameraFrontTwoToneIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip placement="bottom" title="Conversation information">
+                    <Tooltip placement="bottom" title="Information">
                         <IconButton color="primary" onClick={handleDrawerToggle}>
                             <InfoTwoToneIcon />
                         </IconButton>
@@ -139,7 +133,7 @@ const Header = () => {
                     display: { xs: 'none', md: 'flex' }
                 }}
                 variant="temporary"
-                anchor={theme.direction === 'rtl' ? 'left' : 'right'}
+                anchor={'right'}
                 open={mobileOpen}
                 onClose={handleDrawerToggle}
                 elevation={9}
@@ -159,14 +153,14 @@ const Header = () => {
                             sx={{
                                 mx: 'auto',
                                 my: 2,
-                                width: theme.spacing(12),
-                                height: theme.spacing(12)
+                                width: theme.spacing(10),
+                                height: theme.spacing(10)
                             }}
-                            variant="rounded"
-                            alt="Zain Baptista"
-                            src="/static/images/avatars/1.jpg"
+                            variant="circular"
+                            alt="Foo"
+                            src="Foo"
                         />
-                        <Typography variant="h4">Zain Baptista</Typography>
+                        <Typography variant="h6">Foo</Typography>
                         <Typography variant="subtitle2">
                             Active{' '}
                             {formatDistance(subMinutes(new Date(), 7), new Date(), {
@@ -181,8 +175,8 @@ const Header = () => {
                     />
 
                     <Accordion
-                        expanded={expanded === 'section1'}
-                        onChange={handleChange('section1')}
+                        expanded={expanded === '1'}
+                        onChange={handleChange('1')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
                             <Typography variant="h5">Customize Chat</Typography>
@@ -224,11 +218,11 @@ const Header = () => {
                         </AccordionDetails>
                     </Accordion>
                     <Accordion
-                        expanded={expanded === 'section2'}
-                        onChange={handleChange('section2')}
+                        expanded={expanded === '2'}
+                        onChange={handleChange('2')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
-                            <Typography variant="h5">Privacy n Support</Typography>
+                            <Typography variant="h5">Privacy & Support</Typography>
                         </AccordionSummaryWrapper>
                         <AccordionDetails
                             sx={{
@@ -278,8 +272,8 @@ const Header = () => {
                         </AccordionDetails>
                     </Accordion>
                     <Accordion
-                        expanded={expanded === 'section3'}
-                        onChange={handleChange('section3')}
+                        expanded={expanded === '3'}
+                        onChange={handleChange('3')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
                             <Typography variant="h5">Shared Files</Typography>

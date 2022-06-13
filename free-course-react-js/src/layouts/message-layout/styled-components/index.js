@@ -9,7 +9,7 @@ import {
 
 export const RootWrapper = styled(Box)(
   ({ theme }) => `
-         height: calc(100vh - ${/*theme.header.height*/0}px);
+         height: 100vh;
          display: flex;
   `
 );
@@ -17,8 +17,8 @@ export const RootWrapper = styled(Box)(
 export const Sidebar = styled(Box)(
   ({ theme }) => `
           width: 360px;
-          background: ${/*theme.colors.alpha.white[100]*/ "#0075EB11"};
-          border-right: ${/*theme.colors.alpha.black[10]*/ "black"} solid 1px;
+          background: ${theme.palette.foreground.main};
+          border-right: ${"rgba(34, 51, 84, 0.1) solid 1.2px"};
   `
 );
 
@@ -34,9 +34,9 @@ export const ChatWindow = styled(Box)(
 
 export const ChatTopBar = styled(Box)(
   ({ theme }) => `
-          background: ${/*theme.colors.alpha.white[100]*/theme.palette.foreground.main};
-          border-bottom: ${/*theme.colors.alpha.black[10]*/ theme.palette.select.main} solid 1px;
-          padding: ${theme.spacing(2)};
+          background: ${theme.palette.foreground.main};
+          border-bottom: ${theme.palette.select.main} solid 1px;
+          padding: ${theme.spacing(1.2)};
           align-items: center;
   `
 );

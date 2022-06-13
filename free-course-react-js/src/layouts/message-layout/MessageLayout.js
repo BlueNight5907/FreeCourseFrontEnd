@@ -7,8 +7,11 @@ import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import Drawer from "./drawer/Drawer";
+import Scrollbar from "components/scrollbar/Scrollbar";
+import MessageContent from "./content/MessageContent";
 
-const MessageLayout = () => {
+const MessageLayout = (props) => {
+    const { children } = props;
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -28,7 +31,10 @@ const MessageLayout = () => {
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
                 >
-                    <Drawer />
+                    <Scrollbar>
+                        <Drawer />
+                    </Scrollbar>
+
 
                 </DrawerWrapperMobile>
                 <Sidebar
@@ -36,8 +42,9 @@ const MessageLayout = () => {
                         display: { xs: 'none', lg: 'inline-block' }
                     }}
                 >
-                    <Drawer />
-
+                    <Scrollbar>
+                        <Drawer />
+                    </Scrollbar>
                 </Sidebar>
                 <ChatWindow>
                     <ChatTopBar
@@ -56,9 +63,12 @@ const MessageLayout = () => {
                         >
                             <MenuTwoToneIcon />
                         </IconButtonToggle>
-                        {/* <Header /> */}
+                        <Header />
                     </ChatTopBar>
-                    <Box flex={1}>
+                    <Box flex={1} height={"75vh"}>
+                        <Scrollbar>
+                            <MessageContent />
+                        </Scrollbar>
                     </Box>
                     <Divider />
                     <Footer />

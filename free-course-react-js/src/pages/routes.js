@@ -16,6 +16,7 @@ import TestInformation from "./learning/test/TestInformation";
 import Login from "./auth/login/Login";
 import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 import MessageLayout from "layouts/message-layout/MessageLayout";
+import MessageContent from "./message/Message";
 
 const Routes = () => {
   const routes = useRoutes([
