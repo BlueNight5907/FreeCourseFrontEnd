@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import Prism from "prismjs";
 import "./app.scss";
 import theme from "./theme";
 import Routes from "./pages/routes";
@@ -27,6 +28,10 @@ function App() {
     setMode(setting.mode);
   }, [setting]);
 
+  useEffect(() => {
+    Prism.highlightAll();
+  }, []);
+
   //Change app theme
   const appTheme = useMemo(() => {
     if (mode === "light") {
@@ -39,6 +44,14 @@ function App() {
       styleOverrides: {
         root: {
           backgroundColor: appTheme.palette.foreground.main,
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          height: "unset",
+          fontSize: appTheme.typography.body1.fontSize,
         },
       },
     },

@@ -8,9 +8,11 @@ import {
 } from "@mui/icons-material";
 import { IconButton, ListItem, ListItemIcon, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Module = (props) => {
-  const { component, type = "default", editMode, title } = props;
+  const { component, type = "default", editMode, title, href } = props;
+  const navigate = useNavigate();
   const styles = {
     box: {
       padding: (theme) => theme.spacing(0.5, 1.5, 0.5, 1.2),
@@ -66,6 +68,7 @@ const Module = (props) => {
       sx={styles.box}
       disableGutters
       disablePadding
+      {...(!editMode && { onClick: () => navigate(href) })}
     >
       <ListItemIcon>
         <Icon
