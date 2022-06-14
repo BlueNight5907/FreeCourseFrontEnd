@@ -21,9 +21,9 @@ function DropdownItem(props) {
     }),
     "&:hover": {
       backgroundColor: (theme) => theme.palette.select.main,
-      "":{
+      "": {
         borderRadius: square ? 0 : 1,
-      }
+      },
     },
     padding: (theme) => theme.spacing(1),
   };
@@ -51,6 +51,7 @@ function DropdownItem(props) {
             ...style,
             ...sx,
           }}
+          onClick={() => toggleDropdown()}
         >
           {children}
         </ListItemButton>

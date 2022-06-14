@@ -7,6 +7,7 @@ const ConfirmDialog = ({
   open,
   setOpen,
   onAccept,
+  deleted,
   onRefuse,
   title,
   children,
@@ -23,6 +24,7 @@ const ConfirmDialog = ({
         <Stack flexDirection="row" gap={1}>
           <Button
             width={80}
+            sx={{ height: 42 }}
             color="text"
             onClick={() => {
               setOpen(false);
@@ -33,6 +35,12 @@ const ConfirmDialog = ({
           </Button>
           <Button
             width={80}
+            sx={{ height: 42 }}
+            {...(deleted && {
+              color: "error",
+              variant: "contained",
+              disableElevation: true,
+            })}
             onClick={() => {
               setOpen(false);
               onAccept && onAccept();

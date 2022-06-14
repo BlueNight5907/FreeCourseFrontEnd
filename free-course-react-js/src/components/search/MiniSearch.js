@@ -17,7 +17,6 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "auto",
   },
-  padding: theme.spacing(0.8, 0),
   cursor: "pointer",
 }));
 

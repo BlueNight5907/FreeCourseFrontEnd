@@ -17,6 +17,8 @@ import Login from "./auth/login/Login";
 import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 import MessageLayout from "layouts/message-layout/MessageLayout";
 import MessageContent from "./message/Message";
+import CreateCourse from "./manage-course/create-course/CreateCourse";
+
 
 const Routes = () => {
   const routes = useRoutes([
@@ -48,6 +50,14 @@ const Routes = () => {
         {
           path: "/manage-course/dashboard",
           element: <CourseDashboard />,
+        },
+        {
+          path: "/manage-course/category",
+          element: <CourseDashboard />,
+        },
+        {
+          path: "/manage-course/create",
+          element: <CreateCourse />,
         },
       ],
     },
