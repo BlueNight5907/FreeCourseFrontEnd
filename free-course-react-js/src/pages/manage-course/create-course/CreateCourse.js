@@ -6,6 +6,7 @@ import Button from "components/button/Button";
 import { Stack, Tab, Tabs } from "@mui/material";
 import TabPanel from "components/tab-panel/TabPanel";
 import ModuleForm from "containers/course-panel/ModuleForm";
+import ContentForm from "containers/course-panel/ContentForm";
 
 function a11yProps(index) {
   return {
@@ -16,6 +17,8 @@ function a11yProps(index) {
 
 const CreateCourse = () => {
   const [selected, setSelected] = useState(0);
+  const [content, setContent] = useState();
+  const [modules, setModules] = useState([]);
   const handleSelectedChange = (event, newValue) => {
     setSelected(newValue);
   };
@@ -55,16 +58,24 @@ const CreateCourse = () => {
           {...a11yProps(0)}
         />
         <Tab
-          label="Chủ đề khóa học"
+          label="Nội dung khóa học"
           className="capitalize items-start"
           {...a11yProps(1)}
+        />
+        <Tab
+          label="Chủ đề khóa học"
+          className="capitalize items-start"
+          {...a11yProps(2)}
         />
       </Tabs>
       <TabPanel index={0} value={selected}>
         <CourseForm />
       </TabPanel>
       <TabPanel index={1} value={selected}>
-        <ModuleForm />
+        <ContentForm content={content} setContent={setContent} />
+      </TabPanel>
+      <TabPanel index={2} value={selected}>
+        <ModuleForm modules={modules} setModules={setModules} />
       </TabPanel>
     </Wrapper>
   );

@@ -1,20 +1,35 @@
 import Wrapper from "components/wrapper/Wrapper";
 import React, { useState } from "react";
-import { Grid, Stack, useTheme } from "@mui/material";
+import { Box, Grid, Stack, useTheme } from "@mui/material";
 import Button from "components/button/Button";
 import { Add } from "@mui/icons-material";
 import TabPanel from "components/tab-panel/TabPanel";
 import Dashboard from "./panel/Dashboard";
+import CourseCategory from "./panel/CourseCategory";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function CourseDashboard() {
   const theme = useTheme();
-  const [selected, setSelected] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selected, setSelected] = useState(-1);
   const styles = {
     grpButton: {},
   };
+
+  useEffect(() => {
+    if (location.pathname === "/manage-course/dashboard") {
+      setSelected(0);
+    }
+    if (location.pathname === "/manage-course/category") {
+      setSelected(1);
+    }
+  }, [location.pathname]);
+
   return (
-    <Grid container my={0} spacing={2}>
-      <Grid item xs={12}>
+    <Stack my={1} gap={2} flexGrow={1}>
+      <Box>
         <Stack
           className="flex-row justify-between items-center flex-wrap-reverse"
           gap={1}
@@ -27,7 +42,7 @@ function CourseDashboard() {
             <Button
               variant="contained"
               color={selected === 0 ? "primary" : "foreground"}
-              onClick={() => setSelected(0)}
+              onClick={() => navigate("/manage-course/dashboard")}
               disableElevation
             >
               Dashboard
@@ -35,26 +50,33 @@ function CourseDashboard() {
             <Button
               variant="contained"
               color={selected === 1 ? "primary" : "foreground"}
-              onClick={() => setSelected(1)}
+              onClick={() => navigate("/manage-course/category")}
               disableElevation
             >
               Khóa học của tôi
             </Button>
           </Stack>
-          <Button variant="contained" startIcon={<Add />} disableElevation>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => {
+              navigate("/manage-course/create");
+            }}
+            disableElevation
+          >
             Tạo khóa học
           </Button>
         </Stack>
-      </Grid>
-      <Grid item xs={12}>
+      </Box>
+      <Box className="grow">
         <TabPanel index={0} value={selected}>
           <Dashboard />
         </TabPanel>
-        <TabPanel index={1} value={selected}>
-          <Wrapper>Khoa hoc cua toi</Wrapper>
+        <TabPanel className="h-full" index={1} value={selected}>
+          <CourseCategory />
         </TabPanel>
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 }
 
