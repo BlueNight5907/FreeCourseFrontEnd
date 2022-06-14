@@ -16,13 +16,13 @@ body {
   overflow-x: hidden !important;
 }
 
+pre {
+  border-radius: 8px;
+}
+
 a {
   color: unset;
   text-decoration: none;
-}
-
-ul {
-  list-style-type: none;
 }
 
 .loader {

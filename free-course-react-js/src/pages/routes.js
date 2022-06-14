@@ -49,6 +49,10 @@ const Routes = () => {
           element: <CourseDashboard />,
         },
         {
+          path: "/manage-course/category",
+          element: <CourseDashboard />,
+        },
+        {
           path: "/manage-course/create",
           element: <CreateCourse />,
         },

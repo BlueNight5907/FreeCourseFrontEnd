@@ -13,9 +13,11 @@ export const lightPalette = {
   },
   puple: {
     main: "#D657DF",
+    dark: "#BC49C5",
   },
   mintygreen: {
     main: "#1EB972",
+    dark: "#149F60",
   },
   text: {
     main: "#1E2329",
@@ -83,10 +85,12 @@ export const darkPalette = {
     dark: "#F62A45",
   },
   puple: {
-    main: "#D36ADA",
+    main: "#D657DF",
+    dark: "#BC49C5",
   },
   mintygreen: {
     main: "#1EB972",
+    dark: "#149F60",
   },
   text: {
     main: "#EAECEF",

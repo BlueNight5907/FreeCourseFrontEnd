@@ -14,18 +14,26 @@ import {
 } from "@mui/material";
 import Button from "components/button/Button";
 import Transition from "components/transition/Transition";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
-const EditContentDialog = ({ open, setOpen }) => {
-  const handleClose = () => setOpen(false);
+const EditContentDialog = ({ open, setOpen, initialValue, setContent }) => {
   const theme = useTheme();
+  const [value, setValue] = useState(
+    initialValue || "<p>Nội dung khóa học !!!</p>"
+  );
   const editorRef = useRef(null);
-  const log = () => {
-    if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+  const handleClose = () => setOpen(false);
+  const handleSaveContent = () => {
+    console.log(value);
+    if (setContent) {
+      setContent(value);
     }
   };
+
+  useEffect(() => {
+    setValue(initialValue || "<p>Nội dung khóa học !!!</p>");
+  }, [initialValue]);
   return (
     <Dialog
       fullScreen
@@ -74,6 +82,10 @@ const EditContentDialog = ({ open, setOpen }) => {
             autoFocus
             disableElevation
             variant="contained"
+            onClick={() => {
+              handleClose();
+              handleSaveContent();
+            }}
           >
             Lưu
           </Button>
@@ -84,7 +96,11 @@ const EditContentDialog = ({ open, setOpen }) => {
           apiKey="jv4isigvbusa53vjr4qg9ec2lxc9heu9jc0gp08r618c4zsy"
           onInit={(evt, editor) => (editorRef.current = editor)}
           cloudChannel="6-dev"
-          initialValue="<p>This is the initial content of the editor.</p>"
+          value={value}
+          scriptLoading={{ async: true }}
+          onEditorChange={(newValue, editor) => {
+            setValue(newValue);
+          }}
           init={{
             height: "100%",
             menubar: true,
@@ -110,6 +126,7 @@ const EditContentDialog = ({ open, setOpen }) => {
               "wordcount",
               "emoticons",
             ],
+
             toolbar:
               "undo redo | blocks fontsize fontfamily | " +
               " bold italic underline strikethrough forecolor backcolor | emoticons link table |alignleft aligncenter " +

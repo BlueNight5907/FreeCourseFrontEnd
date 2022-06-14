@@ -235,52 +235,60 @@ const Dashboard = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} lg={4} xl={3}>
-            <Grid container spacing={1} width="100%">
-              <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
-                <Paper sx={{ position: "relative", pb: "100%" }} elevation={0}>
-                  <Box
-                    className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
-                    padding={1}
+            <Box>
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
+                  <Paper
+                    sx={{ position: "relative", pb: "100%" }}
+                    elevation={0}
                   >
-                    <Typography fontWeight={500}>
-                      Đánh giá của học viên
-                    </Typography>
-                    <Box flexGrow={1}>
-                      <ReactEcharts
-                        theme={
-                          theme.palette.mode === "dark" ? "dark" : "default"
-                        }
-                        option={option2}
-                        style={{ width: "100%", height: "100%" }}
-                        className="bar-chart"
-                      />
+                    <Box
+                      className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
+                      padding={1}
+                    >
+                      <Typography fontWeight={500}>
+                        Đánh giá của học viên
+                      </Typography>
+                      <Box flexGrow={1}>
+                        <ReactEcharts
+                          theme={
+                            theme.palette.mode === "dark" ? "dark" : "default"
+                          }
+                          option={option2}
+                          style={{ width: "100%", height: "100%" }}
+                          className="bar-chart"
+                        />
+                      </Box>
                     </Box>
-                  </Box>
-                </Paper>
-              </Grid>
-              <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
-                <Paper sx={{ position: "relative", pb: "100%" }} elevation={0}>
-                  <Box
-                    className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
-                    padding={1}
+                  </Paper>
+                </Grid>
+                <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
+                  <Paper
+                    sx={{ position: "relative", pb: "100%" }}
+                    elevation={0}
                   >
-                    <Typography fontWeight={500} gutterBottom>
-                      Đánh giá của học viên
-                    </Typography>
-                    <Box flexGrow={1}>
-                      <ReactEcharts
-                        theme={
-                          theme.palette.mode === "dark" ? "dark" : "default"
-                        }
-                        option={option3}
-                        style={{ width: "100%", height: "100%" }}
-                        className="bar-chart"
-                      />
+                    <Box
+                      className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
+                      padding={1}
+                    >
+                      <Typography fontWeight={500} gutterBottom>
+                        Đánh giá của học viên
+                      </Typography>
+                      <Box flexGrow={1}>
+                        <ReactEcharts
+                          theme={
+                            theme.palette.mode === "dark" ? "dark" : "default"
+                          }
+                          option={option3}
+                          style={{ width: "100%", height: "100%" }}
+                          className="bar-chart"
+                        />
+                      </Box>
                     </Box>
-                  </Box>
-                </Paper>
+                  </Paper>
+                </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Grid>
         </Grid>
       </Grid>

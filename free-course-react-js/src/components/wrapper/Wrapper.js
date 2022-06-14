@@ -47,7 +47,7 @@ const Wrapper = ({
   };
   return (
     <Paper {...others} sx={styles.paper} elevation={elevation}>
-      {title ? (
+      {title || actions ? (
         <>
           <Box className="flex flex-row items-center justify-between mb-1">
             <Typography

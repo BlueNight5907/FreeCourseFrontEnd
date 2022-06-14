@@ -13,6 +13,8 @@ import {
   useTheme,
   Typography,
   useMediaQuery,
+  Divider,
+  OutlinedInput,
 } from "@mui/material";
 import Wrapper from "components/wrapper/Wrapper";
 import {
@@ -21,13 +23,73 @@ import {
   Delete,
   EditRounded,
   Save,
+  DeleteOutline,
+  Add,
 } from "@mui/icons-material";
 import Button, { buttonBg } from "components/button/Button";
 import { scrollSetting } from "utils/classUltis";
 import { useSelector } from "react-redux";
-import EditContentDialog from "./EditContentDialog";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+const ResultBox = (props) => {
+  const [list, setList] = useState([]);
+
+  const handleDelete = (selected) => () => {
+    const newList = list.filter((_, index) => selected !== index);
+    setList(newList);
+  };
+
+  const addNew = () => {
+    setList([...list, ""]);
+  };
+
+  const onChange = (index) => (event) => {
+    list[index] = event.target.value;
+    setList([...list]);
+  };
+
+  return (
+    <>
+      <Divider className="mb-5" orientation="horizontal" />
+      <Stack className="mb-5 flex-row items-center gap-5">
+        <Typography className="font-medium">Kết quả đạt được</Typography>
+        <Button
+          onClick={addNew}
+          startIcon={<Add />}
+          disableElevation
+          variant="outlined"
+        >
+          Thêm kết quả
+        </Button>
+      </Stack>
+      <Stack gap={1}>
+        {list.map((item, index) => (
+          <Stack key={index} className="flex-row gap-2">
+            <FormControl required className="flex-grow">
+              <OutlinedInput
+                onChange={onChange(index)}
+                placeholder="Nhập kết quả đạt được"
+                fullWidth
+                value={item}
+              />
+              <FormHelperText>
+                Kết quả đạt được sau khi học khóa học
+              </FormHelperText>
+            </FormControl>
+            <Button
+              color="error"
+              onClick={handleDelete(index)}
+              className="h-[58px]"
+            >
+              <DeleteOutline />
+            </Button>
+          </Stack>
+        ))}
+      </Stack>
+    </>
+  );
+};
 
 const CourseForm = () => {
   const theme = useTheme();
@@ -42,7 +104,6 @@ const CourseForm = () => {
   ]);
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
-  const [openContentDialog, setOpenContentDialog] = useState(false);
 
   const bgRef = useRef(null);
 
@@ -85,186 +146,184 @@ const CourseForm = () => {
   }, [file]);
 
   return (
-    <>
-      <Box className="flex h-full flex-col" gap={2}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={7} xl={8}>
-            <Typography ml={0.5} gutterBottom className="font-medium">
-              Các thông tin cơ bản của khóa học
-            </Typography>
+    <Box className="flex h-full flex-col" gap={2}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={sideOpen ? 12 : 7} xl={8}>
+          <Typography ml={0.5} gutterBottom className="font-medium">
+            Các thông tin cơ bản của khóa học
+          </Typography>
+          <TextField
+            label="Tên khóa học"
+            helperText="Vd: Cấu trúc dữ liệu và giải thuật, ..."
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            label="Mô tả ngắn cho khóa học(Không bắt buộc)"
+            helperText="Tóm tắt các tính chất của khóa học"
+            multiline
+            rows={4}
+            fullWidth
+            margin="normal"
+            defaultValue=""
+          />
+          <Stack
+            className="flex-row gap-3 mt-2"
+            flexWrap={matchSm ? "nowrap" : "wrap"}
+          >
             <TextField
-              label="Tên khóa học"
-              helperText="Vd: Cấu trúc dữ liệu và giải thuật, ..."
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              label="Mô tả ngắn cho khóa học(Không bắt buộc)"
-              helperText="Tóm tắt các tính chất của khóa học"
-              multiline
-              rows={4}
-              fullWidth
-              margin="normal"
-              defaultValue=""
-            />
-            <Stack
-              className="flex-row gap-3 mt-2"
-              flexWrap={matchSm ? "nowrap" : "wrap"}
+              select
+              label="Danh mục"
+              value=""
+              sx={{ flexGrow: { xs: 1, lg: 0 } }}
+              onChange={() => {}}
+              fullWidth={!matchSm}
+              helperText="Lựa chọn danh mục cho khóa học"
             >
-              <TextField
-                id="outlined-select-currency"
-                select
-                label="Danh mục"
-                value=""
-                onChange={() => {}}
-                fullWidth={!matchSm}
-                className="flex-shrink-0"
-                helperText="Lựa chọn danh mục cho khóa học"
-              >
-                <MenuItem value="df">123</MenuItem>
-              </TextField>
-              <FormControl className="flex-grow">
-                <Paper
-                  className="flex self-start gap-3 items-center w-full"
-                  elevation={0}
-                  sx={{ border: "1px solid " + theme.palette.divider, p: 0.6 }}
-                >
-                  <Button className="flex-shrink-0" variant="outlined">
-                    Thêm Tag
-                  </Button>
-                  <Box className="h-[42px] relative flex-grow">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        gap: 0.5,
-                        listStyle: "none",
-                        p: 0.5,
-                        m: 0,
-                        position: "absolute",
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        ...scrollSetting({
-                          overflowX: "overlay",
-                          overflowY: "hidden",
-                          width: 5,
-                        }),
-                      }}
-                      component="ul"
-                    >
-                      {chipData.map((data) => {
-                        let icon;
+              <MenuItem value="df">123</MenuItem>
+            </TextField>
+            <TextField
+              sx={{ flexGrow: { xs: 1, lg: 0 } }}
+              select
+              label="Mức độ"
+              value=""
+              onChange={() => {}}
+              fullWidth={!matchSm}
+              helperText="Lựa chọn danh mục cho khóa học"
+            >
+              <MenuItem value="df">123</MenuItem>
+            </TextField>
+          </Stack>
+        </Grid>
 
-                        if (data.label === "React") {
-                          icon = <TagFaces />;
-                        }
-
-                        return (
-                          <ListItem
-                            sx={{ p: 0, width: "fit-content" }}
-                            key={data.key}
-                          >
-                            <Chip
-                              icon={icon}
-                              label={data.label}
-                              onDelete={
-                                data.label === "React"
-                                  ? undefined
-                                  : handleDelete(data)
-                              }
-                            />
-                          </ListItem>
-                        );
-                      })}
-                    </Box>
-                  </Box>
-                </Paper>
-                <FormHelperText>
-                  Thêm tag để khóa học dễ dàng được tìm thấy
-                </FormHelperText>
-              </FormControl>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={5} xl={4} minHeight={380}>
-            <Stack gap={1} width="100%" height="100%">
-              <Paper
+        <Grid
+          item
+          xs={12}
+          md={sideOpen ? 12 : 5}
+          xl={4}
+          minHeight={{ xs: 250, sm: 300, lg: 380 }}
+        >
+          <Stack gap={1} width="100%" height="100%">
+            <Paper
+              sx={{
+                width: "100%",
+                height: "100%",
+                position: "relative",
+                bgcolor: theme.palette.shadow.main,
+                backgroundImage: `url(${fileDataURL})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              <input
+                type="file"
+                hidden
+                ref={bgRef}
+                accept=".png, .jpg, .jpeg"
+                onChange={changeBgHandler}
+              />
+              <Stack
                 sx={{
-                  width: "100%",
-                  height: "100%",
-                  position: "relative",
-                  bgcolor: theme.palette.shadow.main,
-                  backgroundImage: `url(${fileDataURL})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
+                  position: "absolute",
+                  bottom: 10,
+                  left: 10,
+                  gap: 1,
+                  flexDirection: "row",
                 }}
               >
-                <input
-                  type="file"
-                  hidden
-                  ref={bgRef}
-                  accept=".png, .jpg, .jpeg"
-                  onChange={changeBgHandler}
-                />
-                <Stack
-                  sx={{
-                    position: "absolute",
-                    bottom: 10,
-                    left: 10,
-                    gap: 1,
-                    flexDirection: "row",
-                  }}
+                <Button
+                  variant="contained"
+                  onClick={() => bgRef.current.click()}
                 >
+                  Đổi ảnh nền
+                </Button>
+                {file && (
                   <Button
+                    sx={{ minWidth: 40 }}
                     variant="contained"
-                    onClick={() => bgRef.current.click()}
+                    color="background"
+                    onClick={() => setFile(null)}
                   >
-                    Đổi ảnh nền
+                    <Delete color="error" />
                   </Button>
-                  {file && (
-                    <Button
-                      sx={{ minWidth: 40 }}
-                      variant="contained"
-                      color="background"
-                      onClick={() => setFile(null)}
-                    >
-                      <Delete color="error" />
-                    </Button>
-                  )}
-                </Stack>
-              </Paper>
-              <Typography ml={1}>Background khóa học</Typography>
-            </Stack>
-          </Grid>
+                )}
+              </Stack>
+            </Paper>
+            <Typography ml={1}>Background khóa học</Typography>
+          </Stack>
         </Grid>
-        <Wrapper
-          sx={{
-            border: "1px solid " + theme.palette.divider,
-            minHeight: 400,
-            flexGrow: 1,
-          }}
-          title="Nội dung khóa học"
-          titleVariant="body1"
-          actions={
-            <Button
-              startIcon={<EditRounded />}
-              specialBg={buttonBg.red}
-              variant="contained"
-              onClick={() => setOpenContentDialog(true)}
+        <Grid item xs={12}>
+          <FormControl className="flex-grow w-full">
+            <Paper
+              className="flex self-start gap-3 items-center w-full"
+              elevation={0}
+              sx={{ border: "1px solid " + theme.palette.divider, p: 0.6 }}
             >
-              Thêm / Chỉnh sửa
-            </Button>
-          }
-        ></Wrapper>
-      </Box>
-      <EditContentDialog
-        open={openContentDialog}
-        setOpen={setOpenContentDialog}
-      />
-    </>
+              <Button className="flex-shrink-0" variant="outlined">
+                Thêm Tag
+              </Button>
+              <Box className="h-[42px]  relative flex-grow">
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    gap: 0.5,
+                    listStyle: "none",
+                    p: 0.5,
+                    m: 0,
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    ...scrollSetting({
+                      overflowX: "overlay",
+                      overflowY: "hidden",
+                      width: 5,
+                    }),
+                  }}
+                  component="ul"
+                >
+                  {chipData.map((data) => {
+                    let icon;
+
+                    if (data.label === "React") {
+                      icon = <TagFaces />;
+                    }
+
+                    return (
+                      <ListItem
+                        sx={{ p: 0, width: "fit-content" }}
+                        key={data.key}
+                      >
+                        <Chip
+                          icon={icon}
+                          label={data.label}
+                          onDelete={
+                            data.label === "React"
+                              ? undefined
+                              : handleDelete(data)
+                          }
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </Box>
+              </Box>
+            </Paper>
+            <FormHelperText>
+              Thêm tag để khóa học dễ dàng được tìm thấy
+            </FormHelperText>
+          </FormControl>
+        </Grid>
+
+        <Grid item xs={12}>
+          <ResultBox />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
