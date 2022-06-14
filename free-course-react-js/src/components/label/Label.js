@@ -15,17 +15,17 @@ const LabelWrapper = styled('span')(
       
       &.MuiLabel {
         &-primary {
-          background-color: ${theme.palette.foreground.main};
-          color: ${theme.palette.foreground.main}
+          background-color: ${"#0075EB"};
+          color: ${"#fff"}
         }
         &-black {
-          background-color: ${theme.palette.foreground.main};
-          color: ${theme.palette.text.primary};
+          background-color: ${"#0075EB"};
+          color: ${"#fff"}
         }
         
         &-secondary {
-          background-color: ${theme.palette.foreground.main};
-          color: ${theme.palette.text.primary}
+          background-color: ${"#0075EB"};
+          color: ${"#fff"}
         }
         
         &-success {
@@ -53,12 +53,12 @@ const LabelWrapper = styled('span')(
 
 const Label = ({
   className,
-  color = 'secondary',
+  color = 'primary',
   children,
   ...rest
 }) => {
   return (
-    <LabelWrapper className={'MuiLabel-' + color} {...rest}>
+    <LabelWrapper className={'MuiLabel-primary'} {...rest}>
       {children}
     </LabelWrapper>
   );

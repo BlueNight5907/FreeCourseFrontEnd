@@ -19,18 +19,21 @@ import {
     ListItemAvatar,
     ListItemText,
     lighten,
-    styled
+    styled,
+    Stack,
+    useTheme
 } from '@mui/material';
 import { formatDistance, subMinutes, subHours } from 'date-fns';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import Label from 'components/label/Label';
-
+import HomeIcon from '@mui/icons-material/Home';
+import FeedIcon from '@mui/icons-material/Feed';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import AlarmTwoToneIcon from '@mui/icons-material/AlarmTwoTone';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Fade from '@mui/material/Fade';
 import MiniSearch from 'components/search/MiniSearch';
-
+import Label from 'components/label/Label';
 import avt from "../../../assets/avatar/u29.jfif";
 
 const AvatarSuccess = styled(Avatar)(
@@ -55,7 +58,7 @@ const AvatarSuccess = styled(Avatar)(
 
 const RootWrapper = styled(Box)(
     ({ theme }) => `
-        padding: ${theme.spacing(1.5)};
+        padding: ${theme.spacing(1.2)};
   `
 );
 
@@ -63,6 +66,7 @@ const ListItemWrapper = styled(ListItemButton)(
     ({ theme }) => `
         &.MuiButtonBase-root {
             margin: ${theme.spacing(0.5)} 0;
+            border-radius: 5px;
         }
   `
 );
@@ -174,8 +178,42 @@ const Drawer = () => {
     const handleChooseChat = (value) => {
         setChat(value);
     }
+    const theme = useTheme();
+    const navigate = useNavigate();
     return (
         <RootWrapper>
+            <Stack
+                direction="row"
+                justifyContent="flex-end"
+                sx={{ mb: 1 }}>
+                <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 400 }}
+                    title="Home"
+                >
+                    <IconButton
+                        aria-label="Home"
+                        color="primary"
+                        onClick={() => navigate("/")}>
+                        <HomeIcon />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 400 }}
+                    title="Newsfeed"
+                >
+                    <IconButton
+                        aria-label="Newsfeed"
+                        color="primary"
+                        onClick={() => navigate("/")}
+                    >
+                        <FeedIcon />
+                    </IconButton>
+                </Tooltip>
+
+            </Stack>
+
             <Box display="flex" alignItems="flex-start">
                 <Avatar alt={user.name} src={user.avatar} />
                 <Box
@@ -203,6 +241,7 @@ const Drawer = () => {
                             }}
                             size="small"
                             color="primary"
+                            title="Đang phát triển"
                         >
                             <SettingsTwoToneIcon fontSize="small" />
                         </IconButton>
@@ -228,7 +267,6 @@ const Drawer = () => {
                     mt: 2,
                 }}
                 variant="h3"
-                align='center'
             >
                 Chats
             </Typography>
@@ -266,12 +304,13 @@ const Drawer = () => {
                                         mr: 1
                                     }}
                                     primaryTypographyProps={{
-                                        color: 'textPrimary',
+                                        fontWeight: 500,
+                                        color: theme.palette.text.main,
                                         variant: 'subtitle1',
                                         noWrap: true
                                     }}
                                     secondaryTypographyProps={{
-                                        color: 'textSecondary',
+                                        color: theme.palette.text2.main,
                                         variant: 'subtitle2',
                                         noWrap: true
                                     }}
@@ -316,7 +355,7 @@ const Drawer = () => {
                                             secondary={item.last}
                                         />
                                         {item.unread && (
-                                            <Label color="black">
+                                            <Label color="primary">
                                                 <b>{item.unread}</b>
                                             </Label>
                                         )}

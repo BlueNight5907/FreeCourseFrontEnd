@@ -1,14 +1,9 @@
 import { Box, Avatar, Typography, Card, styled, Divider } from '@mui/material';
 
 import {
-    formatDistance,
     format,
-    subDays,
-    subHours,
-    subMinutes,
-    formatDistanceToNow
+    subDays
 } from 'date-fns';
-import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 
 const DividerWrapper = styled(Divider)(
     ({ theme }) => `
@@ -24,7 +19,7 @@ const DividerWrapper = styled(Divider)(
 
 const CardWrapperPrimary = styled(Card)(
     ({ theme }) => `
-      background: ${/*theme.palette.primary*/ "#0075EB"};
+      background: ${theme.palette.primary.main};
       color: ${theme.palette.primary.contrastText};
       padding: ${theme.spacing(1.2)};
       border-radius: 15px;
@@ -37,8 +32,8 @@ const CardWrapperPrimary = styled(Card)(
 
 const CardWrapperSecondary = styled(Card)(
     ({ theme }) => `
-      background: ${"#DFDFDF"};
-      color: ${"black"};
+      background: ${theme.palette.subbackground.main};
+      color: ${theme.palette.text.main};
       padding: ${theme.spacing(1.2)};
       border-radius: 15px;
       border-top-left-radius: 15px;
@@ -50,7 +45,6 @@ const CardWrapperSecondary = styled(Card)(
 
 const BubbleChat = ({ data, ...props }) => {
     const { userID, username, avatar, message, time, owned = true } = data;
-    console.log(data);
     return (
         <Box
             display="flex"
@@ -59,7 +53,6 @@ const BubbleChat = ({ data, ...props }) => {
             py={1}
             key={userID}
         >
-
             {owned ? (
                 <>
                     <CardWrapperPrimary

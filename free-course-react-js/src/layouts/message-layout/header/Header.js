@@ -4,7 +4,7 @@ import {
     IconButton,
     Tooltip,
     Avatar,
-    Accordion,
+    Accordion as MuiAccordion,
     AccordionSummary,
     AccordionDetails,
     Drawer,
@@ -29,8 +29,20 @@ import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
 import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 import { formatDistance, subMinutes } from 'date-fns';
+import SmallCard from 'components/user-card/SmallCard';
+
+const Accordion = styled((props) => (
+    <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+    borderRadius: 1,
+    backgroundColor: theme.palette.foreground.main,
+    "&:before": {
+        display: "none",
+    },
+}));
 
 const RootWrapper = styled(Box)(
     ({ theme }) => `
@@ -45,17 +57,20 @@ const RootWrapper = styled(Box)(
 const ListItemIconWrapper = styled(ListItemIcon)(
     ({ theme }) => `
         min-width: 36px;
-        color: ${theme.palette.foreground.main};
+        color: ${theme.palette.primary.light};
 `
 );
 
 const AccordionSummaryWrapper = styled(AccordionSummary)(
     ({ theme }) => `
         &.Mui-expanded {
-          min-height: 48px;
+          min-height: 40px;
         }
         .MuiAccordionSummary-content.Mui-expanded {
-          margin: 12px 0;
+          margin: 10px 0;
+        }
+        .MuiSvgIcon-root {
+            transition: ${theme.transitions.create(['color'])};
         }
         &.MuiButtonBase-root {
           margin-bottom: ${theme.spacing(0.5)};
@@ -64,6 +79,11 @@ const AccordionSummaryWrapper = styled(AccordionSummary)(
           }
           &.Mui-expanded,
           &:hover {
+            border-radius: 10px;
+            background: ${theme.palette.subbackground.main};
+            .MuiSvgIcon-root {
+                color: ${theme.palette.primary.main};
+              }
           }
         }
 `
@@ -179,7 +199,7 @@ const Header = () => {
                         onChange={handleChange('1')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
-                            <Typography variant="h5">Customize Chat</Typography>
+                            <Typography variant="h6">Tùy chỉnh</Typography>
                         </AccordionSummaryWrapper>
                         <AccordionDetails
                             sx={{
@@ -193,7 +213,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Search in Conversation"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                                 <ListItem button>
@@ -202,7 +222,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Change Theme Styling"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                                 <ListItem button>
@@ -211,7 +231,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Choose Default Emoji"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                             </List>
@@ -222,7 +242,44 @@ const Header = () => {
                         onChange={handleChange('2')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
-                            <Typography variant="h5">Privacy & Support</Typography>
+                            <Typography variant="h6">Thành viên nhóm</Typography>
+                        </AccordionSummaryWrapper>
+                        <AccordionDetails
+                            sx={{
+                                p: 0
+                            }}
+                        >
+                            <List component="nav">
+                                <ListItem secondaryAction={
+                                    <IconButton edge="end" aria-label="more">
+                                        <MoreHorizIcon />
+                                    </IconButton>
+                                }>
+                                    <SmallCard name="Test" note="Thành viên" avatar="A" />
+                                </ListItem>
+                                <ListItem secondaryAction={
+                                    <IconButton edge="end" aria-label="more">
+                                        <MoreHorizIcon />
+                                    </IconButton>
+                                }>
+                                    <SmallCard name="Test" note="Thành viên" avatar="A" />
+                                </ListItem>
+                                <ListItem secondaryAction={
+                                    <IconButton edge="end" aria-label="more">
+                                        <MoreHorizIcon />
+                                    </IconButton>
+                                }>
+                                    <SmallCard name="Test" note="Thành viên" avatar="A" />
+                                </ListItem>
+                            </List>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion
+                        expanded={expanded === '3'}
+                        onChange={handleChange('3')}
+                    >
+                        <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
+                            <Typography variant="h6">Quyền riêng tư và hỗ trợ</Typography>
                         </AccordionSummaryWrapper>
                         <AccordionDetails
                             sx={{
@@ -236,7 +293,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Turn off notifications"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                                 <ListItem button>
@@ -245,7 +302,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Ignore all messages"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                                 <ListItem button>
@@ -254,7 +311,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Block user"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
                                 </ListItem>
                                 <ListItem button>
@@ -263,7 +320,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="Something's Wrong"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                         secondary="Report the conversation and provide feedback"
                                         secondaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
@@ -272,11 +329,11 @@ const Header = () => {
                         </AccordionDetails>
                     </Accordion>
                     <Accordion
-                        expanded={expanded === '3'}
-                        onChange={handleChange('3')}
+                        expanded={expanded === '4'}
+                        onChange={handleChange('4')}
                     >
                         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
-                            <Typography variant="h5">Shared Files</Typography>
+                            <Typography variant="h6">File phương tiện, file và liên</Typography>
                         </AccordionSummaryWrapper>
                         <AccordionDetails
                             sx={{
@@ -290,7 +347,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="HolidayPictures.zip"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                         secondary="You opened in the past year"
                                         secondaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
@@ -301,7 +358,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="2021Screenshot.jpg"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                         secondary="You edited this file yesterday"
                                         secondaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
@@ -312,7 +369,7 @@ const Header = () => {
                                     </ListItemIconWrapper>
                                     <ListItemText
                                         primary="PresentationDeck.pdf"
-                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        primaryTypographyProps={{ variant: 'subtitle1' }}
                                         secondary="Never opened"
                                         secondaryTypographyProps={{ variant: 'subtitle1' }}
                                     />
