@@ -1,4 +1,5 @@
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { modules } from "mock-data/module.mock";
 import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GroupList from "../../../components/module/GroupList";
@@ -44,10 +45,9 @@ const Drawer = () => {
         ref={containerRef}
       >
         <Stack gap={1}>
-          <GroupList />
-          <GroupList />
-          <GroupList />
-          <GroupList />
+          {modules.map((item, index) => (
+            <GroupList data={item} key={index} />
+          ))}
         </Stack>
       </Box>
     </MuiDrawer>

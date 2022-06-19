@@ -1,3 +1,5 @@
+import { LOCAL_STORAGE } from "constants/storage-constants";
+import { getItem } from "utils/storeData";
 import {
   LOGIN_REQUEST,
   LOGIN_ERROR,
@@ -8,8 +10,9 @@ import {
 const initState = {
   user: {},
   isLogin: false,
+  accessToken: getItem(LOCAL_STORAGE, "token"),
   accountType: null,
-  refreshToken: null,
+  refreshToken: getItem(LOCAL_STORAGE, "refreshToken"),
   error: null,
   loadingLogin: false,
   loadingRegister: false,

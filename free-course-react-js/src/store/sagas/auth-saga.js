@@ -1,8 +1,17 @@
-import { take, call, put, fork, cancel, cancelled } from "redux-saga/effects";
+import {
+  take,
+  call,
+  put,
+  fork,
+  cancel,
+  cancelled,
+  takeLatest,
+} from "redux-saga/effects";
 import { clearItem, storeItem } from "../../utils/storeData";
 import { LOCAL_STORAGE } from "../../constants/storage-constants";
 import * as authAPI from "../../services/api/authAPI";
 import {
+  AUTHENTICATION_REQUEST,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -24,6 +33,8 @@ function* authorize(username, password) {
   }
 }
 
+function* authorizeWithToken(token) {}
+
 function* loginFlow() {
   while (true) {
     const { username, password } = yield take(LOGIN_REQUEST);
@@ -35,5 +46,12 @@ function* loginFlow() {
   }
 }
 
-const authSagaList = [fork(loginFlow)];
+function* authenFlow() {
+  while (true) {
+    const { token } = yield takeLatest(AUTHENTICATION_REQUEST);
+    yield call(authorizeWithToken, token);
+  }
+}
+
+const authSagaList = [fork(loginFlow), fork(authenFlow)];
 export default authSagaList;

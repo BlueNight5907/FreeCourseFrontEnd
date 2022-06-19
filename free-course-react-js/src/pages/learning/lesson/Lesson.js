@@ -20,10 +20,9 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../components/button/Button";
+import Button, { buttonBg } from "../../../components/button/Button";
 import { scrollSetting } from "../../../utils/classUltis";
 import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
-import { buttonBg } from "./../../../components/button/Button";
 import Comment from "./../../../components/comment/Comment";
 
 const Lesson = () => {
