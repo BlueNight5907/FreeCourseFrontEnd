@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MiniSearch from "../../../components/search/MiniSearch";
 import MyCourseDropdown from "../../../containers/dropdowns/my-courses-dropdown/MyCoursesDropdown";
 import NotificationDropDown from "../../../containers/dropdowns/notification-dropdown/NotificationDropDown";
@@ -26,17 +26,22 @@ import {
   TOGGLE_HOME_DRAWER,
 } from "../../../store/types/page-types/setting-types";
 import Button from "../../../components/button/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Dialog from "components/dialog/dialog";
 const Header = () => {
   const dispatch = useDispatch();
+  const [force, setForceUpdate] = useState(1);
   const { goBack, headerTitle } = useSelector((state) => state.setting);
   const [openSearch, setOpenSearch] = useState(false);
   const theme = useTheme();
+
+  const { user } = useSelector((state) => state.auth);
+
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
   const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
   const navigate = useNavigate();
+
   const styles = {
     header: {
       backgroundColor: theme.palette.foreground.main,
@@ -52,6 +57,11 @@ const Header = () => {
       mr: 2,
       color: theme.palette.primary.main,
       borderRadius: 1,
+    },
+    span: {
+      fontSize: 16,
+      fontWeight: 500,
+      color: (theme) => theme.palette.text.main,
     },
   };
 

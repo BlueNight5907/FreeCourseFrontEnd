@@ -4,13 +4,12 @@ import Wrapper from "components/wrapper/Wrapper";
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { DeleteOutline, Edit } from "@mui/icons-material";
+import { Visibility, Edit } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
 import Button from "components/button/Button";
 import DeleteAction from "../table-cell/delete-action";
 
 const CourseCategory = () => {
-  const [open, setOpen] = useState(false);
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -47,8 +46,20 @@ const CourseCategory = () => {
       width: 300,
       renderCell: (params) => (
         <Box>
-          <Link to={{ pathname: "/lists/" + params.row.id, list: params.row }}>
-            <Button variant="contained" startIcon={<Edit />} />
+          <Link
+            to={{
+              pathname: "/manage-course/detail-course/" + params.row.id,
+              list: params.row,
+            }}
+          >
+            <Button variant="contained" startIcon={<Visibility />} />
+          </Link>
+          <Link to={{ pathname: "/manage-course/edit/" + params.row.id }}>
+            <Button
+              style={{ marginLeft: 16 }}
+              variant="contained"
+              startIcon={<Edit />}
+            />
           </Link>
           <DeleteAction params={params} />
         </Box>

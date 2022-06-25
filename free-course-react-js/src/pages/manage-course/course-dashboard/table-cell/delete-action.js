@@ -20,6 +20,8 @@ const DeleteAction = ({ params }) => {
         title={`Xóa khóa học`}
         setOpen={setOpen}
         deleted
+        onAccept
+        onRefuse
       >
         Bạn có chắc chắn muốn xóa khóa học {params.row.lastName} này không
       </ConfirmDialog>

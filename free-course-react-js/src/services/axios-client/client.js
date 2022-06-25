@@ -8,13 +8,10 @@ const axiosClient = axios.create({
 // Add a request interceptor
 axiosClient.interceptors.request.use(
   function (config) {
-    const user = localStorage.getItem("user");
+    //If local storage has toke, then attach it into request 
+    const accessToken = localStorage.getItem("token");
+    config.headers.common.Authorization = `Bearer ${accessToken}`;
 
-    //If local storage has toke, then attach it into request
-    if (user) {
-      const { accessToken } = JSON.parse(user);
-      config.headers.common.Authorization = `Bearer ${accessToken}`;
-    }
 
     //Using the form-data
     if (config.data instanceof FormData) {
@@ -45,7 +42,7 @@ axiosClient.interceptors.response.use(
 
         try {
           const rs = await axiosClient.post("api/auth/refresh-token", {
-            refreshToken: localStorage.getItem("refresh-token"),
+            refreshToken: localStorage.getItem("refreshToken"),
           });
 
           const { success, accessToken } = rs.data;
