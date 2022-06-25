@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -19,10 +19,19 @@ import googleIcon from "assets/icons/google.svg";
 import githubIcon from "assets/icons/github.svg";
 import loginBg from "assets/background/login.jpg";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGIN_REQUEST } from "store/types/data-types/auth-types";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const theme = useTheme();
+  const { isLogin, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const styles = {
     textField: {
       "& .MuiInput-root": {
@@ -35,9 +44,22 @@ function Login() {
     },
   };
 
-  const login = () => {
-    navigate("/");
+  const login = async () => {
+    dispatch({ type: LOGIN_REQUEST, email, password });
   };
+
+  useEffect(() => {
+    if (isLogin) {
+      console.log("tc");
+      navigate("/");
+    }
+  }, [isLogin, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
 
   return (
     <Grid container className="items-center justify-center flex-1">
@@ -115,12 +137,14 @@ function Login() {
                       sx={styles.textField}
                       label="Email/Tên tài khoản"
                       variant="standard"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                       sx={styles.textField}
                       label="Mật khẩu"
                       variant="standard"
                       type="password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <Stack className="flex-row gap-3 items-center flex-wrap justify-between">
                       <FormControlLabel

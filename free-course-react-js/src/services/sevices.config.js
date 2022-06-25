@@ -1,4 +1,6 @@
 const apiPath = {
-  login: "/login",
+  login: "/auth/signin",
+  getMyAccount: "/account/me",
 };
+
 export default apiPath;

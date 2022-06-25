@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AUTHENTICATION_REQUEST } from "store/types/data-types/auth-types";
+import { useDispatch } from "react-redux";
 
-function Protected({ teacherOnly, redirectPath = "/login" }) {
-  const { accessToken, refreshToken } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+function Protected({ teacherOnly, redirectPath = "/login", children }) {
+  const { user, accessToken } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  if (!accessToken) {
-    navigate("/login");
-  }
+  useEffect(() => {
+    if (!user) {
+      dispatch({ type: AUTHENTICATION_REQUEST });
+    }
+  }, [user, accessToken, dispatch]);
 
-  useEffect(() => {}, []);
-
-  return <Outlet />;
+  return accessToken ? children : <Navigate to={redirectPath} />;
 }
 export default Protected;

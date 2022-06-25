@@ -8,14 +8,14 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import DropdownItem from "../../../components/dropdown/DropdownItem";
 import DropdownMenu from "../../../components/dropdown/DropdownMenu";
 import DropdownToggle from "../../../components/dropdown/DropdownToggle";
 
 import userAvatar from "../../../assets/avatar/u38.jfif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AddRounded,
   LogoutRounded,
@@ -25,6 +25,7 @@ import {
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { TOGGLE_PAGE_MODE } from "../../../store/types/page-types/setting-types";
+import { LOGOUT } from "store/types/data-types/auth-types";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -76,10 +77,20 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 function UserDropdown(props) {
   const { children, sx } = props;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth);
+
   const { mode } = useSelector((state) => state.setting);
+
   const toggleDarkMode = () => {
     dispatch({ type: TOGGLE_PAGE_MODE });
   };
+
+  const logout = (e) => {
+    e.preventDefault();
+    dispatch({ type: LOGOUT });
+  };
+
   return (
     <Dropdown>
       <DropdownToggle
@@ -273,6 +284,7 @@ function UserDropdown(props) {
             component={Link}
             className="user-dropdown flex-row items-center gap-3 cursor-pointer  flex"
             to="./"
+            onClick={logout}
           >
             <Avatar
               sx={{
