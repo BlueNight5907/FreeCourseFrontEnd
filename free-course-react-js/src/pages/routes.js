@@ -18,7 +18,9 @@ import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 import MessageLayout from "layouts/message-layout/MessageLayout";
 import MessageContent from "./message/Message";
 import CreateCourse from "./manage-course/create-course/CreateCourse";
-
+import Community from "./community/Community";
+import Post from "./community/post/Post";
+import PostCreate from "./community/post/PostCreate";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -58,6 +60,18 @@ const Routes = () => {
         {
           path: "/manage-course/create",
           element: <CreateCourse />,
+        },
+        {
+          path: "/community",
+          element: <Community />,
+        },
+        {
+          path: "community/post/create",
+          element: <PostCreate />,
+        },
+        {
+          path: "community/post/:id",
+          element: <Post />,
         },
       ],
     },

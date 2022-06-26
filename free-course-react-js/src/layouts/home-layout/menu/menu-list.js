@@ -57,18 +57,18 @@ const mainMenuList = [
   {
     name: "Tạo bài viết",
     icon: AddRounded,
-    href: "/post/create",
+    href: "/community/post/create",
   },
 
   {
-    name: "Newfeeds",
+    name: "Cộng đồng",
     icon: PublicRounded,
-    href: "/newfeeds",
+    href: "/community",
   },
   {
     name: "Nhắn tin",
     icon: ChatBubbleOutlineRounded,
-    href: "/groups",
+    href: "/message",
     badge: "15",
   },
   {
