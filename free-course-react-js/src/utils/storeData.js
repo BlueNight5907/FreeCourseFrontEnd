@@ -1,12 +1,16 @@
 import { SESSION_STORAGE } from "../constants/storage-constants";
 
 export const storeItem = (storeType, key, value) => {
+  let data = value;
+  if (typeof data === "object") {
+    data = JSON.stringify(data);
+  }
   switch (storeType) {
     case SESSION_STORAGE:
-      sessionStorage.setItem(key, JSON.stringify(value));
+      sessionStorage.setItem(key, data);
       break;
     default:
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, data);
   }
 };
 
@@ -29,5 +33,9 @@ export const getItem = (storeType, key) => {
     default:
       result = localStorage.getItem(key);
   }
-  return result;
+  try {
+    return JSON.parse(result);
+  } catch (error) {
+    return result;
+  }
 };

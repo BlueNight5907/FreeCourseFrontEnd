@@ -7,7 +7,7 @@ export const login = async (email, password) => {
   const data = await request(POST, apiPath.login, { body });
   return {
     user: data.user,
-    token: data.accessToken,
+    accessToken: data.accessToken,
     refreshToken: data.refreshToken,
   };
 };

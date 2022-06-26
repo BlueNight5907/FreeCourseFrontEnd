@@ -33,6 +33,8 @@ const authReducer = (state = initState, action) => {
         ...state,
         isLogin: true,
         user: payload?.user,
+        accessToken: payload.accessToken || state.accessToken,
+        refreshToken: payload.refreshToken || state.refreshToken,
         loadingLogin: false,
       };
     case LOGIN_ERROR:
