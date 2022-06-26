@@ -52,7 +52,7 @@ const Routes = () => {
           element: <MyCourses />,
         },
         {
-          path: "/category",
+          path: "/courses/:category",
           element: <Category />,
         },
         {

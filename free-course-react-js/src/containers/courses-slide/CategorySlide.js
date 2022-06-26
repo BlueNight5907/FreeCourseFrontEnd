@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
 import Tag from "../../components/tag/Tag";
@@ -9,9 +9,17 @@ import {
   ArrowForwardIosRounded,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { GET_CATEGORIES_REQUEST } from "store/types/data-types/category-types";
 
 function CategorySlide(props) {
-  const { href, title } = props;
+  const { href = "/courses", title } = props;
+  const { categories } = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: GET_CATEGORIES_REQUEST });
+  }, [dispatch]);
 
   const style = {
     "& .swiper": {
@@ -39,7 +47,7 @@ function CategorySlide(props) {
         </Typography>
         <Typography
           component={Link}
-          to={href || "./"}
+          to={href + "/all"}
           sx={{
             "&:hover": {
               textDecoration: "underline",
@@ -67,33 +75,11 @@ function CategorySlide(props) {
           },
         }}
       >
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Tag>ABC</Tag>
-        </SwiperSlide>
+        {categories.map((item, index) => (
+          <SwiperSlide key={index}>
+            <Tag href={href + "/" + item.urlPath}>{item.name}</Tag>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </Box>
   );

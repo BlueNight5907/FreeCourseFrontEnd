@@ -16,7 +16,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  GET_CATEGORIES_REQUEST,
+  GET_TAGS_REQUEST,
+} from "store/types/data-types/category-types";
 import Button from "../../../components/button/Button";
 
 const FilterSection = (props) => {
@@ -94,6 +99,14 @@ const Filter = (props) => {
     rate: [],
   });
 
+  const { categories, tags } = useSelector((state) => state.category);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: GET_CATEGORIES_REQUEST });
+    dispatch({ type: GET_TAGS_REQUEST });
+  }, [dispatch]);
+
   const handleChange = (type) => (name, data) => {
     if (type === "radio") {
       filterParams[name] = data;
@@ -128,40 +141,23 @@ const Filter = (props) => {
             defaultOpen
             value={filterParams.category}
             data={[
-              {
-                value: "abc",
-                name: "Lap trinh di dong",
-              },
-              {
-                value: "xyz",
-                name: "Lap trinh web",
-              },
-              {
-                value: "zxc",
-                name: "Lap trinh python",
-              },
+              { value: "all", name: "Toàn bộ" },
+              ...categories.map((item) => ({
+                value: item.urlPath,
+                name: item.name,
+              })),
             ]}
           />
           <FilterSection
-            title="Danh mục khóa học"
+            title="Tag"
             type="checkbox"
             name="rate"
             handleChange={handleChange("checkbox")}
             value={filterParams.rate}
-            data={[
-              {
-                value: "abc",
-                name: "Lap trinh di dong",
-              },
-              {
-                value: "xyz",
-                name: "Lap trinh web",
-              },
-              {
-                value: "zxc",
-                name: "Lap trinh python",
-              },
-            ]}
+            data={tags.map((item) => ({
+              value: item._id,
+              name: item.name,
+            }))}
           />
         </Paper>
       ) : (

@@ -15,6 +15,6 @@ export const login = async (email, password) => {
 export const getMyAccount = async (token) => {
   const data = await request(GET, apiPath.getMyAccount);
   return {
-    user: data.user,
+    user: data,
   };
 };

@@ -32,7 +32,7 @@ const authReducer = (state = initState, action) => {
       return {
         ...state,
         isLogin: true,
-        user: payload?.user,
+        user: payload?.user || state.user,
         accessToken: payload.accessToken || state.accessToken,
         refreshToken: payload.refreshToken || state.refreshToken,
         loadingLogin: false,

@@ -2,13 +2,11 @@ import {
   Avatar,
   Box,
   Divider,
-  FormControl,
-  Link as MuiLink,
   styled,
   Switch,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import DropdownItem from "../../../components/dropdown/DropdownItem";
 import DropdownMenu from "../../../components/dropdown/DropdownMenu";
@@ -26,6 +24,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { TOGGLE_PAGE_MODE } from "../../../store/types/page-types/setting-types";
 import { LOGOUT } from "store/types/data-types/auth-types";
+import { accountType } from "constants/auth-constants";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -75,10 +74,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function UserDropdown(props) {
-  const { children, sx } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const [userInformation, setUserInformation] = useState({});
+
+  useEffect(() => {
+    if (user?.userInformation) {
+      setUserInformation(user.userInformation);
+    }
+  }, [user]);
 
   const { mode } = useSelector((state) => state.setting);
 
@@ -101,7 +106,7 @@ function UserDropdown(props) {
               onClick={toggleDropdown}
             >
               <Avatar
-                src={userAvatar}
+                src={userInformation.avatar}
                 sx={{
                   height: 45,
                   width: 45,
@@ -115,7 +120,7 @@ function UserDropdown(props) {
                     color: (theme) => theme.palette.text.main,
                   }}
                 >
-                  Nguyen Van Huy
+                  {userInformation.fullName}
                 </Typography>
                 <Typography
                   sx={{
@@ -123,7 +128,7 @@ function UserDropdown(props) {
                     color: (theme) => theme.palette.text2.main,
                   }}
                 >
-                  Sinh viên
+                  {accountType[user?.type?.name] || "Sinh viên"}
                 </Typography>
               </Box>
             </div>
@@ -145,7 +150,7 @@ function UserDropdown(props) {
             to="./"
           >
             <Avatar
-              src={userAvatar}
+              src={userInformation.avatar}
               sx={{
                 height: 50,
                 width: 50,
@@ -159,7 +164,7 @@ function UserDropdown(props) {
                   color: (theme) => theme.palette.text.main,
                 }}
               >
-                Nguyen Van Huy
+                {userInformation.fullName}
               </Typography>
               <Typography
                 sx={{
@@ -167,7 +172,7 @@ function UserDropdown(props) {
                   color: (theme) => theme.palette.text2.main,
                 }}
               >
-                Sinh viên
+                {accountType[user?.type?.name] || "Sinh viên"}
               </Typography>
             </Box>
           </Box>

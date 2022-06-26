@@ -30,12 +30,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Dialog from "components/dialog/dialog";
 const Header = () => {
   const dispatch = useDispatch();
-  const [force, setForceUpdate] = useState(1);
   const { goBack, headerTitle } = useSelector((state) => state.setting);
   const [openSearch, setOpenSearch] = useState(false);
   const theme = useTheme();
-
-  const { user } = useSelector((state) => state.auth);
 
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -155,9 +152,7 @@ const Header = () => {
         }}
       >
         <Container>
-          <Paper sx={{ padding: 1 }} elevation={0}>
-            Hello
-          </Paper>
+          <Paper sx={{ padding: 1 }} elevation={0}></Paper>
         </Container>
       </Dialog>
     </>
