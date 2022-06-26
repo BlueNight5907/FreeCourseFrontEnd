@@ -11,6 +11,7 @@ import "./app.scss";
 import theme from "./theme";
 import Routes from "./pages/routes";
 import PageLoading from "./containers/loading/PageLoading";
+import Protected from "guards/Protected";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,

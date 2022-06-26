@@ -1,15 +1,19 @@
+import { LOCAL_STORAGE } from "constants/storage-constants";
+import { getItem } from "utils/storeData";
 import {
   LOGIN_REQUEST,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
   RESET_AUTH_PENDING,
+  LOGOUT,
 } from "../../types/data-types/auth-types";
 
 const initState = {
-  user: {},
+  user: null,
   isLogin: false,
+  accessToken: getItem(LOCAL_STORAGE, "token"),
   accountType: null,
-  refreshToken: null,
+  refreshToken: getItem(LOCAL_STORAGE, "refreshToken"),
   error: null,
   loadingLogin: false,
   loadingRegister: false,
@@ -25,7 +29,6 @@ const authReducer = (state = initState, action) => {
       };
 
     case LOGIN_SUCCESS:
-      console.log(action);
       return {
         ...state,
         isLogin: true,
@@ -34,7 +37,7 @@ const authReducer = (state = initState, action) => {
       };
     case LOGIN_ERROR:
       return {
-        user: {},
+        user: null,
         isLogin: false,
         accountType: null,
         refreshToken: null,
@@ -47,6 +50,16 @@ const authReducer = (state = initState, action) => {
         ...state,
         loadingLogin: false,
         loadingRegister: false,
+      };
+    case LOGOUT:
+      return {
+        user: null,
+        isLogin: false,
+        accountType: null,
+        refreshToken: null,
+        loadingLogin: false,
+        loadingRegister: false,
+        error: null,
       };
     default:
       return state;

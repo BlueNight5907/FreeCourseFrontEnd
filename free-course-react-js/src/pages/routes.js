@@ -21,13 +21,19 @@ import CreateCourse from "./manage-course/create-course/CreateCourse";
 import Community from "./community/Community";
 import Post from "./community/post/Post";
 import PostCreate from "./community/post/PostCreate";
+import DetailCourse from "./manage-course/detail-course/DetailCourse";
+import Protected from "guards/Protected";
 
 const Routes = () => {
   const routes = useRoutes([
     { path: "/login", element: <Login /> },
     {
       path: "/",
-      element: <HomeLayout />,
+      element: (
+        <Protected>
+          <HomeLayout />
+        </Protected>
+      ),
       children: [
         {
           index: true,
@@ -56,6 +62,14 @@ const Routes = () => {
         {
           path: "/manage-course/category",
           element: <CourseDashboard />,
+        },
+        {
+          path: "/manage-course/detail-course/:id",
+          element: <DetailCourse />,
+        },
+        {
+          path: "/manage-course/detail-course/:id/student",
+          element: <DetailCourse />,
         },
         {
           path: "/manage-course/create",

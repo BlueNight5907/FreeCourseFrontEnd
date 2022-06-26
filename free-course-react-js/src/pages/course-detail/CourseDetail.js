@@ -9,6 +9,7 @@ import GroupList from "../../components/module/GroupList";
 import Comment from "../../components/comment/Comment";
 import Button from "../../components/button/Button";
 import { MoreHoriz } from "@mui/icons-material";
+import { modules } from "mock-data/module.mock";
 
 const CourseDetail = () => {
   const theme = useTheme();
@@ -57,8 +58,9 @@ const CourseDetail = () => {
                   Chương: 15 | Bài học: 137 | Thời lượng: 1 giờ 30 phút
                 </Typography>
                 <Stack gap={1}>
-                  <GroupList />
-                  <GroupList />
+                  {modules.map((item, index) => (
+                    <GroupList data={item} key={index} />
+                  ))}
                 </Stack>
               </Box>
             </Wrapper>

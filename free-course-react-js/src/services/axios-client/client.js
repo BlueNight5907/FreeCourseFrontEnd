@@ -8,13 +8,10 @@ const axiosClient = axios.create({
 // Add a request interceptor
 axiosClient.interceptors.request.use(
   function (config) {
-    const user = localStorage.getItem("user");
+    //If local storage has toke, then attach it into request 
+    const accessToken = localStorage.getItem("token");
+    config.headers.common.Authorization = `Bearer ${accessToken}`;
 
-    //If local storage has toke, then attach it into request
-    if (user) {
-      const { accessToken } = JSON.parse(user);
-      config.headers.common.Authorization = `Bearer ${accessToken}`;
-    }
 
     //Using the form-data
     if (config.data instanceof FormData) {
@@ -36,8 +33,32 @@ axiosClient.interceptors.response.use(
     }
     return response.data;
   },
-  function (error) {
-    return Promise.reject(error);
+  async (err) => {
+    const originalConfig = err.config;
+
+    if (originalConfig.url !== "api/Auth/signin" && err.response) {
+      if (err.response.status === 401 && !originalConfig._retry) {
+        originalConfig._retry = true;
+
+        try {
+          const rs = await axiosClient.post("api/auth/refresh-token", {
+            refreshToken: localStorage.getItem("refreshToken"),
+          });
+
+          const { success, accessToken } = rs.data;
+          if (!success) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+          } else localStorage.setItem("token", accessToken);
+
+          return axiosClient(originalConfig);
+        } catch (_error) {
+          return Promise.reject(_error);
+        }
+      }
+    }
+
+    return Promise.reject(err);
   }
 );
 

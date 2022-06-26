@@ -9,11 +9,11 @@ const request = (
   config = {}
 ) => {
   return axiosClient[method](url, data.body ? data.body : data.form, {
-    params: "ac",
+    params: "",
     paramsSerializer: (params) => {
       return queryString.stringify(params);
     },
-    ...config,
+    config,
   });
 };
 

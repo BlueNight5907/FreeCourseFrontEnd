@@ -9,6 +9,7 @@ import TeacherRanking from "./teacher-ranking/TeacherRanking";
 import FeatureCourseSlide from "../../containers/courses-slide/FeatureCourseSlide";
 import TabsCourseSlide from "../../containers/courses-slide/TabsCourseSlide";
 import DetailCourseSlide from "../../containers/courses-slide/DetailCourseSlide";
+import { useSelector } from "react-redux";
 const Home = () => {
   return (
     <Grid container spacing={2} minHeight={0}>
