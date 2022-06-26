@@ -93,7 +93,7 @@ const Routes = () => {
       ],
     },
     {
-      path: "/message",
+      path: "/groups",
       element: <MessageLayout />,
     },
     {
