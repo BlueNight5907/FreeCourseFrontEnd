@@ -7,7 +7,7 @@ export const login = async (email, password) => {
   const data = await request(POST, apiPath.login, { body });
   return {
     user: data.user,
-    token: data.accessToken,
+    accessToken: data.accessToken,
     refreshToken: data.refreshToken,
   };
 };
@@ -15,6 +15,6 @@ export const login = async (email, password) => {
 export const getMyAccount = async (token) => {
   const data = await request(GET, apiPath.getMyAccount);
   return {
-    user: data.user,
+    user: data,
   };
 };

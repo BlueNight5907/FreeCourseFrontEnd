@@ -19,6 +19,7 @@ const mainMenuList = [
     name: "Trang chủ",
     icon: HomeRounded,
     href: "/",
+    end: true,
   },
   {
     name: "Tìm kiếm",
@@ -48,7 +49,7 @@ const mainMenuList = [
   {
     name: "Danh mục khóa học",
     icon: BallotRounded,
-    href: "/category",
+    href: "/courses",
   },
   {
     type: "divider",

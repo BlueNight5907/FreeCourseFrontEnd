@@ -52,7 +52,7 @@ const Routes = () => {
           element: <MyCourses />,
         },
         {
-          path: "/category",
+          path: "/courses/:category",
           element: <Category />,
         },
         {
@@ -108,7 +108,7 @@ const Routes = () => {
       ],
     },
     {
-      path: "/message",
+      path: "/groups",
       element: <MessageLayout />,
     },
     {

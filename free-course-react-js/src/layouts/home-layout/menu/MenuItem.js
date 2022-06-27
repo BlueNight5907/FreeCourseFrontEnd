@@ -22,6 +22,7 @@ const MenuItem = ({
   secondary,
   badge,
   onClick,
+  end,
   href,
   children,
   type,
@@ -35,7 +36,7 @@ const MenuItem = ({
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const match = matchPath({ path: href || "./", end: true }, pathname);
+  const match = matchPath({ path: href || "./", end: !!end }, pathname);
   const styles = {
     menuItem: {
       height: 50,

@@ -17,7 +17,7 @@ const Home = () => {
         <HeroSlide />
       </Grid>
       <Grid item xs={12}>
-        <CategorySlide title="Danh mục khóa học" href="/category" />
+        <CategorySlide title="Danh mục khóa học" />
       </Grid>
       <Grid item xs={12}>
         <TabsCourseSlide />
