@@ -197,6 +197,7 @@ export default function GroupList(props) {
                   type={item.type}
                   title={item.name}
                   href={item.href}
+                  time={item.time}
                 />
               ))}
             </List>

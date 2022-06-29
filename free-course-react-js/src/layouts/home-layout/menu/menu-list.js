@@ -69,7 +69,7 @@ const mainMenuList = [
   {
     name: "Nhắn tin",
     icon: ChatBubbleOutlineRounded,
-    href: "/message",
+    href: "/groups",
     badge: "15",
   },
   {

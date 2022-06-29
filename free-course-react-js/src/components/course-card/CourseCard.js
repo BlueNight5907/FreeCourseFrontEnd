@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Avatar,
@@ -10,7 +10,7 @@ import {
   Typography,
   Rating,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   PeopleOutlineRounded,
   ArrowForwardIosRounded,
@@ -20,9 +20,21 @@ import Button, { buttonBg } from "../button/Button";
 import courseImage from "../../assets/background/course-image.png";
 import userAvt from "../../assets/avatar/u29.jfif";
 import LearningProgress from "../learning-progress/LearningProgress";
+import { useDispatch } from "react-redux";
+import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 
 const CourseCard = (props) => {
   const { learned, data, sx, fullWidth, ...others } = props;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [teacherInfor, setTeacherInfor] = useState({
+    id: "",
+    email: "",
+    userInformation: {
+      fullName: "",
+      avatar: "",
+    },
+  });
   const ref = useRef();
   const style = {
     card: {
@@ -95,18 +107,34 @@ const CourseCard = (props) => {
     }
   };
 
-  const handleClickOutside = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
-      if (ref.current.classList.contains("active")) toggleDetail();
-    }
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        if (ref.current.classList.contains("active")) toggleDetail();
+      }
+    };
     document.addEventListener("click", handleClickOutside, true);
+
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      dispatch({
+        type: GET_ACCOUNT_INFORMATION,
+        accountId: data.creator,
+        callback: (data) => setTeacherInfor(data),
+      });
+    }
+  }, [data, dispatch]);
+
+  const gotoCourse = () => {
+    if (data?._id) {
+      navigate("/course/" + data._id);
+    }
+  };
 
   if (learned) {
     return (
@@ -170,8 +198,7 @@ const CourseCard = (props) => {
                   }}
                   className="course-desc"
                 >
-                  Lorem ipsum dolor sit amet consectetur a elit. Sapiente fkdfk
-                  hdk
+                  {data?.shortDesc}
                 </Box>
 
                 <LearningProgress
@@ -196,21 +223,24 @@ const CourseCard = (props) => {
           <CardMedia
             component="img"
             className="aspect-[18/8]"
-            image={courseImage}
+            image={data?.background || courseImage}
             alt="green iguana"
           />
           <CardContent sx={style.cardContent}>
             <Typography component="p" gutterBottom sx={style.courseTitle}>
-              E-Shop Mobile App
+              {data?.title}
             </Typography>
             <div className="card-content__bottom flex flex-row justify-between items-center">
               <Link
                 to="/"
                 className="card-content__bottom__user flex flex-row items-center gap-2"
               >
-                <Avatar src={userAvt} sx={style.avatar} />
+                <Avatar
+                  src={teacherInfor.userInformation.avatar}
+                  sx={style.avatar}
+                />
                 <Typography component="span" className="text-xs font-normal">
-                  Easin Arafat
+                  {teacherInfor.userInformation.fullName}
                 </Typography>
               </Link>
               <div
@@ -223,7 +253,7 @@ const CourseCard = (props) => {
                     height: 16,
                   }}
                 />
-                7000
+                {data?.participants?.length || 0}
               </div>
             </div>
           </CardContent>
@@ -240,14 +270,17 @@ const CourseCard = (props) => {
               }}
               className="px-2 text-bases font-normal w-full"
             >
-              Cấu trúc dữ liệu và giải thuật
+              {data?.title}
             </Typography>
             <Box className="card-content__bottom w-full flex flex-row justify-between items-center">
               <Link
                 to="/"
                 className="card-content__bottom__user flex flex-row items-center gap-2"
               >
-                <Avatar src={userAvt} sx={style.avatar} />
+                <Avatar
+                  src={teacherInfor.userInformation.avatar}
+                  sx={style.avatar}
+                />
                 <Typography
                   sx={{
                     color: (theme) => theme.palette.foreground.main,
@@ -255,7 +288,7 @@ const CourseCard = (props) => {
                   component="span"
                   className="text-sm font-normal"
                 >
-                  Easin Arafat
+                  {teacherInfor.userInformation.fullName}
                 </Typography>
               </Link>
               <Box
@@ -271,7 +304,7 @@ const CourseCard = (props) => {
                     height: 16,
                   }}
                 />
-                7000
+                {data?.participants?.length || 0}
               </Box>
             </Box>
             <div className="flex flex-row gap-3 items-center justify-between w-full">
@@ -305,13 +338,14 @@ const CourseCard = (props) => {
               }}
               className="text-sm font-normal"
             >
-              Lorem ipsum dolor sit amet consectetur a elit. Sapiente
+              {data?.shortDesc}
             </Typography>
 
             <Button
               variant="contained"
               specialBg={buttonBg.red}
               endIcon={<ArrowForwardIosRounded />}
+              onClick={gotoCourse}
             >
               Chi tiết
             </Button>

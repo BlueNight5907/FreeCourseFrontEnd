@@ -1,4 +1,4 @@
-import { take, call, put, fork, cancelled, race } from "redux-saga/effects";
+import { take, call, put, fork } from "redux-saga/effects";
 import { getCoursesWithCategory } from "services/api/courseAPI";
 import {
   GET_CATEGORIES_ERROR,

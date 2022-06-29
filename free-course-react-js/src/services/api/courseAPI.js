@@ -8,3 +8,14 @@ export const getCoursesWithCategory = (
 ) => {
   return request(GET, apiPath.getCoursesWithCategory(category), { params });
 };
+
+export const getCourseDetail = (id) =>
+  request(GET, apiPath.getCourseDetail(id));
+
+export const getAllMyCourse = () => {
+  return request(GET, apiPath.getAllMyCourse);
+};
+
+export const joinCourse = (id) => {
+  return request(POST, apiPath.joinCourse(id));
+};
