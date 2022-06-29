@@ -30,9 +30,9 @@ const Routes = () => {
     {
       path: "/",
       element: (
-        // <Protected>
-        <HomeLayout />
-        // </Protected>
+        <Protected>
+          <HomeLayout />
+        </Protected>
       ),
       children: [
         {
