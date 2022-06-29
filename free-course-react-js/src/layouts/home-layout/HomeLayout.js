@@ -1,7 +1,8 @@
 import { Box, Container } from "@mui/material";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { GET_MY_COURSE_REQUEST } from "store/types/data-types/learning-process-types";
 import {
   HOME_SIDEBAR_CLOSE_WIDTH,
   HOME_SIDEBAR_WIDTH,
@@ -13,7 +14,14 @@ import Header from "./header/Header";
 
 const HomeLayout = () => {
   const { sideOpen } = useSelector((state) => state.setting);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   let spacing = sideOpen ? HOME_SIDEBAR_WIDTH : HOME_SIDEBAR_CLOSE_WIDTH;
+  useEffect(() => {
+    if (user) {
+      dispatch({ type: GET_MY_COURSE_REQUEST });
+    }
+  }, [user, dispatch]);
   return (
     <Box
       className="flex flex-row"

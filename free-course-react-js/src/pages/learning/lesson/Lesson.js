@@ -27,6 +27,7 @@ import Comment from "./../../../components/comment/Comment";
 
 const Lesson = () => {
   const { courseOpen } = useSelector((state) => state.setting);
+  const { teacher } = useSelector((s) => s.courseDetail);
   const dispatch = useDispatch();
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
@@ -85,7 +86,9 @@ const Lesson = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <Stack className="flex-row justify-between items-center">
-                        <TeacherAvatar />
+                        <TeacherAvatar
+                          userInformation={teacher?.userInformation}
+                        />
                         <Button variant="contained" specialBg={buttonBg.red}>
                           Đi đến trang chủ
                         </Button>

@@ -9,9 +9,10 @@ import {
 import { IconButton, ListItem, ListItemIcon, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { millisecondsToMinutes, millisecondsToSeconds } from "date-fns";
 
 const Module = (props) => {
-  const { component, type = "default", editMode, title, href } = props;
+  const { component, type = "default", editMode, title, href, time } = props;
   const navigate = useNavigate();
   const styles = {
     box: {
@@ -70,7 +71,7 @@ const Module = (props) => {
       disablePadding
       {...(!editMode && { onClick: () => navigate(href) })}
     >
-      <ListItemIcon>
+      <ListItemIcon sx={{ minWidth: 40 }}>
         <Icon
           fontSize="medium"
           sx={{
@@ -78,13 +79,28 @@ const Module = (props) => {
           }}
         />
       </ListItemIcon>
-      <div className="flex flex-row w-full justify-between items-center">
-        <Typography sx={styles.content} className="grow" variant="body2">
-          {title}
-        </Typography>
-        <div className="flex flex-row items-center">
+      <div className="flex flex-row w-full justify-between ">
+        <div className="grow relative">
+          <Typography
+            className="absolute left-0 right-0 w-full top-[50%]"
+            style={{
+              transform: "translateY(-50%)",
+              whiteSpace: "normal",
+            }}
+            sx={styles.content}
+            variant="body2"
+          >
+            {title}
+          </Typography>
+        </div>
+        <div className="flex flex-row items-center flex-shrink-0">
           <Typography sx={styles.content} variant="body2">
-            11:20
+            {millisecondsToMinutes(time)}:
+            {(
+              millisecondsToSeconds(time) -
+              millisecondsToMinutes(time) * 60 +
+              "0"
+            ).substring(0, 2)}
           </Typography>
           {editMode && (
             <>
