@@ -49,7 +49,7 @@ const mainMenuList = [
   {
     name: "Danh mục khóa học",
     icon: BallotRounded,
-    href: "/courses",
+    href: "/courses/all",
   },
   {
     type: "divider",
@@ -69,7 +69,7 @@ const mainMenuList = [
   {
     name: "Nhắn tin",
     icon: ChatBubbleOutlineRounded,
-    href: "/message",
+    href: "/groups",
     badge: "15",
   },
   {

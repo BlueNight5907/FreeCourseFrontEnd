@@ -44,7 +44,7 @@ const Routes = () => {
           element: <Setting />,
         },
         {
-          path: "/course/:id",
+          path: "/course/:courseId",
           element: <CourseDetail />,
         },
         {
@@ -90,11 +90,15 @@ const Routes = () => {
       ],
     },
     {
-      path: "/learning",
-      element: <LearnLayout />,
+      path: "/learning/:courseId",
+      element: (
+        <Protected>
+          <LearnLayout />
+        </Protected>
+      ),
       children: [
         {
-          path: "lesson",
+          path: ":stepId",
           element: <Lesson />,
         },
         {

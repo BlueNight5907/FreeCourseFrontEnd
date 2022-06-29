@@ -39,8 +39,9 @@ const Home = () => {
         <DetailCourseSlide title="Học nhiều trong tuần" />
       </Grid>
       <Grid item xs={12}>
-        <CourseSlide title="Khóa học cơ bản" />
+        <DetailCourseSlide title="Học nhiều trong tuần" />
       </Grid>
+      <Grid item xs={12} />
     </Grid>
   );
 };

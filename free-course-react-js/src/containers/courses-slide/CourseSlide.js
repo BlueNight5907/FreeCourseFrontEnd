@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { SlidePrevButton, SlideNextButton } from "./slide-action";
 
 function CourseSlide(props) {
-  const { href, title, learned } = props;
+  const { href, title, learned, courses } = props;
 
   const style = {
     "& .swiper": {
@@ -21,13 +21,12 @@ function CourseSlide(props) {
       position: "unset",
     },
     position: "relative",
-    padding: (theme) => theme.spacing(1, 0),
     width: "100%",
   };
 
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between mb-1">
+    <Paper sx={{ p: 1 }} elevation={0}>
+      <div className="flex flex-row items-center justify-between mb-2">
         <Typography
           sx={{
             fontSize: {
@@ -79,27 +78,15 @@ function CourseSlide(props) {
         >
           <SlideNextButton />
           <SlidePrevButton />
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
-          <SwiperSlide>
-            <CourseCard learned={learned} />
-          </SwiperSlide>
+
+          {courses?.map((course, index) => (
+            <SwiperSlide key={index}>
+              <CourseCard learned={learned} data={course} />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </Box>
-    </div>
+    </Paper>
   );
 }
 
