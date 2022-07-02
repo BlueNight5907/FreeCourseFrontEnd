@@ -10,11 +10,12 @@ import { Drawer as MuiDrawer } from "../styled-components";
 const Drawer = () => {
   const { courseId, stepId } = useParams();
   const { courseOpen } = useSelector((state) => state.setting);
+  const { courseDetail } = useSelector((state) => state.courseDetail);
+  const { process } = useSelector((state) => state.learningProcess);
   const dispatch = useDispatch();
 
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
-  const { courseDetail } = useSelector((s) => s.courseDetail);
 
   const toggleDrawer = () => {
     dispatch({ type: TOGGLE_COURSE_DRAWER });
@@ -22,9 +23,13 @@ const Drawer = () => {
   const containerRef = useRef();
 
   const courseModules = useMemo(() => {
-    if (!courseDetail) {
+    if (!courseDetail || !process) {
       return [];
     }
+    const allSteps = courseDetail.modules.reduce((steps, module) => {
+      return [...steps, ...module.steps];
+    }, []);
+    const learned = process.learned;
     return courseDetail.modules.reduce((arr, module) => {
       const name = module.title;
       const steps = module.steps.map((step) => ({
@@ -32,11 +37,18 @@ const Drawer = () => {
         href: `/learning/${courseId}/${step._id}`,
         type: step.type === "lesson" ? "video" : "test",
         time: step.time,
+        disabled:
+          allSteps.findIndex((item) => item._id === step._id) > learned.length,
+        active:
+          stepId === step._id &&
+          (learned.findIndex((item) => stepId === item.stepId) > -1 ||
+            allSteps.findIndex((item) => item._id === stepId) ===
+              learned.length),
       }));
       arr.push({ name, steps });
       return arr;
     }, []);
-  }, [courseDetail, courseId]);
+  }, [courseDetail, courseId, process, stepId]);
   return (
     <MuiDrawer
       variant={matchMd ? "permanent" : "temporary"}
