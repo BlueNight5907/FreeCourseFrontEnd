@@ -19,3 +19,15 @@ export const getAllMyCourse = () => {
 export const joinCourse = (id) => {
   return request(POST, apiPath.joinCourse(id));
 };
+
+export const getLearningProcess = (id) => {
+  return request(GET, apiPath.getLearningProcess(id));
+};
+
+export const getStep = (module, step) => {
+  return request(GET, apiPath.getStep(module, step));
+};
+
+export const completeLesson = (module, step) => {
+  return request(POST, apiPath.completeLesson(module, step));
+};
