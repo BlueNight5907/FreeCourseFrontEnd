@@ -8,10 +8,9 @@ const axiosClient = axios.create({
 // Add a request interceptor
 axiosClient.interceptors.request.use(
   function (config) {
-    //If local storage has toke, then attach it into request 
+    //If local storage has toke, then attach it into request
     const accessToken = localStorage.getItem("token");
     config.headers.common.Authorization = `Bearer ${accessToken}`;
-
 
     //Using the form-data
     if (config.data instanceof FormData) {
@@ -36,7 +35,7 @@ axiosClient.interceptors.response.use(
   async (err) => {
     const originalConfig = err.config;
 
-    if (originalConfig.url !== "api/Auth/signin" && err.response) {
+    if (originalConfig.url !== "api/auth/signin" && err.response) {
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
