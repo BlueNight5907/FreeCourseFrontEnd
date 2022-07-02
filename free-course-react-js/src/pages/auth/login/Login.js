@@ -26,7 +26,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const theme = useTheme();
-  const { isLogin, error } = useSelector((state) => state.auth);
+  const { accessToken, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   // const navigate = useNavigate();
@@ -49,11 +49,10 @@ function Login() {
   };
 
   useEffect(() => {
-    if (isLogin) {
-      console.log("tc");
+    if (accessToken) {
       navigate("/");
     }
-  }, [isLogin, navigate]);
+  }, [accessToken, navigate]);
 
   useEffect(() => {
     if (error) {

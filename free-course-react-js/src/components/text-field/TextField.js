@@ -54,6 +54,7 @@ const Input = styled(InputBase, {
 const TextField = (props) => {
   const {
     margin = "normal",
+    border = true,
     onChange,
     id,
     placeholder,
@@ -133,6 +134,8 @@ const TextField = (props) => {
           sx={{
             width: width,
             maxWidth: maxWidth,
+            border: border ? "" : "none",
+            padding: others?.padding,
           }}
         >
           {icon && <IconWrapper>{icon}</IconWrapper>}

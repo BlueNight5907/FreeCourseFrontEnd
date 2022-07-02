@@ -1,6 +1,7 @@
 import { Edit } from "@mui/icons-material";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import Button from "components/button/Button";
 import LearningProgress from "components/learning-progress/LearningProgress";
 import DeleteAction from "pages/manage-course/course-dashboard/table-cell/delete-action";
 import React from "react";
@@ -42,7 +43,7 @@ const Student = () => {
         <LearningProgress
           total={params.row.learningProgress.total}
           learned={params.row.learningProgress.learned}
-          // showLabel
+          showLabel
           variant="determinate"
         />
       ),

@@ -16,6 +16,7 @@ import { teacherSubMenuList } from "../menu/menu-list";
 import { matchPath, useLocation } from "react-router-dom";
 const Drawer = () => {
   const { sideOpen, subMenu } = useSelector((state) => state.setting);
+
   const dispatch = useDispatch();
   const theme = useTheme();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -24,7 +25,7 @@ const Drawer = () => {
     dispatch({ type: TOGGLE_HOME_DRAWER });
   };
   const containerRef = useRef();
-  React.useEffect(() => {
+  useEffect(() => {
     let hasSubMenu = false;
     teacherSubMenuList.every((item) => {
       const match = matchPath({ path: item.href || "./", end: true }, pathname);
@@ -45,6 +46,7 @@ const Drawer = () => {
       });
     }
   }, [dispatch, pathname]);
+
   return (
     <MuiDrawer
       variant={matchMd ? "permanent" : "temporary"}

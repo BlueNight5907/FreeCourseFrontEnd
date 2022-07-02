@@ -197,6 +197,9 @@ export default function GroupList(props) {
                   type={item.type}
                   title={item.name}
                   href={item.href}
+                  time={item.time}
+                  active={item.active}
+                  disabled={item.disabled}
                 />
               ))}
             </List>

@@ -17,23 +17,35 @@ const storage = firebase.storage();
 export default storage;
 
 // Note upload files
-// item = {file: file, label: label}
 // docs: https://firebase.google.com/docs/storage/web/upload-files
-// function upload(items) {
-//     items.foreach(item => {
-//         const fileName = "filename muon lưu"
-//         const uploadTask = storage.ref(`/thư mục muốn lưu(avt hoặc video bài học hay hình )/${fileName}`).put(item.file);
-//         uploadTask.on("state_changed", (snapshot) => {
-//             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) *100;
-//             console.log('Upload is ' + progress + '% done');
-//         },
-//         (err) => {
-//             console.log(err)
-//         },
-//         () => {
-//             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-//                 console.log(downloadURL) (url trả về)
-//             });
-//         })
-//     })
-// }
+
+export function upload(
+  directory,
+  item = { fileName: "", file: null },
+  onCompleteCallback,
+  progressCallback
+) {
+  const fileName = item.fileName;
+  const file = item.file;
+  const promise = new Promise((resolve, reject) => {
+    const uploadTask = storage.ref(`/${directory}/${fileName}`).put(file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        progressCallback && progressCallback(progress);
+      },
+      (err) => {
+        reject(err);
+      },
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          onCompleteCallback && onCompleteCallback(downloadURL);
+          resolve(downloadURL);
+        });
+      }
+    );
+  });
+  return promise;
+}

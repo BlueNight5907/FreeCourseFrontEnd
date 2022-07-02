@@ -18,6 +18,9 @@ import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 import MessageLayout from "layouts/message-layout/MessageLayout";
 import MessageContent from "./message/Message";
 import CreateCourse from "./manage-course/create-course/CreateCourse";
+import Community from "./community/Community";
+import Post from "./community/post/Post";
+import PostCreate from "./community/post/PostCreate";
 import DetailCourse from "./manage-course/detail-course/DetailCourse";
 import Protected from "guards/Protected";
 
@@ -27,9 +30,9 @@ const Routes = () => {
     {
       path: "/",
       element: (
-        // <Protected>
-        <HomeLayout />
-        // </Protected>
+        <Protected>
+          <HomeLayout />
+        </Protected>
       ),
       children: [
         {
@@ -41,7 +44,7 @@ const Routes = () => {
           element: <Setting />,
         },
         {
-          path: "/course/:id",
+          path: "/course/:courseId",
           element: <CourseDetail />,
         },
         {
@@ -49,7 +52,7 @@ const Routes = () => {
           element: <MyCourses />,
         },
         {
-          path: "/category",
+          path: "/courses/:category",
           element: <Category />,
         },
         {
@@ -72,14 +75,30 @@ const Routes = () => {
           path: "/manage-course/create",
           element: <CreateCourse />,
         },
+        {
+          path: "/community",
+          element: <Community />,
+        },
+        {
+          path: "community/post/create",
+          element: <PostCreate />,
+        },
+        {
+          path: "community/post/:id",
+          element: <Post />,
+        },
       ],
     },
     {
-      path: "/learning",
-      element: <LearnLayout />,
+      path: "/learning/:courseId",
+      element: (
+        <Protected>
+          <LearnLayout />
+        </Protected>
+      ),
       children: [
         {
-          path: "lesson",
+          path: ":stepId",
           element: <Lesson />,
         },
         {
@@ -93,7 +112,7 @@ const Routes = () => {
       ],
     },
     {
-      path: "/message",
+      path: "/groups",
       element: <MessageLayout />,
     },
     {

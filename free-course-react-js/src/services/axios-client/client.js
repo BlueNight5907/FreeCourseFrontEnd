@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getItem } from "utils/storeData";
 import { BACKEND_URL } from "../../config";
 
 const axiosClient = axios.create({
@@ -10,6 +11,7 @@ axiosClient.interceptors.request.use(
   function (config) {
     //If local storage has toke, then attach it into request
     const accessToken = localStorage.getItem("token");
+    console.log(accessToken);
     config.headers.common.Authorization = `Bearer ${accessToken}`;
 
     //Using the form-data
@@ -35,12 +37,13 @@ axiosClient.interceptors.response.use(
   async (err) => {
     const originalConfig = err.config;
 
-    if (originalConfig.url !== "api/auth/signin" && err.response) {
+    const accessToken = getItem("token");
+    if (accessToken && originalConfig.url !== "/auth/signin" && err.response) {
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
         try {
-          const rs = await axiosClient.post("api/auth/refresh-token", {
+          const rs = await axiosClient.post("/auth/refresh-token", {
             refreshToken: localStorage.getItem("refreshToken"),
           });
 
