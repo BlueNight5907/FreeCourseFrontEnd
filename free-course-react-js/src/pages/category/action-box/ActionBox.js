@@ -21,8 +21,46 @@ import DropdownItem from "../../../components/dropdown/DropdownItem";
 import DropdownMenu from "../../../components/dropdown/DropdownMenu";
 import DropdownToggle from "../../../components/dropdown/DropdownToggle";
 
+const sorts = [
+  {
+    name: "Gần đây nhất",
+    value: "createdAt",
+    order: "desc",
+  },
+  {
+    name: "Mới cập nhật",
+    value: "updatedAt",
+    order: "desc",
+  },
+  {
+    name: "Đăng ký nhiều nhất",
+    value: "participants",
+    order: "desc",
+  },
+  {
+    name: "Tên A - Z",
+    value: "title",
+    order: "asc",
+  },
+  {
+    name: "Tên Z - A",
+    value: "title",
+    order: "desc",
+  },
+];
+
 const ActionBox = (props) => {
-  const { setOpenFilter, view, setView } = props;
+  const {
+    setOpenFilter,
+    view,
+    setView,
+    updateSort,
+    updateOrder,
+    total,
+    params,
+    findCourses,
+    clearParams,
+  } = props;
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const styles = {
@@ -68,7 +106,13 @@ const ActionBox = (props) => {
                 },
               }}
             >
-              Gần đây nhất
+              {
+                sorts.find(
+                  (item) =>
+                    item.value === params.queries.sort &&
+                    item.order === params.queries.order
+                )?.name
+              }
             </DropdownToggle>
             <DropdownMenu
               direction="left"
@@ -79,19 +123,38 @@ const ActionBox = (props) => {
                 xs: 120,
               }}
             >
-              <DropdownItem square>Gần đây nhất</DropdownItem>
+              {sorts.map((item, index) => (
+                <DropdownItem
+                  onClick={() => {
+                    updateSort(item.value);
+                    updateOrder(item.order);
+                  }}
+                  square
+                  key={index}
+                >
+                  {item.name}
+                </DropdownItem>
+              ))}
             </DropdownMenu>
           </Dropdown>
-          <Button
-            sx={styles.actionBtn}
-            variant="contained"
-            startIcon={<ClearAllRounded />}
-            disableElevation
-          >
-            {matchSm && "Hủy bộ lọc"}
-          </Button>
+          {params?.queries.tags.length > 0 && (
+            <Button
+              sx={styles.actionBtn}
+              variant="contained"
+              startIcon={<ClearAllRounded />}
+              disableElevation
+              onClick={clearParams}
+            >
+              {matchSm && "Xóa bộ lọc"}
+            </Button>
+          )}
         </Stack>
-        {matchSm && <Typography className="mr-2">610 kết quả</Typography>}
+        {matchSm && <Typography className="mr-2">{total} kết quả</Typography>}
+        {!matchSm && (
+          <Button variant="contained" onClick={findCourses}>
+            Lọc kết quả
+          </Button>
+        )}
       </Stack>
       <Divider className="my-2" />
       <Stack
@@ -124,7 +187,12 @@ const ActionBox = (props) => {
             {matchSm && " Chế độ xem lưới"}
           </ToggleButton>
         </ToggleButtonGroup>
-        {!matchSm && <Typography className="mr-2">610 kết quả</Typography>}
+        {!matchSm && <Typography className="mr-2">{total} kết quả</Typography>}
+        {matchSm && (
+          <Button variant="contained" onClick={findCourses}>
+            Lọc kết quả
+          </Button>
+        )}
       </Stack>
     </Paper>
   );

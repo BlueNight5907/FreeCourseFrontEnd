@@ -22,6 +22,7 @@ import userAvt from "../../assets/avatar/u29.jfif";
 import LearningProgress from "../learning-progress/LearningProgress";
 import { useDispatch } from "react-redux";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
+import { maxLines } from "utils/classUltis";
 
 const CourseCard = (props) => {
   const { learned, data, sx, fullWidth, ...others } = props;
@@ -83,7 +84,7 @@ const CourseCard = (props) => {
     },
 
     card2: {
-      maxWidth: fullWidth
+      width: fullWidth
         ? "unset"
         : {
             xs: 300,
@@ -91,7 +92,6 @@ const CourseCard = (props) => {
             md: 380,
             lg: 420,
           },
-      minWidth: 280,
     },
     boxGradient: {
       background:
@@ -142,12 +142,12 @@ const CourseCard = (props) => {
         <Card className="w-full">
           <CardActionArea
             className="relative"
-            onClick={() => console.log("hello")}
+            onClick={() => navigate("/course/" + data?.courseId)}
           >
             <CardMedia
               component="img"
               className="aspect-[18/10]"
-              image={courseImage}
+              image={data?.background || courseImage}
               alt="green iguana"
             />
             <Box
@@ -160,7 +160,9 @@ const CourseCard = (props) => {
                   to="/"
                   className="card-content__bottom__user flex flex-row items-center gap-2"
                 >
-                  <Avatar src={userAvt} />
+                  <Avatar
+                    src={teacherInfor.userInformation.avatar || userAvt}
+                  />
                   <Typography
                     sx={{
                       color: "#fff",
@@ -168,21 +170,9 @@ const CourseCard = (props) => {
                     component="span"
                     className="text-normal font-medium"
                   >
-                    Easin Arafat
+                    {teacherInfor.userInformation.fullName}
                   </Typography>
                 </Link>
-
-                <Button
-                  component="div"
-                  width={72}
-                  height={33}
-                  sx={{
-                    backgroundColor: "#FB6D3A",
-                    color: "#fff",
-                  }}
-                >
-                  90p
-                </Button>
               </Box>
 
               <Box>
@@ -194,25 +184,41 @@ const CourseCard = (props) => {
                     borderRadius: 1,
                     marginBottom: 1,
                     color: "#fff",
-                    fontSize: 14,
                   }}
                   className="course-desc"
                 >
-                  {data?.shortDesc}
+                  <Typography gutterBottom>{data.name}</Typography>
+                  <Typography
+                    sx={{
+                      ...maxLines(2),
+                      display: { sm: "-webkit-box", xs: "none" },
+                    }}
+                    variant="body2"
+                  >
+                    {data?.shortDesc}
+                  </Typography>
                 </Box>
 
-                <LearningProgress
-                  variant="determinate"
-                  total={20}
-                  learned={10}
-                />
+                {data.learned !== data.total && (
+                  <LearningProgress
+                    variant="determinate"
+                    total={data.total}
+                    learned={data.learned}
+                  />
+                )}
               </Box>
             </Box>
           </CardActionArea>
         </Card>
 
         <Typography className="mt-1 ml-2" variant="body2">
-          Đã học 15 ngày trước
+          {data.visited <= 0 &&
+            data.learned === 0 &&
+            "Bạn chưa học bất kì bài học nào"}
+          {data.visited === 0 &&
+            data.learned !== 0 &&
+            "Bạn mới học vào hôm nay"}
+          {data.visited > 0 && `Học lần cuối vào ${data.visited} ngày trước`}
         </Typography>
       </Box>
     );
@@ -263,7 +269,7 @@ const CourseCard = (props) => {
           sx={style.cardDetail}
           ref={ref}
         >
-          <Box className=" flex p-2 flex-col gap-3 items-center justify-center box-border h-full">
+          <Box className=" flex p-2 flex-col gap-3 items-center box-border h-full">
             <Typography
               sx={{
                 color: (theme) => theme.palette.foreground.main,
@@ -335,6 +341,8 @@ const CourseCard = (props) => {
             <Typography
               sx={{
                 color: (theme) => theme.palette.foreground.main,
+                ...maxLines(3),
+                textAlign: "left",
               }}
               className="text-sm font-normal"
             >

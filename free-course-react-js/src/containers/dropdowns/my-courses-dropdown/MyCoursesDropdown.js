@@ -5,24 +5,20 @@ import DropdownItem from "../../../components/dropdown/DropdownItem";
 import DropdownMenu from "../../../components/dropdown/DropdownMenu";
 import DropdownToggle from "../../../components/dropdown/DropdownToggle";
 import LearningProgress from "../../../components/learning-progress/LearningProgress";
-
-import courseImage from "../../../assets/background/course-image.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { differenceInDays } from "date-fns";
 
 function MyCourseDropdown(props) {
-  const { children, sx } = props;
   const { learned } = useSelector((state) => state.learningProcess);
+  const navigate = useNavigate();
 
   const learnedStatusList = useMemo(() => {
     return learned.reduce((arr, item) => {
-      console.log(item);
       const data = {
-        visited:
-          item.visited !== null
-            ? differenceInDays(item.visited, new Date().getTime())
-            : -1,
+        visited: item.visited
+          ? differenceInDays(new Date().getTime(), item.visited)
+          : -1,
         name: item.courseData.title,
         background: item.courseData.background,
         courseId: item.courseId,
@@ -86,7 +82,13 @@ function MyCourseDropdown(props) {
         minHeight={400}
       >
         {learnedStatusList.map((course, index) => (
-          <DropdownItem key={index}>
+          <DropdownItem
+            key={index}
+            onClick={() => {
+              console.log(course.courseId);
+              navigate("/course/" + course.courseId);
+            }}
+          >
             <Stack flexDirection="row" gap={1} className="w-full">
               <Box
                 component="img"
@@ -121,7 +123,7 @@ function MyCourseDropdown(props) {
                   }}
                   color="InfoText"
                 >
-                  {course.visited === 0 &&
+                  {course.visited <= 0 &&
                     course.learned === 0 &&
                     "Bạn chưa học bất kì bài học nào"}
                   {course.visited === 0 &&

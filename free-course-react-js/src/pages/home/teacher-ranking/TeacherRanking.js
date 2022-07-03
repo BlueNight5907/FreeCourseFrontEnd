@@ -61,7 +61,7 @@ const Item = (props) => {
 const TeacherRanking = () => {
   const theme = useTheme();
   return (
-    <Paper className="inset-0 relative w-full h-full overflow-hidden min-h-[500px]">
+    <Paper className="inset-0 relative w-full h-full overflow-hidden min-h-[400px]">
       <Box
         sx={{
           position: "absolute",
