@@ -7,7 +7,7 @@ import chatGroupIntro from "../../assets/background/group-intro.png";
 function ChatGroupIntroduction(props) {
   const { children, sx, ...others } = props;
   const style = {
-    height: 180,
+    height: 230,
     borderRadius: 1,
     backgroundColor: "#E3D2FB",
     padding: 2.5,

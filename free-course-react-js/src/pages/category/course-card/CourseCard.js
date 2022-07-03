@@ -6,16 +6,43 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Button from "../../../components/button/Button";
 import Image from "../../../components/image/Image";
 import courseImg from "../../../assets/background/course-slide-bg.jpg";
 import { Link } from "react-router-dom";
+import { getRandomItem } from "utils/array-utils";
+import colors from "utils/colors";
+import { useDispatch } from "react-redux";
+import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
+import { maxLines } from "utils/classUltis";
 const CourseCard = (props) => {
-  const { gridView } = props;
+  const { gridView, data } = props;
+  const [teacherInfor, setTeacherInfor] = useState({
+    id: "",
+    email: "",
+    userInformation: {
+      fullName: "",
+      avatar: "",
+    },
+  });
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+  const color = useMemo(() => {
+    return data?.tags.map((item) => getRandomItem(colors)) || [];
+  }, [data?.tags]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (data) {
+      dispatch({
+        type: GET_ACCOUNT_INFORMATION,
+        accountId: data.creator,
+        callback: (data) => setTeacherInfor(data),
+      });
+    }
+  }, [data, dispatch]);
 
   return (
     <Box
@@ -29,6 +56,7 @@ const CourseCard = (props) => {
         "&:hover .overlay": {
           display: "block",
         },
+        height: gridView ? "100%" : "fit-content",
         paddingY: gridView ? 0.8 : 2,
         paddingX: gridView ? (matchSm ? 0.8 : 0.4) : 0,
         borderRadius: gridView ? 1 : 0,
@@ -48,10 +76,11 @@ const CourseCard = (props) => {
         <Box
           className="relative overflow-hidden flex-shrink-0 flex items-center"
           borderRadius={0.5}
+          width={gridView ? "100%" : "fit-content"}
           alignSelf="flex-start"
         >
           <Image
-            src={courseImg}
+            src={data?.background || courseImg}
             {...(!gridView
               ? {
                   width: matchSm ? 260 : 80,
@@ -77,26 +106,33 @@ const CourseCard = (props) => {
           >
             <Typography
               component={Link}
-              to="./"
+              to={`/course/${data?._id}`}
               sx={{
                 "&:hover": {
                   color: theme.palette.primary.main,
                 },
+                ...maxLines(1),
               }}
               fontFamily="Roboto"
               variant={gridView && !matchSm ? "body2" : "body1"}
               className="font-semibold"
             >
-              Cấu trúc dữ liệu và giải thuật
+              {data?.title}
             </Typography>
             {!gridView && matchSm && (
               <Typography
                 fontFamily="Roboto"
                 variant={gridView && !matchSm ? "caption" : "button"}
-                className="font-normal block"
+                className="font-normal"
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                }}
               >
-                Go Beyond the Basics with Project-Based Building Information
-                Modeling for Architects
+                {data?.shortDesc}
               </Typography>
             )}
 
@@ -105,7 +141,7 @@ const CourseCard = (props) => {
               variant={gridView && !matchSm ? "caption" : "subtitle2"}
               className="font-normal block"
             >
-              Nguyễn Văn Huy
+              {teacherInfor.userInformation.fullName}
             </Typography>
             <Stack flexDirection="Row" gap={0.5} alignItems="center">
               <Typography color="orange" variant="subtitle2">
@@ -125,23 +161,48 @@ const CourseCard = (props) => {
               variant="caption"
               className="font-light block"
             >
-              8 giờ học - 10 video - Mới bắt đầu
+              {data?.level.name} - {data?.participants.length} người học
             </Typography>
-            <Typography
-              variant="caption"
-              fontFamily="Roboto"
-              sx={{
-                padding: 0.5,
-                color: "#4d3105",
-                backgroundColor: "#f3ca8c",
-              }}
+            <Stack
+              direction="row"
+              gap={0.5}
+              flexWrap="wrap"
+              alignItems="center"
             >
-              Recommend
-            </Typography>
+              <Typography
+                variant="caption"
+                fontFamily="Roboto"
+                sx={{
+                  padding: 0.5,
+                  color: "#4d3105",
+                  backgroundColor: "#f3ca8c",
+                }}
+              >
+                {data?.category.name}
+              </Typography>
+              {matchSm &&
+                data?.tags.map((tag, index) => (
+                  <Typography
+                    key={index}
+                    variant="caption"
+                    fontFamily="Roboto"
+                    sx={{
+                      padding: theme.spacing(0.5, 1),
+                      borderRadius: 0.5,
+                      color: "#fff",
+                      backgroundColor: color[index],
+                    }}
+                  >
+                    {tag.name}
+                  </Typography>
+                ))}
+            </Stack>
           </Box>
           {!gridView && matchMd && (
             <Box flexShrink={0} className="flex flex-col gap-1">
-              <Button>Xem chi tiết</Button>
+              <Button component={Link} to={`/course/${data?._id}`}>
+                Xem chi tiết
+              </Button>
             </Box>
           )}
         </Stack>

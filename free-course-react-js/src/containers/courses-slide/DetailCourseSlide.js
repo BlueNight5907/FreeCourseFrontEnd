@@ -7,7 +7,7 @@ import CourseCard from "../../pages/category/course-card/CourseCard";
 import { SlideNextButton, SlidePrevButton } from "./slide-action";
 
 const TestCourseSlide = (props) => {
-  const { title } = props;
+  const { title, courses } = props;
   const { sideOpen } = useSelector((state) => state.setting);
   const style = {
     "& .swiper": {
@@ -53,13 +53,11 @@ const TestCourseSlide = (props) => {
         >
           <SlideNextButton />
           <SlidePrevButton />
-          {Array(10)
-            .fill(0)
-            .map((_, index) => (
-              <SwiperSlide key={index}>
-                <CourseCard gridView />
-              </SwiperSlide>
-            ))}
+          {courses?.map((course, index) => (
+            <SwiperSlide key={index}>
+              <CourseCard gridView data={course} />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </Box>
     </Box>

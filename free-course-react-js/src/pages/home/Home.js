@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeroSlide from "../../containers/courses-slide/HeroSLide";
 import CategorySlide from "../../containers/courses-slide/CategorySlide";
 import { Grid, Stack } from "@mui/material";
@@ -8,9 +8,35 @@ import CourseSlide from "../../containers/courses-slide/CourseSlide";
 import TeacherRanking from "./teacher-ranking/TeacherRanking";
 import FeatureCourseSlide from "../../containers/courses-slide/FeatureCourseSlide";
 import TabsCourseSlide from "../../containers/courses-slide/TabsCourseSlide";
-import DetailCourseSlide from "../../containers/courses-slide/DetailCourseSlide";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 const Home = () => {
+  const [frontendCourses, setFrontendCourses] = useState([]);
+  const [aiCourses, setAICourses] = useState([]);
+  const [backendCourses, setBackendCourses] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "frontend",
+      params: { page: 1, page_size: 8 },
+      callback: setFrontendCourses,
+    });
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "ai",
+      params: { page: 1, page_size: 8 },
+      callback: setAICourses,
+    });
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "backend",
+      params: { page: 1, page_size: 8 },
+      callback: setBackendCourses,
+    });
+  }, [dispatch]);
+
   return (
     <Grid container spacing={2} minHeight={0}>
       <Grid item xs={12}>
@@ -24,7 +50,6 @@ const Home = () => {
       </Grid>
       <Grid item xs={12} lg={7.5} xl={8.5}>
         <Stack direction="column" gap={2}>
-          <CourseSlide title="Các khóa học đã xem" learned />
           <ChatGroupIntroduction />
           <SocialNetworkIntroduction />
         </Stack>
@@ -36,10 +61,16 @@ const Home = () => {
         <FeatureCourseSlide />
       </Grid>
       <Grid item xs={12}>
-        <DetailCourseSlide title="Học nhiều trong tuần" />
+        <CourseSlide
+          title="Khóa học lập trình Front-end"
+          courses={frontendCourses}
+        />
       </Grid>
       <Grid item xs={12}>
-        <DetailCourseSlide title="Học nhiều trong tuần" />
+        <CourseSlide title="Trí tuệ nhân tạo" courses={aiCourses} />
+      </Grid>
+      <Grid item xs={12}>
+        <CourseSlide title="Lập trình backend" courses={backendCourses} />
       </Grid>
       <Grid item xs={12} />
     </Grid>
