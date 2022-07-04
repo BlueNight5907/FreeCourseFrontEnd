@@ -124,13 +124,7 @@ const CourseCard = (props) => {
                 fontFamily="Roboto"
                 variant={gridView && !matchSm ? "caption" : "button"}
                 className="font-normal"
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                }}
+                sx={maxLines(2)}
               >
                 {data?.shortDesc}
               </Typography>
