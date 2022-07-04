@@ -16,6 +16,10 @@ import Posts from "mock-data/post";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { GET_FEEDS_REQUEST } from "store/types/data-types/blog-type";
 
 const Feed = () => {
   const theme = useTheme();
@@ -34,16 +38,34 @@ const Feed = () => {
     },
   };
 
+  const dispatch = useDispatch();
+  const { posts } = useSelector((state) => state.blog);
+  const [feeds, setFeeds] = useState([]);
+
+  useEffect(() => {
+    dispatch({ type: GET_FEEDS_REQUEST, page_size: 50 });
+  }, []);
+
+  useEffect(() => {
+    if (posts) {
+      setFeeds(posts);
+    }
+  }, [posts, setFeeds]);
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} sx={{ justifyContent: "flex-end" }}>
       {/* Left of post */}
       <Grid item xs={12} lg={1} />
 
       {/* Post */}
       <Grid item xs={12} lg={6} marginRight={2}>
-        {Posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
+        {
+          feeds.map((post) => (
+            <Post key={post._id} post={post} />
+          ))
+          // posts.map((post) => {
+          //   console.log(post);
+          // })
+        }
       </Grid>
 
       {/* Right of post */}
