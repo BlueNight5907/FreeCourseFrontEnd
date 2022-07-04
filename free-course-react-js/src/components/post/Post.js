@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bookmark,
   BookmarkBorderOutlined,
@@ -24,6 +24,7 @@ import {
   styled,
   Tooltip,
   Divider,
+  Snackbar,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { format, subDays } from "date-fns";
@@ -32,6 +33,8 @@ import TextField from "components/text-field/TextField";
 import Button from "components/button/Button";
 import Caption from "components/caption/Caption";
 import PostActionDropDown from "containers/dropdowns/post-action-dropdown/PostActionDropDown";
+import { useDispatch } from "react-redux";
+import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 
 const CardActions = styled(MuiCardActions)(({ theme }) => ({
   display: "flex",
@@ -49,9 +52,20 @@ const InputWrapper = styled("div")(({ theme }) => ({
 }));
 
 const Post = ({ post }) => {
-  const { username, createdAt, avatar, backgroundUrl, description, id } = post;
+  const {
+    _id,
+    title,
+    createdAt,
+    backgroundUrl,
+    description,
+    content,
+    comments,
+    likes,
+    creator,
+  } = post;
   let { like } = post;
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const iconStyle = {
     default: {
@@ -71,7 +85,7 @@ const Post = ({ post }) => {
   };
 
   // Like react
-  const [likeNum, setLikeNum] = useState(like);
+  const [likeNum, setLikeNum] = useState(likes.length);
   const [isLiked, setIsLike] = useState(false);
   const toggleLike = () => {
     setIsLike(!isLiked);
@@ -84,6 +98,43 @@ const Post = ({ post }) => {
     setIsMark(!isMarked);
   };
 
+  // Creator data
+  const [creatorData, setCreatorData] = useState({
+    id: "",
+    email: "",
+    userInformation: {
+      fullName: "",
+      avatar: "",
+    },
+  });
+
+  useEffect(() => {
+    if (creator) {
+      dispatch({
+        type: GET_ACCOUNT_INFORMATION,
+        accountId: creator,
+        callback: (data) => setCreatorData(data),
+      });
+    }
+  }, [creator, dispatch]);
+
+  const [openSnack, setOpenSnack] = React.useState(false);
+
+  const handleClick = () => {
+    navigator.clipboard
+      .writeText(`http://localhost:3000/community/post/${_id}`)
+      .then(() => {
+        setOpenSnack(true);
+      });
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
   return (
     <Card
       elevation={0}
@@ -96,15 +147,15 @@ const Post = ({ post }) => {
       <CardHeader
         avatar={
           <UserCard
-            name={/*username*/ "TADA"}
-            subtitle={format(subDays(createdAt, 0), "dd/MM/yyyy")}
-            avatar={avatar}
-            subLink={"/community/post/" + id}
+            name={creatorData.userInformation.fullName}
+            subtitle={/*format(subDays(createdAt, 0), "dd/MM/yyyy")*/ createdAt}
+            avatar={creatorData.userInformation.avatar}
+            subLink={"/community/post/" + _id}
           />
         }
         action={<PostActionDropDown />}
       />
-      <CardMedia component="img" image={backgroundUrl} />
+      {backgroundUrl && <CardMedia component="img" image={backgroundUrl} />}
       <CardActions>
         <Box>
           <IconButton onClick={toggleLike}>
@@ -119,7 +170,7 @@ const Post = ({ post }) => {
             <ChatBubbleOutline sx={iconStyle.default} />
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={handleClick}>
             {/* <SendOutlined sx={iconStyle.default} /> */}
             <Icon icon="bx:share-alt" style={iconStyle.default} />
           </IconButton>
@@ -157,6 +208,12 @@ const Post = ({ post }) => {
           </Typography>
         </Button>
       </InputWrapper>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message="Sao chép địa chỉ thành công"
+      />
     </Card>
   );
 };

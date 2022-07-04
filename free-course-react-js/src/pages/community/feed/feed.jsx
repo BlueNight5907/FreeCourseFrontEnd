@@ -40,10 +40,17 @@ const Feed = () => {
 
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.blog);
+  const [feeds, setFeeds] = useState([]);
 
   useEffect(() => {
     dispatch({ type: GET_FEEDS_REQUEST, page_size: 50 });
   }, []);
+
+  useEffect(() => {
+    if (posts) {
+      setFeeds(posts);
+    }
+  }, [posts, setFeeds]);
   return (
     <Grid container spacing={1} sx={{ justifyContent: "flex-end" }}>
       {/* Left of post */}
@@ -52,12 +59,12 @@ const Feed = () => {
       {/* Post */}
       <Grid item xs={12} lg={6} marginRight={2}>
         {
-          /* {posts
-          ? posts
-          : Posts.map((post) => <Post key={post._id} post={post} />)} */
-          posts.map((post) => {
-            console.log(post);
-          })
+          feeds.map((post) => (
+            <Post key={post._id} post={post} />
+          ))
+          // posts.map((post) => {
+          //   console.log(post);
+          // })
         }
       </Grid>
 
