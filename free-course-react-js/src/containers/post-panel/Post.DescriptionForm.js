@@ -35,7 +35,6 @@ const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const ImageInput = ({ background, setBackground }) => {
   const theme = useTheme();
   const bgRef = useRef(null);
-  const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
 
   const [fileDataURL, setFileDataURL] = useState(null);
   const [file, setFile] = useState(background);
@@ -71,7 +70,7 @@ const ImageInput = ({ background, setBackground }) => {
         fileReader.abort();
       }
     };
-  }, [file]);
+  }, [file, background]);
   return (
     <Stack gap={1} width="100%" height="100%">
       <Paper
@@ -103,7 +102,7 @@ const ImageInput = ({ background, setBackground }) => {
           }}
         >
           <Button variant="contained" onClick={() => bgRef.current.click()}>
-            Đổi ảnh nền
+            {file ? "Thay ảnh bìa" : "Thêm ảnh bìa"}
           </Button>
           {file && (
             <Button
@@ -118,68 +117,9 @@ const ImageInput = ({ background, setBackground }) => {
         </Stack>
       </Paper>
       <Typography variant="caption" ml={1}>
-        Background khóa học
+        Ảnh bìa cho bài viết
       </Typography>
     </Stack>
-  );
-};
-
-const ResultBox = (props) => {
-  const [list, setList] = useState([]);
-
-  const handleDelete = (selected) => () => {
-    const newList = list.filter((_, index) => selected !== index);
-    setList(newList);
-  };
-
-  const addNew = () => {
-    setList([...list, ""]);
-  };
-
-  const onChange = (index) => (event) => {
-    list[index] = event.target.value;
-    setList([...list]);
-  };
-
-  return (
-    <>
-      <Divider className="mb-5" orientation="horizontal" />
-      <Stack className="mb-5 flex-row items-center gap-5">
-        <Typography className="font-medium">Kết quả đạt được</Typography>
-        <Button
-          onClick={addNew}
-          startIcon={<Add />}
-          disableElevation
-          variant="outlined"
-        >
-          Thêm kết quả
-        </Button>
-      </Stack>
-      <Stack gap={1}>
-        {list.map((item, index) => (
-          <Stack key={index} className="flex-row gap-2">
-            <FormControl required className="flex-grow">
-              <OutlinedInput
-                onChange={onChange(index)}
-                placeholder="Nhập kết quả đạt được"
-                fullWidth
-                value={item}
-              />
-              <FormHelperText>
-                Kết quả đạt được sau khi học khóa học
-              </FormHelperText>
-            </FormControl>
-            <Button
-              color="error"
-              onClick={handleDelete(index)}
-              className="h-[58px]"
-            >
-              <DeleteOutline />
-            </Button>
-          </Stack>
-        ))}
-      </Stack>
-    </>
   );
 };
 
@@ -207,7 +147,6 @@ const DescriptionForm = ({
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
   };
-  useEffect(() => {});
 
   return (
     <Box className="flex h-full flex-col" gap={2}>

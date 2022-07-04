@@ -1,4 +1,7 @@
 import {
+  GET_FEEDS_REQUEST,
+  GET_FEEDS_SUCCESS,
+  GET_FEEDS_ERROR,
   GET_BLOG_REQUEST,
   GET_BLOG_SUCCESS,
   GET_BLOG_ERROR,
@@ -11,30 +14,52 @@ import {
   DELETE_BLOG_REQUEST,
   DELETE_BLOG_SUCCESS,
   DELETE_BLOG_ERROR,
-} from "../../types/data-types/post-type";
+} from "../../types/data-types/blog-type";
 
 const initialState = {
   posts: [],
+  post: null,
+  comments: [],
+  loadingGetFeeds: false,
   loadingGetBlog: false,
   loadingAddBlog: false,
   loadingUpdateBlog: false,
   loadingDeleteBlog: false,
+  message: null,
   error: null,
 };
 
-const PostReducer = (state = initialState, action) => {
+const BlogReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case GET_FEEDS_REQUEST:
+      return {
+        ...state,
+        loadingGetFeeds: true,
+      };
+    case GET_FEEDS_SUCCESS:
+      return {
+        ...state,
+        loadingGetFeeds: false,
+        posts: [...state.posts, ...payload.feeds],
+      };
+    case GET_FEEDS_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
     case GET_BLOG_REQUEST:
       return {
         ...state,
         loadingGetBlog: true,
+        post: null,
+        comments: [],
       };
     case GET_BLOG_SUCCESS:
       return {
         ...state,
         loadingGetBlog: false,
-        posts: [...state.posts, ...payload.data],
+        post: payload.post,
       };
     case GET_BLOG_ERROR:
       return {
@@ -50,7 +75,7 @@ const PostReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingAddBlog: false,
-        posts: [...payload.post, ...state.posts],
+        posts: [payload.post, ...state.posts],
       };
     case POST_BLOG_ERROR:
       return {
@@ -58,18 +83,35 @@ const PostReducer = (state = initialState, action) => {
         error: payload,
       };
     case UPDATE_BLOG_REQUEST:
-      return {};
+      return {
+        ...state,
+        loadingUpdateBlog: true,
+        message: null,
+      };
     case UPDATE_BLOG_SUCCESS:
-      return {};
+      return {
+        ...state,
+        loadingUpdateBlog: false,
+        //posts: []
+        message: payload.message,
+      };
     case UPDATE_BLOG_ERROR:
       return {
         ...state,
         error: payload,
       };
     case DELETE_BLOG_REQUEST:
-      return {};
+      return {
+        ...state,
+        loadingDeleteBlog: true,
+        message: null,
+      };
     case DELETE_BLOG_SUCCESS:
-      return {};
+      return {
+        ...state,
+        loadingDeleteBlog: false,
+        message: payload.message,
+      };
     case DELETE_BLOG_ERROR:
       return {
         ...state,
@@ -81,4 +123,4 @@ const PostReducer = (state = initialState, action) => {
   }
 };
 
-export default PostReducer;
+export default BlogReducer;

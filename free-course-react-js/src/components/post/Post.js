@@ -49,7 +49,7 @@ const InputWrapper = styled("div")(({ theme }) => ({
 }));
 
 const Post = ({ post }) => {
-  const { username, createDate, avatar, media, caption, id } = post;
+  const { username, createdAt, avatar, backgroundUrl, description, id } = post;
   let { like } = post;
   const theme = useTheme();
 
@@ -96,15 +96,15 @@ const Post = ({ post }) => {
       <CardHeader
         avatar={
           <UserCard
-            name={username}
-            subtitle={format(subDays(createDate, 0), "dd/MM/yyyy")}
+            name={/*username*/ "TADA"}
+            subtitle={format(subDays(createdAt, 0), "dd/MM/yyyy")}
             avatar={avatar}
             subLink={"/community/post/" + id}
           />
         }
         action={<PostActionDropDown />}
       />
-      <CardMedia component="img" image={media} />
+      <CardMedia component="img" image={backgroundUrl} />
       <CardActions>
         <Box>
           <IconButton onClick={toggleLike}>
@@ -138,7 +138,7 @@ const Post = ({ post }) => {
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
           {likeNum} {likeNum > 2 ? "likes" : "like"}
         </Typography>
-        <Caption caption={caption} />
+        <Caption caption={description} />
       </CardContent>
       <Divider />
       <InputWrapper>

@@ -9,7 +9,7 @@ import DescriptionForm from "containers/post-panel/Post.DescriptionForm";
 // import ContentForm from "containers/course-panel/ContentForm";
 import ContentForm from "containers/post-panel/Post.ContentForm";
 import { useDispatch } from "react-redux";
-import { POST_BLOG_REQUEST } from "store/types/data-types/post-type";
+import { POST_BLOG_REQUEST } from "store/types/data-types/blog-type";
 
 function a11yProps(index) {
   return {
@@ -31,7 +31,18 @@ const PostCreate = () => {
   const dispatch = useDispatch();
 
   const handleUploadBlog = () => {
-    dispatch({ type: POST_BLOG_REQUEST });
+    dispatch({
+      type: POST_BLOG_REQUEST,
+      title,
+      description,
+      background,
+      content,
+    });
+
+    setTitle("");
+    setDescription("");
+    setBackground(null);
+    setContent("");
   };
 
   return (
@@ -44,7 +55,11 @@ const PostCreate = () => {
       actions={
         <Stack className="flex-row justify-end gap-3">
           <Button>Hủy</Button>
-          <Button variant="contained" startIcon={<ArrowCircleUp />}>
+          <Button
+            variant="contained"
+            startIcon={<ArrowCircleUp />}
+            onClick={handleUploadBlog}
+          >
             Đăng bài
           </Button>
         </Stack>
