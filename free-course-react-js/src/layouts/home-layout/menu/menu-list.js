@@ -49,7 +49,7 @@ const mainMenuList = [
   {
     name: "Danh mục khóa học",
     icon: BallotRounded,
-    href: "/courses/all",
+    href: "/courses",
   },
   {
     type: "divider",

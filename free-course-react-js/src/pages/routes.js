@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
+import { Navigate, useRoutes } from "react-router-dom";
 import LearnLayout from "../layouts/learning-layout/LearnLayout";
 import HomeLayout from "../layouts/home-layout/HomeLayout";
 import CourseDetail from "./course-detail/CourseDetail";
@@ -16,7 +16,6 @@ import TestInformation from "./learning/test/TestInformation";
 import Login from "./auth/login/Login";
 import CourseDashboard from "./manage-course/course-dashboard/CourseDashboard";
 import MessageLayout from "layouts/message-layout/MessageLayout";
-import MessageContent from "./message/Message";
 import CreateCourse from "./manage-course/create-course/CreateCourse";
 import Community from "./community/Community";
 import Post from "./community/post/Post";
@@ -52,7 +51,11 @@ const Routes = () => {
           element: <MyCourses />,
         },
         {
-          path: "/courses/:category",
+          path: "/courses",
+          element: <Navigate to="/courses/all" replace />,
+        },
+        {
+          path: "/courses/:urlPath",
           element: <Category />,
         },
         {

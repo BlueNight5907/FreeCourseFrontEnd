@@ -6,13 +6,28 @@ import {
   EditRounded,
   SlowMotionVideoRounded,
 } from "@mui/icons-material";
-import { IconButton, ListItem, ListItemIcon, Typography } from "@mui/material";
+import {
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { millisecondsToMinutes, millisecondsToSeconds } from "date-fns";
 
 const Module = (props) => {
-  const { component, type = "default", editMode, title, href, time } = props;
+  const {
+    component,
+    type = "default",
+    editMode,
+    title,
+    href,
+    time,
+    active,
+    disabled,
+  } = props;
   const navigate = useNavigate();
   const styles = {
     box: {
@@ -27,6 +42,7 @@ const Module = (props) => {
         backgroundColor: (theme) => theme.palette.hover.main + "60",
         borderLeft: (theme) => "3px solid " + theme.palette.primary.main,
       },
+      mb: 0.4,
     },
     content: {
       color: (theme) => theme.palette.text.main,
@@ -64,11 +80,12 @@ const Module = (props) => {
   };
 
   return (
-    <ListItem
+    <ListItemButton
       component={component}
       sx={styles.box}
       disableGutters
-      disablePadding
+      selected={active}
+      disabled={disabled}
       {...(!editMode && { onClick: () => navigate(href) })}
     >
       <ListItemIcon sx={{ minWidth: 40 }}>
@@ -114,7 +131,7 @@ const Module = (props) => {
           )}
         </div>
       </div>
-    </ListItem>
+    </ListItemButton>
   );
 };
 

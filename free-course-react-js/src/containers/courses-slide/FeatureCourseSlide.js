@@ -8,17 +8,50 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "../../components/image/Image";
 import { SlideNextButton, SlidePrevButton } from "./slide-action";
 import courseBg from "../../assets/background/Students watching webinar on computer.jpg";
 import Button from "../../components/button/Button";
+import { useDispatch } from "react-redux";
+import {
+  GET_ACCOUNT_INFORMATION,
+  GET_COURSES_WITH_FILTER,
+} from "store/types/data-types/common-types";
+import { getRandomItem } from "utils/array-utils";
+import colors from "utils/colors";
+import { Link } from "react-router-dom";
+import { maxLines } from "utils/classUltis";
 
-const FeatureCourseItem = (props) => {
+const FeatureCourseItem = ({ course }) => {
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+  const [teacherInfor, setTeacherInfor] = useState({
+    id: "",
+    email: "",
+    userInformation: {
+      fullName: "",
+      avatar: "",
+    },
+  });
+  const color = useMemo(() => {
+    return course?.tags.map((item) => getRandomItem(colors)) || [];
+  }, [course?.tags]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (course) {
+      dispatch({
+        type: GET_ACCOUNT_INFORMATION,
+        accountId: course.creator,
+        callback: (data) => setTeacherInfor(data),
+      });
+    }
+  }, [course, dispatch]);
+
   return (
     <Paper
       elevation={0}
@@ -57,7 +90,7 @@ const FeatureCourseItem = (props) => {
             sm: 280,
             xs: "100%",
           }}
-          src={courseBg}
+          src={course?.background || courseBg}
           style={{ objectFit: "cover" }}
           border={"0.5px solid #d1d7dc"}
         />
@@ -78,17 +111,28 @@ const FeatureCourseItem = (props) => {
           gap={0.2}
           alignItems="flex-start"
         >
-          <Typography fontFamily="Roboto" className="font-semibold">
-            Cấu trúc dữ liệu và giải thuật
+          <Typography
+            component={Link}
+            to={`/course/${course?._id}`}
+            sx={{
+              "&:hover": {
+                color: theme.palette.primary.main,
+              },
+              ...maxLines(2),
+            }}
+            fontFamily="Roboto"
+            className="font-semibold"
+          >
+            {course?.title}
           </Typography>
           {matchSm && (
             <Typography
               fontFamily="Roboto"
               variant="button"
               className="font-normal block"
+              sx={maxLines(3)}
             >
-              Go Beyond the Basics with Project-Based Building Information
-              Modeling for Architects
+              {course?.shortDesc}
             </Typography>
           )}
 
@@ -97,7 +141,7 @@ const FeatureCourseItem = (props) => {
             variant="button"
             className="font-light block"
           >
-            Nguyễn Văn Huy
+            {teacherInfor.userInformation.fullName}
           </Typography>
           <Stack flexDirection="Row" gap={0.5} alignItems="center">
             <Typography color="orange" variant="subtitle2">
@@ -117,27 +161,51 @@ const FeatureCourseItem = (props) => {
             variant="caption"
             className="font-light block"
           >
-            8 giờ học - 10 video - Mới bắt đầu
+            {course?.level.name} - {course?.participants.length} người học
           </Typography>
-          <Typography
-            variant="caption"
-            fontFamily="Roboto"
-            sx={{
-              padding: 0.5,
-              color: "#4d3105",
-              backgroundColor: "#f3ca8c",
-            }}
-          >
-            Recommend
-          </Typography>
+          <Stack direction="row" gap={0.5} flexWrap="wrap" alignItems="center">
+            <Typography
+              variant="caption"
+              fontFamily="Roboto"
+              sx={{
+                padding: 0.5,
+                color: "#4d3105",
+                backgroundColor: "#f3ca8c",
+              }}
+            >
+              {course?.category.name}
+            </Typography>
+            {course?.tags.map((tag, index) => (
+              <Typography
+                key={index}
+                variant="caption"
+                fontFamily="Roboto"
+                sx={{
+                  padding: theme.spacing(0.5, 1),
+                  borderRadius: 0.5,
+                  color: "#fff",
+                  backgroundColor: color[index],
+                }}
+              >
+                {tag.name}
+              </Typography>
+            ))}
+          </Stack>
         </Box>
-        {matchMd && <Button>Xem chi tiết</Button>}
+        {matchMd && (
+          <Button component={Link} to={`/course/${course?._id}`}>
+            Xem chi tiết
+          </Button>
+        )}
       </Box>
     </Paper>
   );
 };
 
 const FeatureCourseSlide = () => {
+  const dispatch = useDispatch();
+  const [popularCourses, setPopularCourses] = useState([]);
+  const [hotTrendCourses, setHotTrendCourses] = useState([]);
   const style = {
     "& .swiper": {
       position: "unset",
@@ -146,6 +214,22 @@ const FeatureCourseSlide = () => {
     padding: (theme) => theme.spacing(1, 0),
     width: "100%",
   };
+
+  useEffect(() => {
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "all",
+      params: { sort: "participants", page: 1, page_size: 2 },
+      callback: setPopularCourses,
+    });
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "all",
+      params: { sort: "rates", page: 1, page_size: 2 },
+      callback: setHotTrendCourses,
+    });
+  }, [dispatch]);
+
   return (
     <Box
       sx={{
@@ -172,15 +256,12 @@ const FeatureCourseSlide = () => {
         >
           <SlideNextButton />
           <SlidePrevButton />
-          <SwiperSlide>
-            <FeatureCourseItem />
-          </SwiperSlide>
-          <SwiperSlide>
-            <FeatureCourseItem />
-          </SwiperSlide>
-          <SwiperSlide>
-            <FeatureCourseItem />
-          </SwiperSlide>
+
+          {[...popularCourses, ...hotTrendCourses].map((item, index) => (
+            <SwiperSlide key={index}>
+              <FeatureCourseItem course={item} />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </Box>
     </Box>

@@ -42,3 +42,11 @@ export const scrollSetting = (options) => {
     },
   };
 };
+
+export const maxLines = (line = 1) => ({
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  display: "-webkit-box",
+  WebkitLineClamp: line,
+  WebkitBoxOrient: "vertical",
+});

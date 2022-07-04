@@ -22,13 +22,13 @@ import {
   GET_CATEGORIES_REQUEST,
   GET_TAGS_REQUEST,
 } from "store/types/data-types/category-types";
+import { scrollSetting } from "utils/classUltis";
 import Button from "../../../components/button/Button";
 
 const FilterSection = (props) => {
   const {
     type = "radio",
     handleChange,
-    name,
     value,
     data,
     title,
@@ -54,7 +54,7 @@ const FilterSection = (props) => {
           {type === "radio" && (
             <RadioGroup
               value={value}
-              onChange={(event) => handleChange(name, event.target.value)}
+              onChange={(event) => handleChange(event.target.value)}
             >
               {data?.map((item, index) => (
                 <FormControlLabel
@@ -73,12 +73,15 @@ const FilterSection = (props) => {
                 control={
                   <Checkbox
                     checked={value?.filter((a) => a === item.value).length > 0}
-                    onChange={(e) =>
-                      handleChange(name, {
-                        value: item.value,
-                        checked: e.target.checked,
-                      })
-                    }
+                    onChange={(e) => {
+                      let arr = value;
+                      if (e.target.checked) {
+                        arr.push(item.value);
+                      } else {
+                        arr = value.filter((tag) => tag !== item.value);
+                      }
+                      handleChange(arr);
+                    }}
                   />
                 }
                 label={item.name}
@@ -91,13 +94,9 @@ const FilterSection = (props) => {
 };
 
 const Filter = (props) => {
-  const { open, setOpen } = props;
+  const { open, setOpen, params, updateCategory, updateTags } = props;
   const theme = useTheme();
   const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
-  const [filterParams, setFilterParams] = useState({
-    category: "",
-    rate: [],
-  });
 
   const { categories, tags } = useSelector((state) => state.category);
   const dispatch = useDispatch();
@@ -106,19 +105,6 @@ const Filter = (props) => {
     dispatch({ type: GET_CATEGORIES_REQUEST });
     dispatch({ type: GET_TAGS_REQUEST });
   }, [dispatch]);
-
-  const handleChange = (type) => (name, data) => {
-    if (type === "radio") {
-      filterParams[name] = data;
-    } else {
-      if (data.checked) {
-        filterParams[name].push(data.value);
-      } else {
-        filterParams[name] = filterParams[name].filter((a) => a !== data.value);
-      }
-    }
-    setFilterParams({ ...filterParams });
-  };
 
   return (
     <>
@@ -137,9 +123,9 @@ const Filter = (props) => {
             title="Danh mục khóa học"
             type="radio"
             name="category"
-            handleChange={handleChange("radio")}
+            handleChange={updateCategory}
             defaultOpen
-            value={filterParams.category}
+            value={params.category}
             data={[
               { value: "all", name: "Toàn bộ" },
               ...categories.map((item) => ({
@@ -152,10 +138,10 @@ const Filter = (props) => {
             title="Tag"
             type="checkbox"
             name="rate"
-            handleChange={handleChange("checkbox")}
-            value={filterParams.rate}
+            handleChange={updateTags}
+            value={params.queries.tags}
             data={tags.map((item) => ({
-              value: item._id,
+              value: item.name,
               name: item.name,
             }))}
           />
@@ -180,7 +166,11 @@ const Filter = (props) => {
             }}
           >
             <Box
-              sx={{ boxShadow: theme.shadows[3], zIndex: 2 }}
+              sx={{
+                boxShadow: theme.shadows[3],
+                zIndex: 2,
+                backgroundColor: theme.palette.foreground.main,
+              }}
               className=" sticky top-0 flex shrink-0 items-center justify-between mb-3 px-2 py-2"
             >
               <Typography className="ml-3 font-medium flex gap-1 items-center">
@@ -192,51 +182,39 @@ const Filter = (props) => {
               </IconButton>
             </Box>
 
-            <Box className="grow">
+            <Box className="grow" sx={scrollSetting()}>
               <FilterSection
                 title="Danh mục khóa học"
                 type="radio"
                 name="category"
-                handleChange={handleChange("radio")}
-                value={filterParams.category}
+                handleChange={updateCategory}
+                defaultOpen
+                value={params.category}
                 data={[
-                  {
-                    value: "abc",
-                    name: "Lap trinh di dong",
-                  },
-                  {
-                    value: "xyz",
-                    name: "Lap trinh web",
-                  },
-                  {
-                    value: "zxc",
-                    name: "Lap trinh python",
-                  },
+                  { value: "all", name: "Toàn bộ" },
+                  ...categories.map((item) => ({
+                    value: item.urlPath,
+                    name: item.name,
+                  })),
                 ]}
               />
               <FilterSection
-                title="Danh mục khóa học"
+                title="Tag"
                 type="checkbox"
                 name="rate"
-                handleChange={handleChange("checkbox")}
-                value={filterParams.rate}
-                data={[
-                  {
-                    value: "abc",
-                    name: "Lap trinh di dong",
-                  },
-                  {
-                    value: "xyz",
-                    name: "Lap trinh web",
-                  },
-                  {
-                    value: "zxc",
-                    name: "Lap trinh python",
-                  },
-                ]}
+                handleChange={updateTags}
+                value={params.queries.tags}
+                data={tags.map((item) => ({
+                  value: item.name,
+                  name: item.name,
+                }))}
               />
             </Box>
-            <Button className="m-2" variant="contained">
+            <Button
+              className="m-2"
+              variant="contained"
+              onClick={() => setOpen(false)}
+            >
               Hoàn tất
             </Button>
           </Paper>

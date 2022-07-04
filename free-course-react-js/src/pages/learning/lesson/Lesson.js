@@ -5,6 +5,7 @@ import {
   DriveFileRenameOutline,
   NoteAltRounded,
 } from "@mui/icons-material";
+import ReactPlayer from "react-player";
 import {
   Box,
   Divider,
@@ -18,16 +19,24 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button, { buttonBg } from "../../../components/button/Button";
 import { scrollSetting } from "../../../utils/classUltis";
 import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
 import Comment from "./../../../components/comment/Comment";
+import { format } from "date-fns";
+import { useParams } from "react-router-dom";
+import { COMPLETE_LESSON_REQUEST } from "store/types/data-types/learning-process-types";
 
 const Lesson = () => {
   const { courseOpen } = useSelector((state) => state.setting);
   const { teacher } = useSelector((s) => s.courseDetail);
+  const { courseId, stepId } = useParams();
+  const { lessonDetail } = useSelector((state) => state.learningProcess);
+  const [progress, setProgress] = useState(0);
+  const [submit, setSubmit] = useState(false);
+  const videoRef = useRef();
   const dispatch = useDispatch();
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
@@ -35,6 +44,38 @@ const Lesson = () => {
   const [openComment, setOpenComment] = useState(false);
   const handleClick = () => setOpen((s) => !s);
   const toggleComment = () => setOpenComment((s) => !s);
+
+  const handleProgressVideo = useCallback((progress) => {
+    console.log(progress);
+  }, []);
+
+  useEffect(() => {
+    const progressInterval = setInterval(() => {
+      setProgress(
+        videoRef.current.getCurrentTime() / videoRef.current.getDuration()
+      );
+    }, 1000);
+    return () => {
+      clearInterval(progressInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!submit && progress > 0.95 && lessonDetail) {
+      dispatch({
+        type: COMPLETE_LESSON_REQUEST,
+        courseId,
+        stepId,
+        moduleId: lessonDetail.moduleId,
+        callback: setSubmit,
+      });
+    }
+  }, [courseId, dispatch, lessonDetail, progress, stepId, submit]);
+
+  useEffect(() => {
+    setTimeout(() => setSubmit(false), 5000);
+  }, [stepId]);
+
   return (
     <>
       <Stack flexDirection="row" gap={2}>
@@ -42,7 +83,26 @@ const Lesson = () => {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Paper className="aspect-[19/10] bg-black"></Paper>
+                <Box
+                  className="aspect-video overflow-hidden relative w-full"
+                  borderRadius={1}
+                >
+                  <ReactPlayer
+                    className="absolute inset-0 bg-black rounded-sm"
+                    width="100%"
+                    height="100%"
+                    onProgress={handleProgressVideo}
+                    progressInterval={100}
+                    controls={true}
+                    url={lessonDetail?.content?.url}
+                    ref={videoRef}
+                    config={{
+                      youtube: {
+                        playerVars: { showinfo: 0 },
+                      },
+                    }}
+                  />
+                </Box>
               </Grid>
             </Grid>
           </Grid>
@@ -55,10 +115,15 @@ const Lesson = () => {
                       <Stack className="flex-row justify-between">
                         <Box>
                           <Typography variant="body1" className="font-semibold">
-                            Lập trình OOP
+                            {lessonDetail?.title}
                           </Typography>
                           <Typography variant="caption">
-                            287.623 lượt xem - 18 thg 2, 2022
+                            287.623 lượt xem -{" "}
+                            {lessonDetail?.createdAt &&
+                              format(
+                                new Date(lessonDetail.createdAt),
+                                "dd/MM/yyyy"
+                              )}
                           </Typography>
                         </Box>
                         <Stack gap={1} flexDirection="row">
@@ -98,10 +163,14 @@ const Lesson = () => {
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <Box height={2200}></Box>
+                {lessonDetail?.content && (
+                  <Paper elevation={0} sx={{ p: 1, minHeight: 200, my: 1 }}>
+                    {lessonDetail.content.content}
+                  </Paper>
+                )}
               </Grid>
+              <Grid item xs={12}></Grid>
             </Grid>
-            <Paper elevation={0} sx={{ padding: 1 }}></Paper>
           </Grid>
         </Grid>
         <Box width={400} flexShrink={0} display={{ xs: "none", xl: "block" }}>

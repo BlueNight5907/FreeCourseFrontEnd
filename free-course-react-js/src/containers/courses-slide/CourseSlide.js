@@ -3,7 +3,6 @@ import { Box, Paper, Typography } from "@mui/material";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
-import { FreeMode } from "swiper";
 import CourseCard from "../../components/course-card/CourseCard";
 import { ArrowForwardIosRounded } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -65,11 +64,9 @@ function CourseSlide(props) {
         <Swiper
           slidesPerView="auto"
           spaceBetween={10}
-          freeMode={true}
           pagination={{
             clickable: true,
           }}
-          modules={[FreeMode]}
           breakpoints={{
             900: {
               spaceBetween: 20,

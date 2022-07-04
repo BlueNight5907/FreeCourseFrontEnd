@@ -15,6 +15,8 @@ const apiPath = {
   getLearningProcess: (courseId) => `/course/${courseId}/learning-process`,
   getAllMyCourse: "/course/me",
   joinCourse: (id) => `/course/join/${id}`,
+  getStep: (module, step) => `/module/${module}/step/${step}`,
+  completeLesson: (module, step) => `/module/${module}/step/${step}/complete`,
 };
 
 export default apiPath;
