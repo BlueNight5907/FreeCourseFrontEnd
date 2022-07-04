@@ -97,47 +97,24 @@ const TabsContainerWrapper = styled(Box)(
 const chats = [
   {
     avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
+    name: "User63548644",
+    last: "Nice to meet you too",
     unread: 3,
   },
   {
     avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
+    name: "User3546940",
+    last: "😂",
   },
   {
     avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
+    name: "User89778432",
+    last: "Hi",
   },
   {
     avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
-  },
-  {
-    avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
-    unread: 1,
-  },
-  {
-    avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
-    unread: 10,
-  },
-  {
-    avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
-    unread: 10,
-  },
-  {
-    avatar: avt,
-    name: "TADA",
-    last: "Hello nice to meet you",
+    name: "User65454748",
+    last: "bRUH",
   },
 ];
 

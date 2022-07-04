@@ -118,7 +118,7 @@ const Header = () => {
             src=""
           />
           <Box ml={1}>
-            <Typography variant="h6">Zain Baptista</Typography>
+            <Typography variant="h6">User63548644</Typography>
             <Typography variant="caption">
               {formatDistance(subMinutes(new Date(), 8), new Date(), {
                 addSuffix: true,

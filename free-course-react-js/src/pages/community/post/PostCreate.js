@@ -1,129 +1,109 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  AppBar,
-  Dialog,
-  Divider,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Toolbar,
-  Typography,
-  Box,
-  useTheme,
-} from "@mui/material";
-import QuillEditor from "components/rich-text-editor/QuillEditor";
-import { Editor } from "@tinymce/tinymce-react";
+import React, { useState, useRef, useEffect } from "react";
+import Wrapper from "./../../../components/wrapper/Wrapper";
+import { AddCircle, Save, ArrowCircleUp } from "@mui/icons-material";
+import CourseForm from "containers/course-panel/CourseForm";
+import Button from "components/button/Button";
+import { Stack, Tab, Tabs } from "@mui/material";
+import TabPanel from "components/tab-panel/TabPanel";
+import DescriptionForm from "containers/post-panel/Post.DescriptionForm";
+// import ContentForm from "containers/course-panel/ContentForm";
+import ContentForm from "containers/post-panel/Post.ContentForm";
+import { useDispatch } from "react-redux";
+import { POST_BLOG_REQUEST } from "store/types/data-types/blog-type";
 
-const PostCreate = (props) => {
-  const { open, setOpen, setContent, initialValue } = props;
-  // const [content, setContent] = useState("");
-  // const [files, setFiles] = useState([]);
+function a11yProps(index) {
+  return {
+    id: `course-tab-${index}`,
+    "aria-controls": `course-slide-tabpanel-${index}`,
+  };
+}
 
-  // const onEditorChange = (value) => {
-  //   setContent(value);
-  //   console.log(content);
-  // };
-
-  // const onFilesChange = (files) => {
-  //   setFiles(files);
-  // };
-  const theme = useTheme();
-  const [value, setValue] = useState("");
-  const editorRef = useRef(null);
-  const handleClose = () => setOpen(false);
-  const handleSaveContent = () => {
-    console.log(value);
-    if (setContent) {
-      setContent(value);
-    }
+const PostCreate = () => {
+  const [selected, setSelected] = useState(0);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [background, setBackground] = useState(null);
+  const [content, setContent] = useState("");
+  const handleSelectedChange = (event, newValue) => {
+    setSelected(newValue);
   };
 
-  useEffect(() => {
-    setValue(
-      initialValue ||
-        "<h1 id='post-title'>Your title here</h1><h3 id='post-subtitle' style='color: rgb(149, 165, 166);'>Your sub-title here</h3>"
-    );
-  }, [initialValue]);
-  return (
-    <Box
-      sx={{
-        margin: theme.spacing(1, 0, 0, 0),
-        minHeight: 300,
-      }}
-    >
-      <Box>
-        <Typography>Tạo bài viết mới</Typography>
-      </Box>
-      <Editor
-        apiKey="jv4isigvbusa53vjr4qg9ec2lxc9heu9jc0gp08r618c4zsy"
-        onInit={(evt, editor) => (editorRef.current = editor)}
-        cloudChannel="6-dev"
-        value={value}
-        scriptLoading={{ async: true }}
-        onEditorChange={(newValue, editor) => {
-          setValue(newValue);
-        }}
-        init={{
-          height: "100%",
-          menubar: true,
-          placeholder: "Text here",
-          plugins: [
-            "advlist",
-            "autolink",
-            "lists",
-            "link",
-            "image",
-            "charmap",
-            "preview",
-            "anchor",
-            "searchreplace",
-            "visualblocks",
-            "code",
-            "fullscreen",
-            "insertdatetime",
-            "media",
-            "table",
-            "code",
-            "codesample",
-            "help",
-            "wordcount",
-            "emoticons",
-          ],
+  const dispatch = useDispatch();
 
-          toolbar:
-            "undo redo | image media | blocks fontsize fontfamily | " +
-            " bold italic underline strikethrough forecolor backcolor | emoticons link table |alignleft aligncenter " +
-            "alignright alignjustify | bullist numlist outdent indent | " +
-            "removeformat | anchor fullscreen preview | help",
-          // images_upload_url: "postAcceptor.php",
-          /* we override default upload handler to simulate successful upload*/
-          images_upload_handler: function (blobInfo, success, failure) {
-            console.log("hello world");
-          },
-          text_patterns: [
-            { start: "*", end: "*", format: "italic" },
-            { start: "**", end: "**", format: "bold" },
-            { start: "_", end: "_", format: "underline" },
-            { start: "--", end: "--", format: "strikethrough" },
-            { start: ">", end: "<", format: "blockquote" },
-            { start: "<", end: ">", format: "code" },
-            { start: "#", format: "h1" },
-            { start: "##", format: "h2" },
-            { start: "###", format: "h3" },
-            { start: "####", format: "h4" },
-            { start: "#####", format: "h5" },
-            { start: "######", format: "h6" },
-            // The following text patterns require the `lists` plugin
-            { start: "1. ", cmd: "InsertOrderedList" },
-            { start: "* ", cmd: "InsertUnorderedList" },
-            { start: "- ", cmd: "InsertUnorderedList" },
-          ],
-          content_style: `body { font-family:${theme.typography.fontFamily}; font-size:${theme.typography.body1.fontSize} }`,
+  const handleUploadBlog = () => {
+    dispatch({
+      type: POST_BLOG_REQUEST,
+      title,
+      description,
+      background,
+      content,
+    });
+
+    setTitle("");
+    setDescription("");
+    setBackground(null);
+    setContent("");
+  };
+
+  return (
+    <Wrapper
+      marginY={1}
+      title="Tạo bài viết"
+      titleVariant="h3"
+      BoxProps={{ className: "flex flex-col" }}
+      titleIcon={<AddCircle color="primary" />}
+      actions={
+        <Stack className="flex-row justify-end gap-3">
+          <Button>Hủy</Button>
+          <Button
+            variant="contained"
+            startIcon={<ArrowCircleUp />}
+            onClick={handleUploadBlog}
+          >
+            Đăng bài
+          </Button>
+        </Stack>
+      }
+    >
+      <Tabs
+        orientation={"horizontal"}
+        variant="scrollable"
+        value={selected}
+        onChange={handleSelectedChange}
+        allowScrollButtonsMobile
+        aria-label="Vertical tabs example"
+        sx={{
+          flexShrink: 0,
+          marginX: 1,
+          height: "fit-content",
+          borderBottom: "1px solid #d1d7dc",
         }}
-      />
-    </Box>
+      >
+        <Tab
+          label="Tiêu đề và mô tả"
+          className="capitalize items-start"
+          {...a11yProps(0)}
+        />
+        <Tab
+          label="Nội dung bài viết"
+          className="capitalize items-start"
+          {...a11yProps(1)}
+        />
+      </Tabs>
+      <TabPanel index={0} value={selected}>
+        <DescriptionForm
+          title={title}
+          setTitle={setTitle}
+          description={description}
+          setDescription={setDescription}
+          background={background}
+          setBackground={setBackground}
+        />
+      </TabPanel>
+      <TabPanel index={1} value={selected}>
+        <ContentForm content={content} setContent={setContent} />
+      </TabPanel>
+    </Wrapper>
   );
 };
 
