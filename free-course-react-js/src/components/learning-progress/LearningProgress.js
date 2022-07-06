@@ -26,11 +26,12 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 const LearningProgress = (props) => {
   const { total, learned, showLabel, progressSx, variant } = props;
   const value = (learned / total) * 100;
+  console.log(value);
   if (!showLabel) {
     return <BorderLinearProgress value={value} variant={variant} />;
   }
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div className="flex flex-row w-full items-center gap-1">
       <BorderLinearProgress sx={progressSx} value={value} variant={variant} />
       <Typography
         sx={{
