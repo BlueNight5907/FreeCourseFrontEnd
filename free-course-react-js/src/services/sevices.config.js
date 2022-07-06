@@ -1,8 +1,11 @@
 const apiPath = {
   login: "/auth/signin",
+  createCourse: "course/create",
+  createModule: (id) => "module/" + id,
   getMyAccount: "/account/me",
   getCategories: "/category/all",
   getAllTags: "/tag/all",
+  getAllLevels: "course/levels",
   getCoursesWithCategory: (category) => `/course/category/${category}`,
   getNewFeeds: (time, page_size) =>
     `/community/feeds?time=${time}&page_size=${page_size}`,

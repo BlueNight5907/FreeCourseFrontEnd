@@ -22,6 +22,7 @@ import Post from "./community/post/Post";
 import PostCreate from "./community/post/PostCreate";
 import DetailCourse from "./manage-course/detail-course/DetailCourse";
 import Protected from "guards/Protected";
+import MatchRoles from "guards/MatchRoles";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -36,19 +37,35 @@ const Routes = () => {
       children: [
         {
           index: true,
-          element: <Home />,
+          element: (
+            <MatchRoles>
+              <Home />
+            </MatchRoles>
+          ),
         },
         {
           path: "/settings",
-          element: <Setting />,
+          element: (
+            <MatchRoles>
+              <Setting />
+            </MatchRoles>
+          ),
         },
         {
           path: "/course/:courseId",
-          element: <CourseDetail />,
+          element: (
+            <MatchRoles>
+              <CourseDetail />
+            </MatchRoles>
+          ),
         },
         {
           path: "/my-courses",
-          element: <MyCourses />,
+          element: (
+            <MatchRoles>
+              <MyCourses />
+            </MatchRoles>
+          ),
         },
         {
           path: "/courses",
@@ -56,39 +73,75 @@ const Routes = () => {
         },
         {
           path: "/courses/:urlPath",
-          element: <Category />,
+          element: (
+            <MatchRoles>
+              <Category />
+            </MatchRoles>
+          ),
         },
         {
           path: "/manage-course/dashboard",
-          element: <CourseDashboard />,
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <CourseDashboard />
+            </MatchRoles>
+          ),
         },
         {
           path: "/manage-course/category",
-          element: <CourseDashboard />,
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <CourseDashboard />
+            </MatchRoles>
+          ),
         },
         {
           path: "/manage-course/detail-course/:id",
-          element: <DetailCourse />,
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <DetailCourse />
+            </MatchRoles>
+          ),
         },
         {
           path: "/manage-course/detail-course/:id/student",
-          element: <DetailCourse />,
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <DetailCourse />
+            </MatchRoles>
+          ),
         },
         {
           path: "/manage-course/create",
-          element: <CreateCourse />,
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <CreateCourse />
+            </MatchRoles>
+          ),
         },
         {
           path: "/community",
-          element: <Community />,
+          element: (
+            <MatchRoles>
+              <Community />
+            </MatchRoles>
+          ),
         },
         {
           path: "community/post/create",
-          element: <PostCreate />,
+          element: (
+            <MatchRoles>
+              <PostCreate />
+            </MatchRoles>
+          ),
         },
         {
           path: "community/post/:id",
-          element: <Post />,
+          element: (
+            <MatchRoles>
+              <Post />
+            </MatchRoles>
+          ),
         },
       ],
     },
@@ -102,33 +155,37 @@ const Routes = () => {
       children: [
         {
           path: ":stepId",
-          element: <Lesson />,
+          element: (
+            <MatchRoles>
+              <Lesson />
+            </MatchRoles>
+          ),
         },
         {
           path: "test",
-          element: <TestInformation />,
+          element: (
+            <MatchRoles>
+              <TestInformation />
+            </MatchRoles>
+          ),
         },
         {
           path: "test/dosomething",
-          element: <Test />,
+          element: (
+            <MatchRoles>
+              <Test />
+            </MatchRoles>
+          ),
         },
       ],
     },
     {
       path: "/groups",
-      element: <MessageLayout />,
-    },
-    {
-      path: "/sample1",
-      element: <SamplePage />,
-    },
-    {
-      path: "/sample2",
-      element: <SamplePage2 />,
-    },
-    {
-      path: "/sample4",
-      element: <Sample3 />,
+      element: (
+        <MatchRoles>
+          <MessageLayout />
+        </MatchRoles>
+      ),
     },
   ]);
   return routes;

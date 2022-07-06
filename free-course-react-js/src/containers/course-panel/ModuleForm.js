@@ -24,6 +24,8 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_NEW_MODULE_REQUEST } from "store/types/data-types/manage-course-types";
 
 const modulesSchema = yup.object().shape({
   modules: yup.array(
@@ -44,9 +46,16 @@ const AddModuleForm = ({ open }) => {
   const [value, setValue] = useState("");
   const { control } = useFormContext();
   const { append } = useFieldArray({ control, name: "modules" });
+  const dispatch = useDispatch();
+  const { courseData } = useSelector((state) => state.manageCourse);
   const resetValue = () => setValue("");
 
   const addNew = () => {
+    dispatch({
+      type: ADD_NEW_MODULE_REQUEST,
+      body: { title: value },
+      courseId: courseData._id,
+    });
     append({
       name: value,
       steps: [],

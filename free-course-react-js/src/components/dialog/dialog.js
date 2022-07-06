@@ -63,7 +63,7 @@ const Dialog = ({
       <DialogTitle onClose={() => setOpen && setOpen(false)}>
         {title}
       </DialogTitle>
-      <DialogContent>{children}</DialogContent>
+      <DialogContent sx={{ pt: "20px !important" }}>{children}</DialogContent>
       {actions && (
         <DialogActions sx={{ padding: 1.5 }}>{actions}</DialogActions>
       )}

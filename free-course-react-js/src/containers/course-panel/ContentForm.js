@@ -6,13 +6,21 @@ import React, { useState, useEffect } from "react";
 import EditContentDialog from "./EditContentDialog";
 import ReactHtmlParser from "react-html-parser";
 import Prism from "prismjs";
+import { useFormContext } from "react-hook-form";
 
 const ContentForm = ({ content, setContent }) => {
   const theme = useTheme();
+  const {
+    setValue,
+    formState: { errors },
+    getValues,
+  } = useFormContext();
   const [openContentDialog, setOpenContentDialog] = useState(false);
   useEffect(() => {
-    Prism.highlightAll();
-  }, [content]);
+    if (getValues("content")) {
+      Prism.highlightAll();
+    }
+  }, [getValues]);
   return (
     <>
       <Wrapper
@@ -21,6 +29,7 @@ const ContentForm = ({ content, setContent }) => {
           minHeight: 400,
           height: "100%",
         }}
+        BoxProps={{ className: "content" }}
         elevation={0}
         title="Nội dung khóa học"
         titleVariant="body1"
@@ -35,13 +44,13 @@ const ContentForm = ({ content, setContent }) => {
           </Button>
         }
       >
-        {content && ReactHtmlParser(content)}
+        {ReactHtmlParser(getValues("content"))}
       </Wrapper>
       <EditContentDialog
         open={openContentDialog}
         setOpen={setOpenContentDialog}
-        setContent={setContent}
-        initialValue={content}
+        setContent={(value) => setValue("content", value)}
+        initialValue={getValues("content") || ""}
       />
     </>
   );

@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { getRandomItem } from "../../utils/array-utils";
 import colors from "../../utils/colors";
 function Tag(props) {
   const { children, width, height, href, sx, ...others } = props;
+  const color = useMemo(() => getRandomItem(colors), []);
   const style = {
     paddingTop: 1,
     paddingBottom: 1,
@@ -16,7 +17,7 @@ function Tag(props) {
     justifyContent: "center",
     alignItems: "center",
     color: "#fff",
-    backgroundColor: getRandomItem(colors),
+    backgroundColor: color,
     borderRadius: 1,
     cursor: "pointer",
     boxSizing: "border-box",

@@ -50,3 +50,42 @@ export function upload(
   });
   return promise;
 }
+
+export class Upload {
+  constructor(directory, file, onCompleteCallback, progressCallback) {
+    this.directory = directory;
+    this.onCompleteCallback = onCompleteCallback;
+    this.file = file;
+    this.progressCallback = progressCallback;
+    this.storage = storage;
+  }
+
+  start() {
+    const promise = new Promise((resolve, reject) => {
+      this.uploadTask = storage
+        .ref(`/${this.directory}/${new Date().getTime() + this.file.name}`)
+        .put(this.file);
+      this.uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          this.progressCallback && this.progressCallback(progress);
+        },
+        (err) => {
+          reject(err);
+        },
+        () => {
+          this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.onCompleteCallback && this.onCompleteCallback(downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+    return promise;
+  }
+  stop() {
+    this.uploadTask?.cancel();
+  }
+}

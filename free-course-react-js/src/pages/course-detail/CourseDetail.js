@@ -23,7 +23,9 @@ import {
   GET_COURSE_DETAIL_REQUEST,
   GET_TEACHER_INFOR_REQUEST,
 } from "store/types/data-types/course-detail-types";
+import Prism from "prismjs";
 import { millisecondsToHours, millisecondsToMinutes } from "date-fns";
+import ReactHtmlParser from "react-html-parser";
 
 const styles = {
   backgroundContainer: {
@@ -65,6 +67,7 @@ const CourseDetail = () => {
         type: GET_TEACHER_INFOR_REQUEST,
         teacherId: courseDetail.creator,
       });
+      Prism.highlightAll();
     }
   }, [courseDetail, dispatch]);
 
@@ -141,7 +144,7 @@ const CourseDetail = () => {
           </Grid>
           <Grid item xs={12}>
             <Wrapper elevation={0}>
-              <Box className="content" sx={{ minHeight: 200 }}>
+              <Box className="content" sx={{ minHeight: 200, pb: 2 }}>
                 <Stack direction="row" flexWrap="wrap" gap={1} mb={2}>
                   {courseDetail && (
                     <Chip label={courseDetail.category.name} color="primary" />
@@ -150,7 +153,9 @@ const CourseDetail = () => {
                     <Chip label={item.name} key={index} />
                   ))}
                 </Stack>
-                {courseDetail?.content || courseDetail?.shortDesc}
+                {ReactHtmlParser(
+                  courseDetail?.content || courseDetail?.shortDesc
+                )}
               </Box>
               <Box my={1}>
                 {courseDetail?.gains?.length > 0 && (

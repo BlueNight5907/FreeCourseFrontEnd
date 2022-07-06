@@ -31,3 +31,11 @@ export const getStep = (module, step) => {
 export const completeLesson = (module, step) => {
   return request(POST, apiPath.completeLesson(module, step));
 };
+
+export const createCourse = (body) => {
+  return request(POST, apiPath.createCourse, { body });
+};
+
+export const createModule = (courseId, body) => {
+  return request(POST, apiPath.createModule(courseId), { body });
+};
