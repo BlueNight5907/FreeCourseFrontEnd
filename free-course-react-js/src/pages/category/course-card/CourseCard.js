@@ -10,7 +10,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Button from "../../../components/button/Button";
 import Image from "../../../components/image/Image";
 import courseImg from "../../../assets/background/course-slide-bg.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
 import colors from "utils/colors";
 import { useDispatch } from "react-redux";
@@ -33,6 +33,7 @@ const CourseCard = (props) => {
     return data?.tags.map((item) => getRandomItem(colors)) || [];
   }, [data?.tags]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
@@ -43,6 +44,14 @@ const CourseCard = (props) => {
       });
     }
   }, [data, dispatch]);
+
+  const points = useMemo(() => {
+    return (
+      data?.rates?.reduce((total, rating) => {
+        return total + rating.point;
+      }, 0) / data?.rates.length || 0
+    );
+  }, [data]);
 
   return (
     <Box
@@ -78,6 +87,7 @@ const CourseCard = (props) => {
           borderRadius={0.5}
           width={gridView ? "100%" : "fit-content"}
           alignSelf="flex-start"
+          onClick={() => navigate(`/course/${data?._id}`)}
         >
           <Image
             src={data?.background || courseImg}
@@ -139,15 +149,15 @@ const CourseCard = (props) => {
             </Typography>
             <Stack flexDirection="Row" gap={0.5} alignItems="center">
               <Typography color="orange" variant="subtitle2">
-                5.0
+                {points}
               </Typography>
-              <Rating size="small" value={5} readOnly />
+              <Rating size="small" value={points} readOnly precision={0.5} />
               <Typography
                 fontFamily="Roboto"
                 variant="button"
                 className="font-light"
               >
-                (400)
+                ({data?.rates.length})
               </Typography>
             </Stack>
             <Typography

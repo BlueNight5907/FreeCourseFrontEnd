@@ -9,11 +9,26 @@ import {
 import Transition from "components/transition/Transition";
 import LessonForm from "./lesson-form";
 import TestForm from "./test-form";
+import { useSelector } from "react-redux";
 
 const StepFormDialog = ({ open, setOpen, moduleData }) => {
   const [stepType, setStepType] = useState("");
   const [direction, setDirection] = useState("up");
-  const goBack = () => setStepType("");
+  const goBack = () => {
+    if (step) {
+      setOpen(false);
+    } else {
+      setStepType("");
+    }
+  };
+
+  const { step } = useSelector((state) => state.manageCourse);
+
+  useEffect(() => {
+    if (step) {
+      setStepType("lesson");
+    }
+  }, [step]);
 
   useEffect(() => {
     stepType === "lesson" && setDirection("right");
@@ -67,7 +82,12 @@ const StepFormDialog = ({ open, setOpen, moduleData }) => {
         </Slide>
       )}
       {stepType === "lesson" && (
-        <LessonForm goBack={goBack} open={stepType === "lesson"} />
+        <LessonForm
+          goBack={goBack}
+          close={() => setOpen(false)}
+          open={stepType === "lesson"}
+          moduleData={moduleData}
+        />
       )}
       {stepType === "test" && (
         <TestForm goBack={goBack} open={stepType === "test"} />

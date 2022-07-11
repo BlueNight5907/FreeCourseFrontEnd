@@ -54,11 +54,7 @@ function Login() {
     }
   }, [accessToken, navigate]);
 
-  useEffect(() => {
-    if (error) {
-      alert(error);
-    }
-  }, [error]);
+  useEffect(() => {}, [error]);
 
   return (
     <Grid container className="items-center justify-center flex-1">
@@ -172,7 +168,11 @@ function Login() {
                     >
                       Đăng nhập
                     </Button>
-                    <Button sx={styles.authBtn} variant="outlined">
+                    <Button
+                      sx={styles.authBtn}
+                      variant="outlined"
+                      onClick={() => navigate("/register")}
+                    >
                       Đăng ký
                     </Button>
                   </Stack>

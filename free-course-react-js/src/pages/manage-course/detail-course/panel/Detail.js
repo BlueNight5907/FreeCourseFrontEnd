@@ -1,8 +1,10 @@
 import {
+  Alert,
   Avatar,
   Box,
   Card,
   CardHeader,
+  Chip,
   Grid,
   IconButton,
   Paper,
@@ -11,18 +13,20 @@ import {
   useTheme,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Button from "components/button/Button";
 import GroupList from "components/module/GroupList";
 import Wrapper from "components/wrapper/Wrapper";
-import ContentForm from "containers/course-panel/ContentForm";
 import ReactEcharts from "echarts-for-react";
-import { modules, newStudent } from "mock-data/module.mock";
-import React from "react";
+import { newStudent } from "mock-data/module.mock";
+import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
+import bgImage from "assets/background/social-network-bg.jpg";
+import Prism from "prismjs";
+import ReactHtmlParser from "react-html-parser";
 
 const Detail = () => {
   const theme = useTheme();
   const { sideOpen } = useSelector((s) => s.setting);
+  const { courseDetail } = useSelector((s) => s.courseDetail);
   const option2 = {
     tooltip: {
       trigger: "item",
@@ -55,17 +59,70 @@ const Detail = () => {
     ],
   };
 
+  useEffect(() => {
+    if (courseDetail) {
+      Prism.highlightAll();
+    }
+  }, [courseDetail]);
+
+  const courseModules = useMemo(() => {
+    if (!courseDetail) {
+      return [];
+    }
+    return courseDetail.modules.reduce((arr, module) => {
+      const name = module.title;
+      const steps = module.steps.map((step) => ({
+        name: step.title,
+        href: `./`,
+        type: step.type === "lesson" ? "video" : "test",
+        time: step.time,
+      }));
+      arr.push({ name, steps });
+      return arr;
+    }, []);
+  }, [courseDetail]);
+
   return (
     <Grid container spacing={2} minHeight={0}>
       <Grid item xs={12} lg={7.5} xl={8.5}>
         <Grid item xs={12}>
-          <ContentForm></ContentForm>
+          <Wrapper>
+            <Box className="content" sx={{ minHeight: 500, pb: 2 }}>
+              <Stack direction="row" flexWrap="wrap" gap={1} mb={2}>
+                {courseDetail && (
+                  <Chip label={courseDetail.category.name} color="primary" />
+                )}
+                {courseDetail?.tags.map((item, index) => (
+                  <Chip label={item.name} key={index} />
+                ))}
+              </Stack>
+              {ReactHtmlParser(
+                courseDetail?.content || courseDetail?.shortDesc
+              )}
+            </Box>
+            <Box my={1}>
+              {courseDetail?.gains?.length > 0 && (
+                <>
+                  <Typography gutterBottom>Kết quả đạt được:</Typography>
+                  <Grid container spacing={1}>
+                    {courseDetail?.gains?.map((item, index) =>
+                      item ? (
+                        <Grid item key={index} xs={12} md={6}>
+                          <Alert severity="success">{item}</Alert>
+                        </Grid>
+                      ) : null
+                    )}
+                  </Grid>
+                </>
+              )}
+            </Box>
+          </Wrapper>
         </Grid>
         <Grid item xs={12} sx={{ my: 2 }}>
           <Wrapper>
             <Stack gap={1}>
-              {modules.map((item, index) => (
-                <GroupList data={item} key={index} />
+              {courseModules.map((item, index) => (
+                <GroupList data={item} key={index} index={index} />
               ))}
             </Stack>
           </Wrapper>
@@ -80,7 +137,9 @@ const Detail = () => {
                 height: "100%",
                 position: "relative",
                 bgcolor: theme.palette.shadow.main,
-                backgroundImage: `url()`,
+                backgroundImage: `url(${
+                  courseDetail?.background ? courseDetail.background : bgImage
+                })`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -93,7 +152,7 @@ const Detail = () => {
           <Box>
             <Grid container spacing={1}>
               <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
-                <Paper sx={{ position: "relative", pb: "100%" }} elevation={0}>
+                <Paper sx={{ position: "relative", pb: "75%" }} elevation={0}>
                   <Box
                     className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
                     padding={1}
@@ -123,18 +182,13 @@ const Detail = () => {
               New Student Attend
             </Typography>
             <Stack gap={1}>
-              {newStudent.map((item) => (
-                <Card key={item.id}>
+              {newStudent.map((item, index) => (
+                <Card key={index} elevation={0}>
                   <CardHeader
                     avatar={
                       <Avatar alt="N" src={item.avatar} aria-label="recipe">
                         R
                       </Avatar>
-                    }
-                    action={
-                      <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                      </IconButton>
                     }
                     title={item.name}
                     subheader={item.date}

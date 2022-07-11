@@ -16,7 +16,14 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { CREATE_COURSE_REQUEST } from "store/types/data-types/manage-course-types";
+import {
+  CREATE_COURSE_REQUEST,
+  CREATE_NEW_COURSE,
+  EDIT_COURSE_REQUEST,
+  GET_ALL_MODULES_REQUEST,
+  GET_TEACHER_COURSE_INFOR_REQUEST,
+} from "store/types/data-types/manage-course-types";
+import { useParams } from "react-router-dom";
 
 function a11yProps(index) {
   return {
@@ -38,8 +45,9 @@ const courseSchema = yup.object().shape({
   gains: yup.array().of(yup.string().required("Không được để trống nội dung")),
 });
 
-const CreateCourse = () => {
+const CreateCourse = ({ type = "create" }) => {
   const { courseData } = useSelector((state) => state.manageCourse);
+  const { courseId } = useParams();
   const [selected, setSelected] = useState(0);
   const [content, setContent] = useState();
   const [modules, setModules] = useState([]);
@@ -55,6 +63,7 @@ const CreateCourse = () => {
     category: "",
     background: "",
     gains: [],
+    modules: [],
   });
   const dispatch = useDispatch();
   const methods = useForm({
@@ -62,6 +71,15 @@ const CreateCourse = () => {
     resolver: yupResolver(courseSchema),
     defaultValues: formData,
   });
+
+  useEffect(() => {
+    if (type === "edit" && courseId) {
+      dispatch({ type: GET_TEACHER_COURSE_INFOR_REQUEST, courseId });
+    } else {
+      dispatch({ type: CREATE_NEW_COURSE });
+    }
+  }, [courseId, dispatch, type]);
+
   useEffect(() => {
     dispatch({ type: GET_CATEGORIES_REQUEST });
     dispatch({ type: GET_TAGS_REQUEST });
@@ -78,8 +96,28 @@ const CreateCourse = () => {
       methods.setValue("category", courseData.category);
       methods.setValue("background", courseData.background);
       methods.setValue("gains", courseData.gains);
+      methods.setValue("modules", courseData.modules);
+    } else {
+      methods.setValue("tags", []);
+      methods.setValue("title", "");
+      methods.setValue("shortDesc", "");
+      methods.setValue("content", "");
+      methods.setValue("level", "");
+      methods.setValue("category", "");
+      methods.setValue("background", "");
+      methods.setValue("gains", []);
+      methods.setValue("modules", []);
     }
   }, [courseData, methods]);
+
+  useEffect(() => {
+    if (courseId || courseData?._id) {
+      dispatch({
+        type: GET_ALL_MODULES_REQUEST,
+        courseId: courseId || courseData?._id,
+      });
+    }
+  }, [courseData, courseId, dispatch]);
 
   useEffect(() => {
     const subscription = methods.watch((value) => setFormData(value));
@@ -91,6 +129,12 @@ const CreateCourse = () => {
   const onSubmit = (data) => {
     if (!courseData) {
       dispatch({ type: CREATE_COURSE_REQUEST, body: data });
+    } else {
+      dispatch({
+        type: EDIT_COURSE_REQUEST,
+        body: data,
+        courseId: courseId || courseData._id,
+      });
     }
   };
   const onError = (errors) => console.log(errors);
@@ -101,22 +145,24 @@ const CreateCourse = () => {
         component="form"
         onSubmit={methods.handleSubmit(onSubmit, onError)}
         marginY={1}
-        title="Tạo khóa học"
+        title={type === "edit" ? "Chỉnh sửa khóa học" : "Tạo khóa học"}
         titleVariant="h3"
         BoxProps={{ className: "flex flex-col" }}
         titleIcon={<AddCircle color="primary" />}
         actions={
-          <Stack className="flex-row justify-end gap-3">
-            <Button>Hủy</Button>
-            <Button
-              variant="contained"
-              type="submit"
-              onClick={() => {}}
-              startIcon={<Save />}
-            >
-              {courseData ? "Lưu và tiếp tục" : "Tạo khóa học mới"}
-            </Button>
-          </Stack>
+          selected !== 2 && (
+            <Stack className="flex-row justify-end gap-3">
+              <Button>Hủy</Button>
+              <Button
+                variant="contained"
+                type="submit"
+                onClick={() => {}}
+                startIcon={<Save />}
+              >
+                {courseData ? "Lưu và tiếp tục" : "Tạo khóa học mới"}
+              </Button>
+            </Stack>
+          )
         }
       >
         <Tabs

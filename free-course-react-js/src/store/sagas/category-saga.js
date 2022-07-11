@@ -84,7 +84,7 @@ function* fetchCourseList(category, params) {
 function* watchFetchCourseList() {
   while (true) {
     const { params, category } = yield take(GET_COURSES_REQUEST);
-    yield call(fetchCourseList, category, params);
+    yield fork(fetchCourseList, category, params);
   }
 }
 

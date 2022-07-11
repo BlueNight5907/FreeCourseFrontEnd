@@ -23,10 +23,12 @@ import PostCreate from "./community/post/PostCreate";
 import DetailCourse from "./manage-course/detail-course/DetailCourse";
 import Protected from "guards/Protected";
 import MatchRoles from "guards/MatchRoles";
+import Register from "./auth/register/Register";
 
 const Routes = () => {
   const routes = useRoutes([
     { path: "/login", element: <Login /> },
+    { path: "/register", element: <Register /> },
     {
       path: "/",
       element: (
@@ -96,7 +98,15 @@ const Routes = () => {
           ),
         },
         {
-          path: "/manage-course/detail-course/:id",
+          path: "/manage-course/edit/:courseId",
+          element: (
+            <MatchRoles roles={["teacher", "admin"]}>
+              <CreateCourse type="edit" />
+            </MatchRoles>
+          ),
+        },
+        {
+          path: "/manage-course/detail-course/:courseId",
           element: (
             <MatchRoles roles={["teacher", "admin"]}>
               <DetailCourse />

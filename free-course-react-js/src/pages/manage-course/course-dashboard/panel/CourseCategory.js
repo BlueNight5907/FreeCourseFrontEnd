@@ -1,60 +1,89 @@
-import { Box, Paper, Stack } from "@mui/material";
+import { Box, Chip, Paper, Stack } from "@mui/material";
 import RenderTable from "components/render-table/RenderTable";
 import Wrapper from "components/wrapper/Wrapper";
-import React from "react";
-import { useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Visibility, Edit } from "@mui/icons-material";
-import { DataGrid } from "@mui/x-data-grid";
 import Button from "components/button/Button";
 import DeleteAction from "../table-cell/delete-action";
+import { GET_MY_CREATED_COURSES_REQUEST } from "store/types/data-types/manage-course-types";
+import { useDispatch } from "react-redux";
+import { getRandomItem } from "utils/array-utils";
+import colors from "utils/colors";
+import Image from "components/image/Image";
+
+const ListTag = ({ row }) => {
+  const colorArr = useMemo(
+    () => row.tags?.map((item) => getRandomItem(colors)),
+    [row.tags]
+  );
+  return (
+    <Stack direction="row" gap={0.5}>
+      {row.tags?.map((tag, index) => (
+        <Chip
+          key={index}
+          sx={{ color: "#fff", backgroundColor: colorArr[index] }}
+          label={tag.name}
+        />
+      ))}
+    </Stack>
+  );
+};
 
 const CourseCategory = () => {
+  const dispatch = useDispatch();
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
     {
-      field: "firstName",
-      headerName: "First name",
-      width: 150,
+      headerName: "Ảnh nền",
+      field: "background",
+      width: 210,
+      renderCell: ({ row }) => (
+        <Image className="aspect-video w-full p-2" src={row.background} />
+      ),
+    },
+    {
+      headerName: "Tên khóa học",
+      field: "title",
+      width: 350,
+    },
+    {
+      headerName: "Danh mục",
+      field: "category",
+      valueGetter: ({ row }) => row.category?.name,
+      width: 180,
       editable: true,
     },
     {
-      field: "lastName",
-      headerName: "Last name",
-      width: 150,
+      headerName: "Cấp độ",
+      field: "level",
+      valueGetter: ({ row }) => row.level?.name,
+      width: 130,
       editable: true,
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
+      headerName: "Nhãn",
+      field: "tag",
       sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+      flex: 1,
+      minWidth: 320,
+      renderCell: ListTag,
     },
     {
+      headerName: "Học viên",
+      field: "participants",
+      valueGetter: ({ row }) => row.participants.length,
+      type: "number",
+    },
+    {
+      headerName: "Hành động",
       field: "action",
-      headerName: "Action",
-      width: 300,
+      width: 250,
       renderCell: (params) => (
         <Box>
-          <Link
-            to={{
-              pathname: "/manage-course/detail-course/" + params.row.id,
-              list: params.row,
-            }}
-          >
+          <Link to={"/manage-course/detail-course/" + params.row._id}>
             <Button variant="contained" startIcon={<Visibility />} />
           </Link>
-          <Link to={{ pathname: "/manage-course/edit/" + params.row.id }}>
+          <Link to={{ pathname: "/manage-course/edit/" + params.row._id }}>
             <Button
               style={{ marginLeft: 16 }}
               variant="contained"
@@ -67,29 +96,31 @@ const CourseCategory = () => {
     },
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const getData = useCallback(async () => {
+    const { data, total: totalRows } = await new Promise((resolve, reject) => {
+      try {
+        dispatch({
+          type: GET_MY_CREATED_COURSES_REQUEST,
+          callback: (data) => resolve(data),
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+    console.log({ data, totalRows });
+    return { data, totalRows };
+  }, [dispatch]);
 
   return (
     <Stack gap={1} className="h-full">
-      <Wrapper className="grow-0 h-[unset]">Khoa hoc cua toi</Wrapper>
       <Paper className="grow flex flex-col min-h-[700px] p-1">
-        <DataGrid
-          rows={rows}
+        <RenderTable
+          params={{ page: 0, page_size: 10 }}
           columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          checkboxSelection
-          disableSelectionOnClick
+          rowIdField="_id"
+          rowHeight={100}
+          rowsPerPageOptions={[10, 25, 50]}
+          getData={getData}
         />
       </Paper>
     </Stack>

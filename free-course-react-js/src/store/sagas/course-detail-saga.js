@@ -1,14 +1,21 @@
 import { take, call, put, fork, delay } from "redux-saga/effects";
 import { getAccountInfor } from "services/api/accountAPI";
 import {
+  getCourseComments,
   getCourseDetail,
   getCoursesWithCategory,
   joinCourse,
+  ratingCourse,
+  sendCourseComment,
 } from "services/api/courseAPI";
 import {
+  ADD_COURSE_COMMENT_REQUEST,
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_REQUEST,
   GET_COURSES_WITH_CATEGORY_SUCCESS,
+  GET_COURSE_COMMENTS_ERROR,
+  GET_COURSE_COMMENTS_REQUEST,
+  GET_COURSE_COMMENTS_SUCCESS,
   GET_COURSE_DETAIL_ERROR,
   GET_COURSE_DETAIL_REQUEST,
   GET_COURSE_DETAIL_SUCCESS,
@@ -16,6 +23,7 @@ import {
   GET_TEACHER_INFOR_REQUEST,
   GET_TEACHER_INFOR_SUCCESS,
   JOIN_COURSE_REQUEST,
+  RATING_COURSE_REQUEST,
 } from "store/types/data-types/course-detail-types";
 import { GET_MY_COURSE_REQUEST } from "store/types/data-types/learning-process-types";
 
@@ -32,7 +40,7 @@ function* getCourse(courseId) {
 function* watchGetCourse() {
   while (true) {
     const { courseId } = yield take(GET_COURSE_DETAIL_REQUEST);
-    yield call(getCourse, courseId);
+    yield fork(getCourse, courseId);
   }
 }
 
@@ -49,7 +57,63 @@ function* getTeacherInfor(teacherId) {
 function* watchGetTeacherInfor() {
   while (true) {
     const { teacherId } = yield take(GET_TEACHER_INFOR_REQUEST);
-    yield call(getTeacherInfor, teacherId);
+    yield fork(getTeacherInfor, teacherId);
+  }
+}
+
+// Get teacher infor
+function* addNewComment(courseId, comment) {
+  try {
+    yield call(sendCourseComment, courseId, comment);
+    yield delay(500);
+    yield put({ type: GET_COURSE_COMMENTS_REQUEST, courseId });
+  } catch (error) {
+    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+  }
+}
+
+function* watchAddComment() {
+  while (true) {
+    const { courseId, comment } = yield take(ADD_COURSE_COMMENT_REQUEST);
+    yield call(addNewComment, courseId, comment);
+  }
+}
+
+// Get teacher infor
+function* doRatingCourse(courseId, point, callback) {
+  try {
+    yield call(ratingCourse, courseId, point);
+    yield delay(500);
+    callback();
+    yield put({ type: GET_COURSE_DETAIL_REQUEST, courseId });
+  } catch (error) {
+    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+  }
+}
+
+function* watchRatingCourse() {
+  while (true) {
+    const { courseId, point, callback } = yield take(RATING_COURSE_REQUEST);
+    yield call(doRatingCourse, courseId, point, callback);
+  }
+}
+
+function* getAllComment(courseId) {
+  try {
+    const { comments } = yield call(getCourseComments, courseId);
+    yield put({
+      type: GET_COURSE_COMMENTS_SUCCESS,
+      payload: comments?.reverse() || [],
+    });
+  } catch (error) {
+    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+  }
+}
+
+function* watchGetComment() {
+  while (true) {
+    const { courseId } = yield take(GET_COURSE_COMMENTS_REQUEST);
+    yield fork(getAllComment, courseId);
   }
 }
 
@@ -72,7 +136,7 @@ function* fetchCourseList(category, params) {
 function* watchFetchCourseList() {
   while (true) {
     const { params, category } = yield take(GET_COURSES_WITH_CATEGORY_REQUEST);
-    yield call(fetchCourseList, category, params);
+    yield fork(fetchCourseList, category, params);
   }
 }
 
@@ -97,5 +161,8 @@ const courseDetailSagaList = [
   fork(watchGetTeacherInfor),
   fork(watchFetchCourseList),
   fork(watchJoinCourse),
+  fork(watchAddComment),
+  fork(watchGetComment),
+  fork(watchRatingCourse),
 ];
 export default courseDetailSagaList;

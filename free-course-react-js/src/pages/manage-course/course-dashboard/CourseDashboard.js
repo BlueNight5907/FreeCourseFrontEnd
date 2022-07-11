@@ -8,10 +8,13 @@ import Dashboard from "./panel/Dashboard";
 import CourseCategory from "./panel/CourseCategory";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { GET_MY_CREATED_COURSES_REQUEST } from "store/types/data-types/manage-course-types";
+import { useDispatch } from "react-redux";
 
 function CourseDashboard() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const [selected, setSelected] = useState(-1);
   const styles = {

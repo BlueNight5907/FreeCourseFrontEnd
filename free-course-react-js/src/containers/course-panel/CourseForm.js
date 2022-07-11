@@ -25,7 +25,6 @@ import { useSelector } from "react-redux";
 import ConfirmDialog from "components/dialog/confirm-dialog";
 import TransferList from "./TransferList";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { getRandomItem } from "utils/array-utils";
 import colors from "utils/colors";
 import { Upload } from "../../firebase";
 
@@ -111,7 +110,6 @@ const CourseForm = () => {
   const [file, setFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [init, setInit] = useState(true);
   const [fileDataURL, setFileDataURL] = useState(null);
   const bgRef = useRef(null);
 
@@ -162,12 +160,15 @@ const CourseForm = () => {
       );
       uploadTask.start();
     } else {
-      if (!getValues("background")) {
-        setFileDataURL();
-      } else {
-        setFileDataURL(getValues("background"));
-      }
+      setTimeout(() => {
+        if (!getValues("background")) {
+          setFileDataURL();
+        } else {
+          setFileDataURL(getValues("background"));
+        }
+      }, [500]);
     }
+
     return () => {
       isCancel = true;
       if (fileReader && fileReader.readyState === 1) {
@@ -198,7 +199,7 @@ const CourseForm = () => {
               label="Tên khóa học"
               variant="outlined"
               fullWidth
-              defaultValue={getValues("name") || ""}
+              value={getValues("title")}
               {...register("title", { required: true })}
               error={errors.title ? true : false}
               helperText={
@@ -212,7 +213,7 @@ const CourseForm = () => {
               rows={4}
               fullWidth
               margin="normal"
-              defaultValue={getValues("shortDesc") || ""}
+              value={getValues("shortDesc")}
               {...register("shortDesc", { required: true })}
               error={errors.shortDesc ? true : false}
               helperText={
@@ -396,7 +397,7 @@ const CourseForm = () => {
                           key={index}
                         >
                           <Chip
-                            label={tag.name}
+                            label={tag?.name}
                             sx={{
                               bgcolor: colors.at(index),
                               color: "#fff",

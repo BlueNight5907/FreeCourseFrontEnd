@@ -4,6 +4,7 @@ import {
   DownloadRounded,
   DriveFileRenameOutline,
   NoteAltRounded,
+  Send,
 } from "@mui/icons-material";
 import ReactPlayer from "react-player";
 import {
@@ -15,6 +16,7 @@ import {
   Paper,
   Slide,
   Stack,
+  TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -27,11 +29,15 @@ import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
 import Comment from "./../../../components/comment/Comment";
 import { format } from "date-fns";
 import { useParams } from "react-router-dom";
-import { COMPLETE_LESSON_REQUEST } from "store/types/data-types/learning-process-types";
+import {
+  ADD_LESSON_COMMENT,
+  COMPLETE_LESSON_REQUEST,
+  GET_ALL_LESSON_COMMENT_REQUEST,
+} from "store/types/data-types/learning-process-types";
 
 const Lesson = () => {
-  const { courseOpen } = useSelector((state) => state.setting);
   const { teacher } = useSelector((s) => s.courseDetail);
+  const { comments } = useSelector((s) => s.learningProcess);
   const { courseId, stepId } = useParams();
   const { lessonDetail } = useSelector((state) => state.learningProcess);
   const [progress, setProgress] = useState(0);
@@ -41,6 +47,7 @@ const Lesson = () => {
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
+  const [comment, setComment] = useState("");
   const [openComment, setOpenComment] = useState(false);
   const handleClick = () => setOpen((s) => !s);
   const toggleComment = () => setOpenComment((s) => !s);
@@ -61,6 +68,16 @@ const Lesson = () => {
   }, []);
 
   useEffect(() => {
+    if (stepId && lessonDetail?.moduleId) {
+      dispatch({
+        type: GET_ALL_LESSON_COMMENT_REQUEST,
+        stepId,
+        moduleId: lessonDetail.moduleId,
+      });
+    }
+  }, [dispatch, lessonDetail, stepId]);
+
+  useEffect(() => {
     if (!submit && progress > 0.95 && lessonDetail) {
       dispatch({
         type: COMPLETE_LESSON_REQUEST,
@@ -75,6 +92,16 @@ const Lesson = () => {
   useEffect(() => {
     setTimeout(() => setSubmit(false), 5000);
   }, [stepId]);
+
+  const sendComment = () => {
+    dispatch({
+      type: ADD_LESSON_COMMENT,
+      moduleId: lessonDetail.moduleId,
+      stepId,
+      comment,
+    });
+    setComment("");
+  };
 
   return (
     <>
@@ -311,25 +338,45 @@ const Lesson = () => {
             backgroundColor: theme.palette.background.main,
           }}
         >
-          <Box padding={2}>
-            <Typography className="font-bold text-lg">80 bình luận</Typography>
+          <Box paddingX={2} paddingY={1}>
+            <Typography className="font-bold text-lg">
+              {comments.length} bình luận
+            </Typography>
             <Typography variant="body2">
               (Vui lòng không spam hoặc quấy rối dưới mọi hình thức)
             </Typography>
           </Box>
           <Box
-            sx={{ backgroundColor: theme.palette.foreground.main }}
-            height={150}
-            mb={2}
-            mt={4}
-          ></Box>
+            sx={{
+              backgroundColor: theme.palette.foreground.main,
+              position: "relative",
+            }}
+            p={1}
+            borderRadius={1}
+            my={2}
+          >
+            <TextField
+              label="Bình luận"
+              multiline
+              rows={4}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full"
+            />
+            <Button
+              sx={{ bottom: 15, right: 15, position: "absolute" }}
+              variant="contained"
+              onClick={sendComment}
+              disabled={comment === ""}
+              endIcon={<Send />}
+            >
+              Gửi
+            </Button>
+          </Box>
           <Stack gap={1}>
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
+            {comments?.map((item, index) => (
+              <Comment key={index} data={item} />
+            ))}
           </Stack>
         </Box>
       </Drawer>
