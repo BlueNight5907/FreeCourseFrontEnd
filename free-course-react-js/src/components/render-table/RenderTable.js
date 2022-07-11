@@ -13,6 +13,7 @@ function RenderTable(props) {
     getData,
     columns,
     rowsPerPageOptions = [15, 25, 50],
+    ...others
   } = props;
   const [selected, setSelected] = useState([]);
   const [searchParams, setSearchParams] = useState(params);
@@ -47,6 +48,7 @@ function RenderTable(props) {
   return (
     <Box width={width} flexGrow={1} height={height}>
       <DataGrid
+        {...others}
         columns={columns || []}
         rows={rows}
         {...(onSelection && {
@@ -82,9 +84,9 @@ function RenderTable(props) {
           baseSelect: { sx: { "& .MuiInput-input": { height: 40 } } },
           baseTextField: { sx: { "& .MuiInput-input": { height: 40 } } },
         }}
-        pageSize={searchParams.pageSize}
-        onPageSizeChange={(pageSize) =>
-          setSearchParams({ ...searchParams, pageSize: pageSize })
+        pageSize={searchParams.page_size}
+        onPageSizeChange={(page_size) =>
+          setSearchParams({ ...searchParams, page_size: page_size })
         }
         rowsPerPageOptions={rowsPerPageOptions}
         rowCount={totalRows}
@@ -103,7 +105,7 @@ RenderTable.propTypes = {
   onSelection: PropTypes.func,
   params: PropTypes.shape({
     page: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
+    page_size: PropTypes.number.isRequired,
   }),
   rowIdField: PropTypes.string.isRequired,
   getData: PropTypes.func.isRequired,

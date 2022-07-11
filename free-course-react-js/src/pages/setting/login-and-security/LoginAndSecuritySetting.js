@@ -7,6 +7,8 @@ import {
   Typography,
   Avatar,
   Stack,
+  ListItemButton,
+  Alert,
 } from "@mui/material";
 import React from "react";
 import TextControl from "./../../../components/text-control/TextControl";
@@ -15,11 +17,45 @@ import Button from "./../../../components/button/Button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import TextField from "../../../components/text-field/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CHANGE_PASSWORD_REQUEST,
+  LOGOUT,
+} from "store/types/data-types/auth-types";
 const LoginAndSecuritySetting = () => {
   const [changePassMode, setChangePassMode] = useState(false);
+  const [form, setForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [regisState, setRegisState] = useState({
+    success: "",
+    error: "",
+  });
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const toggleChangePassMode = () => {
     setChangePassMode((s) => !s);
   };
+
+  const changePassword = () => {
+    dispatch({
+      type: CHANGE_PASSWORD_REQUEST,
+      body: form,
+      callback: ({ success = null, error = null }) => {
+        setRegisState({ success, error });
+        if (success) {
+          setForm({
+            oldPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }
+      },
+    });
+  };
+
   return (
     <Container maxWidth="md" sx={{ padding: 0 }}>
       <Grid container spacing={2}>
@@ -34,7 +70,7 @@ const LoginAndSecuritySetting = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextControl label="Tên tài khoản" value="henrypoter22@gmail.com" />
+          <TextControl label="Tên tài khoản" value={user?.email} />
         </Grid>
         {!changePassMode ? (
           <>
@@ -63,6 +99,11 @@ const LoginAndSecuritySetting = () => {
                 fullWidth
                 helper=""
                 margin="none"
+                value={form.oldPassword}
+                type="password"
+                onChange={(e) =>
+                  setForm({ ...form, oldPassword: e.target.value })
+                }
                 icon={<VpnKeyRounded />}
               />
             </Grid>
@@ -71,8 +112,13 @@ const LoginAndSecuritySetting = () => {
                 label="Mật khẩu mới"
                 placeholder="Nhập mật khẩu mới"
                 fullWidth
+                type="password"
                 helper=""
                 margin="none"
+                value={form.newPassword}
+                onChange={(e) =>
+                  setForm({ ...form, newPassword: e.target.value })
+                }
                 icon={<KeyRounded />}
               />
             </Grid>
@@ -83,10 +129,23 @@ const LoginAndSecuritySetting = () => {
                 fullWidth
                 helper=""
                 margin="none"
+                type="password"
+                value={form.confirmPassword}
+                onChange={(e) =>
+                  setForm({ ...form, confirmPassword: e.target.value })
+                }
                 icon={<KeyRounded />}
               />
             </Grid>
+            <Grid item xs={12}>
+              {regisState.error && (
+                <Alert severity="error">{regisState.error}</Alert>
+              )}
 
+              {regisState.success && (
+                <Alert severity="success">{regisState.success}</Alert>
+              )}
+            </Grid>
             <Grid item xs={12}>
               <Stack direction="row" gap={2}>
                 <Button
@@ -99,7 +158,11 @@ const LoginAndSecuritySetting = () => {
                 >
                   Hủy
                 </Button>
-                <Button width={160} variant="contained">
+                <Button
+                  width={160}
+                  variant="contained"
+                  onClick={changePassword}
+                >
                   Đổi mật khẩu
                 </Button>
               </Stack>
@@ -114,7 +177,10 @@ const LoginAndSecuritySetting = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <DropdownItem>
+          <ListItemButton
+            sx={{ width: "100%", borderRadius: 1 }}
+            onClick={() => dispatch({ type: LOGOUT })}
+          >
             <Box
               component={Link}
               className="user-dropdown flex-row items-center gap-3 cursor-pointer  flex"
@@ -138,7 +204,7 @@ const LoginAndSecuritySetting = () => {
                 Đăng xuất
               </Typography>
             </Box>
-          </DropdownItem>
+          </ListItemButton>
         </Grid>
       </Grid>
     </Container>

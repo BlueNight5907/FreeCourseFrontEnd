@@ -7,6 +7,9 @@ import {
   GET_COURSES_ERROR,
   GET_COURSES_REQUEST,
   GET_COURSES_SUCCESS,
+  GET_LEVELS_ERROR,
+  GET_LEVELS_REQUEST,
+  GET_LEVELS_SUCCESS,
   GET_TAGS_ERROR,
   GET_TAGS_REQUEST,
   GET_TAGS_SUCCESS,
@@ -47,6 +50,23 @@ function* watchGetTags() {
   }
 }
 
+// Get all tags
+function* getLevels() {
+  try {
+    const levels = yield call(categoryAPI.getAllLevels);
+    yield put({ type: GET_LEVELS_SUCCESS, payload: { levels } });
+  } catch (error) {
+    yield put({ type: GET_LEVELS_ERROR, payload: error.message });
+  }
+}
+
+function* watchGetLevels() {
+  while (true) {
+    yield take(GET_LEVELS_REQUEST);
+    yield call(getLevels);
+  }
+}
+
 // Get course list
 function* fetchCourseList(category, params) {
   try {
@@ -64,7 +84,7 @@ function* fetchCourseList(category, params) {
 function* watchFetchCourseList() {
   while (true) {
     const { params, category } = yield take(GET_COURSES_REQUEST);
-    yield call(fetchCourseList, category, params);
+    yield fork(fetchCourseList, category, params);
   }
 }
 
@@ -72,5 +92,6 @@ const categorySagaList = [
   fork(watchGetCategories),
   fork(watchGetTags),
   fork(watchFetchCourseList),
+  fork(watchGetLevels),
 ];
 export default categorySagaList;

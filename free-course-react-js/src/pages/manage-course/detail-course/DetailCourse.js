@@ -2,8 +2,10 @@ import { Edit } from "@mui/icons-material";
 import { Box, Stack, useTheme } from "@mui/material";
 import Button from "components/button/Button";
 import TabPanel from "components/tab-panel/TabPanel";
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { GET_COURSE_DETAIL_REQUEST } from "store/types/data-types/course-detail-types";
 import Detail from "./panel/Detail";
 import Student from "./panel/Student";
 
@@ -11,7 +13,15 @@ const DetailCourse = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const { courseId } = useParams();
   const [selected, setSelected] = useState(-1);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (courseId) {
+      dispatch({ type: GET_COURSE_DETAIL_REQUEST, courseId });
+    }
+  }, [courseId, dispatch]);
 
   useEffect(() => {
     let id = location.pathname.split("/")[3];

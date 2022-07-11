@@ -3,10 +3,16 @@ import {
   completeLesson,
   getAllMyCourse,
   getLearningProcess,
+  getLessonComment,
   getStep,
+  sendLessonComment,
 } from "services/api/courseAPI";
 import {
+  ADD_LESSON_COMMENT,
   COMPLETE_LESSON_REQUEST,
+  GET_ALL_LESSON_COMMENT_ERROR,
+  GET_ALL_LESSON_COMMENT_REQUEST,
+  GET_ALL_LESSON_COMMENT_SUCCESS,
   GET_LEARNING_PROCESS_ERROR,
   GET_LEARNING_PROCESS_REQUEST,
   GET_LEARNING_PROCESS_SUCCESS,
@@ -31,7 +37,45 @@ function* getAllMyCourses() {
 function* watchGetMyCourses() {
   while (true) {
     yield take(GET_MY_COURSE_REQUEST);
-    yield call(getAllMyCourses);
+    yield fork(getAllMyCourses);
+  }
+}
+
+function* senMyComment(moduleId, stepId, comment) {
+  try {
+    const data = yield call(sendLessonComment, moduleId, stepId, comment);
+    yield put({
+      type: GET_ALL_LESSON_COMMENT_SUCCESS,
+      payload: data.comments?.reverse() || [],
+    });
+  } catch (error) {
+    yield put({ type: GET_ALL_LESSON_COMMENT_ERROR, payload: error.message });
+  }
+}
+
+function* watchSendComment() {
+  while (true) {
+    const { moduleId, stepId, comment } = yield take(ADD_LESSON_COMMENT);
+    yield call(senMyComment, moduleId, stepId, comment);
+  }
+}
+
+function* getAllLessonComment(moduleId, stepId) {
+  try {
+    const data = yield call(getLessonComment, moduleId, stepId);
+    yield put({
+      type: GET_ALL_LESSON_COMMENT_SUCCESS,
+      payload: data.comments?.reverse() || [],
+    });
+  } catch (error) {
+    yield put({ type: GET_ALL_LESSON_COMMENT_ERROR, payload: error.message });
+  }
+}
+
+function* watchGetAllComment() {
+  while (true) {
+    const { moduleId, stepId } = yield take(GET_ALL_LESSON_COMMENT_REQUEST);
+    yield call(getAllLessonComment, moduleId, stepId);
   }
 }
 
@@ -47,7 +91,7 @@ function* getProcess(courseId) {
 function* watchGetLearningProcess() {
   while (true) {
     const { courseId } = yield take(GET_LEARNING_PROCESS_REQUEST);
-    yield call(getProcess, courseId);
+    yield fork(getProcess, courseId);
   }
 }
 
@@ -63,7 +107,7 @@ function* getLesson(moduleId, stepId) {
 function* watchGetLesson() {
   while (true) {
     const { moduleId, stepId } = yield take(GET_LESSON_DETAIL_REQUEST);
-    yield call(getLesson, moduleId, stepId);
+    yield fork(getLesson, moduleId, stepId);
   }
 }
 
@@ -92,5 +136,7 @@ const learningProcessSagaList = [
   fork(watchGetLearningProcess),
   fork(watchGetLesson),
   fork(watchCompleteLesson),
+  fork(watchSendComment),
+  fork(watchGetAllComment),
 ];
 export default learningProcessSagaList;

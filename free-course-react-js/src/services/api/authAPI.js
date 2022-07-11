@@ -1,4 +1,4 @@
-import { GET, POST } from "constants/services-constant";
+import { GET, POST, PUT } from "constants/services-constant";
 import request from "services/axios-client/request";
 import apiPath from "services/sevices.config";
 
@@ -17,4 +17,12 @@ export const getMyAccount = async (token) => {
   return {
     user: data,
   };
+};
+
+export const register = async (body) => {
+  return request(POST, apiPath.register, { body });
+};
+
+export const changePass = async (body) => {
+  return request(PUT, apiPath.changePassword, { body });
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Avatar,
@@ -69,6 +69,7 @@ const CourseCard = (props) => {
       fontWeight: 600,
       fontSize: 14,
       lineHeight: 1.9,
+      ...maxLines(1),
     },
 
     avatar: {
@@ -135,6 +136,14 @@ const CourseCard = (props) => {
       navigate("/course/" + data._id);
     }
   };
+
+  const points = useMemo(() => {
+    return (
+      data?.rates?.reduce((total, rating) => {
+        return total + rating.point;
+      }, 0) / data?.rates?.length || 0
+    );
+  }, [data]);
 
   if (learned) {
     return (
@@ -329,13 +338,14 @@ const CourseCard = (props) => {
                 }}
                 className="text-sm font-normal"
               >
-                4.9
+                {points}
               </Typography>
               <Rating
                 name="size-small"
                 readOnly
-                defaultValue={5}
+                value={points}
                 size="small"
+                precision={0.5}
               />
             </div>
             <Typography

@@ -4,10 +4,12 @@ import { LOCAL_STORAGE } from "../../constants/storage-constants";
 import * as authAPI from "../../services/api/authAPI";
 import {
   AUTHENTICATION_REQUEST,
+  CHANGE_PASSWORD_REQUEST,
   LOGIN_ERROR,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT,
+  REGISTER_REQUEST,
   RESET_AUTH_PENDING,
 } from "../types/data-types/auth-types";
 
@@ -80,5 +82,42 @@ function* authenFlow() {
   }
 }
 
-const authSagaList = [fork(loginFlow), fork(authenFlow)];
+function* registerAccount(body, callback) {
+  try {
+    const data = yield call(authAPI.register, body);
+    callback({ success: data, error: null });
+  } catch (error) {
+    callback({ success: null, error: error.message });
+  }
+}
+
+function* registerWatcher() {
+  while (true) {
+    const { body, callback } = yield take(REGISTER_REQUEST);
+    yield call(registerAccount, body, callback);
+  }
+}
+
+function* changePassword(body, callback) {
+  try {
+    const data = yield call(authAPI.changePass, body);
+    callback({ success: data, error: null });
+  } catch (error) {
+    callback({ success: null, error: error.message });
+  }
+}
+
+function* changePassWatcher() {
+  while (true) {
+    const { body, callback } = yield take(CHANGE_PASSWORD_REQUEST);
+    yield call(changePassword, body, callback);
+  }
+}
+
+const authSagaList = [
+  fork(loginFlow),
+  fork(authenFlow),
+  fork(registerWatcher),
+  fork(changePassWatcher),
+];
 export default authSagaList;

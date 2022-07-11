@@ -24,10 +24,27 @@ export default function MainMenu(props) {
   const { user } = useSelector((state) => state.auth);
   const [userInformation, setUserInformation] = React.useState({});
   const dispatch = useDispatch();
+  const [mainMenu, setMainMenu] = React.useState([]);
 
   React.useEffect(() => {
     if (user?.userInformation) {
       setUserInformation(user.userInformation);
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    if (user?.type?.name) {
+      const type = user?.type?.name;
+      const menuTemp = mainMenuList.filter((item) => {
+        if (item.type === "divider") {
+          return true;
+        }
+        if (item.roles.includes(type)) {
+          return true;
+        }
+        return false;
+      });
+      setMainMenu(menuTemp);
     }
   }, [user]);
 
@@ -107,7 +124,7 @@ export default function MainMenu(props) {
           </Box>
         )}
 
-        {mainMenuList.map((item, index) => (
+        {mainMenu.map((item, index) => (
           <MenuItem
             type={item.type}
             title={item.title}

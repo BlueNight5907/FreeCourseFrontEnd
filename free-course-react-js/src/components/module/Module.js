@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { millisecondsToMinutes, millisecondsToSeconds } from "date-fns";
+import ConfirmDialog from "components/dialog/confirm-dialog";
 
 const Module = (props) => {
   const {
@@ -26,8 +27,16 @@ const Module = (props) => {
     href,
     time,
     active,
+    moduleId,
+    id,
     disabled,
+    courseId,
+    getStepData,
+    deleteStep,
+    updateStep,
+    setOpenStepForm,
   } = props;
+  const [openConfirm, setOpenConfirm] = React.useState(false);
   const navigate = useNavigate();
   const styles = {
     box: {
@@ -80,58 +89,87 @@ const Module = (props) => {
   };
 
   return (
-    <ListItemButton
-      component={component}
-      sx={styles.box}
-      disableGutters
-      selected={active}
-      disabled={disabled}
-      {...(!editMode && { onClick: () => navigate(href) })}
-    >
-      <ListItemIcon sx={{ minWidth: 40 }}>
-        <Icon
-          fontSize="medium"
-          sx={{
-            color: setColor(type),
-          }}
-        />
-      </ListItemIcon>
-      <div className="flex flex-row w-full justify-between ">
-        <div className="grow relative">
-          <Typography
-            className="absolute left-0 right-0 w-full top-[50%]"
-            style={{
-              transform: "translateY(-50%)",
-              whiteSpace: "normal",
+    <>
+      <ListItemButton
+        component={component}
+        sx={styles.box}
+        disableGutters
+        selected={active}
+        disabled={disabled}
+        {...(!editMode && { onClick: () => navigate(href) })}
+      >
+        <ListItemIcon sx={{ minWidth: 40 }}>
+          <Icon
+            fontSize="medium"
+            sx={{
+              color: setColor(type),
             }}
-            sx={styles.content}
-            variant="body2"
-          >
+          />
+        </ListItemIcon>
+        <div className="flex flex-row w-full justify-between ">
+          <div className="grow relative">
+            <Typography
+              className="absolute left-0 right-0 w-full top-[50%]"
+              style={{
+                transform: "translateY(-50%)",
+                whiteSpace: "normal",
+              }}
+              sx={styles.content}
+              variant="body2"
+            >
+              {title}
+            </Typography>
+          </div>
+          <div className="flex flex-row items-center flex-shrink-0">
+            <Typography sx={styles.content} variant="body2">
+              {millisecondsToMinutes(time)}:
+              {(
+                millisecondsToSeconds(time) -
+                millisecondsToMinutes(time) * 60 +
+                "0"
+              ).substring(0, 2)}
+            </Typography>
+            {editMode && (
+              <>
+                <IconButton
+                  color="primary"
+                  onClick={() => {
+                    setOpenStepForm(true);
+                    getStepData(moduleId, id);
+                  }}
+                >
+                  <EditRounded />
+                </IconButton>
+                <IconButton
+                  color="tomato"
+                  onClick={() => {
+                    setOpenConfirm(true);
+                    console.log(courseId, moduleId, id);
+                  }}
+                >
+                  <DeleteRounded />
+                </IconButton>
+              </>
+            )}
+          </div>
+        </div>
+      </ListItemButton>
+      <ConfirmDialog
+        deleted
+        open={openConfirm}
+        setOpen={setOpenConfirm}
+        title="Xóa bài học"
+        onAccept={() => deleteStep && deleteStep(courseId, moduleId, id)}
+      >
+        <Typography>
+          Bạn có chắc muốn xóa bài học{" "}
+          <Typography component="span" fontWeight={500} color="error.light">
             {title}
-          </Typography>
-        </div>
-        <div className="flex flex-row items-center flex-shrink-0">
-          <Typography sx={styles.content} variant="body2">
-            {millisecondsToMinutes(time)}:
-            {(
-              millisecondsToSeconds(time) -
-              millisecondsToMinutes(time) * 60 +
-              "0"
-            ).substring(0, 2)}
-          </Typography>
-          {editMode && (
-            <>
-              <IconButton color="primary">
-                <EditRounded />
-              </IconButton>
-              <IconButton color="tomato">
-                <DeleteRounded />
-              </IconButton>
-            </>
-          )}
-        </div>
-      </div>
-    </ListItemButton>
+          </Typography>{" "}
+          ?
+        </Typography>
+      </ConfirmDialog>
+    </>
   );
 };
 

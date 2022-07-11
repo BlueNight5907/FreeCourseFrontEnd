@@ -3,8 +3,10 @@ import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 import AvatarWrapper from "./avatar-wrapper/AvatarWrapper";
 import TextControl from "./../../../components/text-control/TextControl";
+import { useSelector } from "react-redux";
 
 const AccountSetting = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <Container maxWidth="md" sx={{ padding: 0 }}>
       <Grid container spacing={2}>
