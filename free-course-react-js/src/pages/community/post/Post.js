@@ -33,12 +33,6 @@ const Post = (props) => {
     dispatch({ type: GET_BLOG_REQUEST, id });
   }, [id, dispatch]);
 
-  // useEffect(() => {
-  //   if (post) {
-  //     console.log("hello world");
-  //     console.log(post);
-  //   }
-  // }, [post]);
   return (
     <Grid container spacing={2} minHeight={0}>
       <Grid item xs={12}>

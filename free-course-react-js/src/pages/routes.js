@@ -24,6 +24,7 @@ import DetailCourse from "./manage-course/detail-course/DetailCourse";
 import Protected from "guards/Protected";
 import MatchRoles from "guards/MatchRoles";
 import Register from "./auth/register/Register";
+import UserProfile from "./user/User";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -152,6 +153,10 @@ const Routes = () => {
               <Post />
             </MatchRoles>
           ),
+        },
+        {
+          path: "user/profile/:id",
+          element: <UserProfile />,
         },
       ],
     },

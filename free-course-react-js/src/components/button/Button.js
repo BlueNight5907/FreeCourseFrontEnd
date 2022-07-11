@@ -22,6 +22,7 @@ function Button(props) {
     specialBg,
     height,
     sx,
+    disabled = false,
     iconNearEdge = true,
     ...others
   } = props;
@@ -52,6 +53,7 @@ function Button(props) {
         ...style,
         ...sx,
       }}
+      disabled={disabled}
       startIcon={startIcon}
       endIcon={endIcon}
       {...others}

@@ -67,6 +67,12 @@ export const lightPalette = {
   subbackground: {
     main: "#D2D2D2",
   },
+  basicText: {
+    main: "#000000",
+  },
+  addOnBackground: {
+    main: "#E1E1E7",
+  },
   contrastThreshold: 3,
   tonalOffset: 0.2,
 };
@@ -139,6 +145,12 @@ export const darkPalette = {
   },
   overlay: {
     main: "rgba(255,255,255,0.9)",
+  },
+  basicText: {
+    main: "#FFFFFF",
+  },
+  addOnBackground: {
+    main: "#3A3B3C",
   },
   contrastThreshold: 3,
   tonalOffset: 0.2,
