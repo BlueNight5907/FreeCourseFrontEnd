@@ -37,3 +37,13 @@ export const updateBlog = async (
 export const deleteBlog = async (id) => {
   return request(DELETE, apiPath.deleteBlog(id));
 };
+
+export const likeBlog = async (id) => {
+  return request(POST, apiPath.likePost(id));
+};
+
+export const postComment = async (id, content, url) => {
+  const body = { content, url };
+  const data = await request(POST, apiPath.postComment(id), { body });
+  return data;
+};

@@ -6,8 +6,9 @@ import {
   Stack,
   Typography,
   IconButton,
+  Fab,
 } from "@mui/material";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
@@ -15,49 +16,63 @@ import UserCard from "components/user-card/UserCard";
 import Posts from "mock-data/post";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { GET_FEEDS_REQUEST } from "store/types/data-types/blog-type";
+import CourseSlide from "containers/courses-slide/CourseSlide";
+import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
+import { Add } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Feed = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
-
-  const iconStyle = {
-    default: {
-      color: "#000",
-      fontSize: theme.typography.pxToRem(34),
-    },
-    action: {
-      ticked: {
-        color: theme.palette.mintygreen.main,
-        fontSize: theme.typography.pxToRem(20),
-      },
-    },
-  };
+  const matchSm = useMediaQuery(theme.breakpoints.up("md"));
 
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.blog);
   const [feeds, setFeeds] = useState([]);
+  const [frontendCourses, setFrontendCourses] = useState([]);
 
   useEffect(() => {
-    dispatch({ type: GET_FEEDS_REQUEST, page_size: 50 });
-  }, []);
+    dispatch({
+      type: GET_FEEDS_REQUEST,
+      page_size: 10,
+      callback: setFeeds,
+    });
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "frontend",
+      params: { page: 1, page_size: 8 },
+      callback: setFrontendCourses,
+    });
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (posts) {
-      setFeeds(posts);
-    }
-  }, [posts, setFeeds]);
+  // On scroll
+  // useEffect(() => {
+  //   if (posts) {
+  //     setFeeds(posts);
+  //   }
+  // }, [posts, setFeeds]);
   return (
     <Grid container spacing={1} sx={{ justifyContent: "flex-end" }}>
-      {/* Left of post */}
-      <Grid item xs={12} lg={1} />
-
+      {matchSm && (
+        <Fab
+          // sx={{
+          //   background: theme.palette.primary,
+          // }}
+          color="primary"
+          size="medium"
+          elevation={2}
+          className="fixed bottom-4 right-1"
+          title="Tạo bài viết mới"
+          onClick={() => navigate("/community/post/create")}
+        >
+          <Add />
+        </Fab>
+      )}
       {/* Post */}
-      <Grid item xs={12} lg={6} marginRight={2}>
+      <Grid item xs={12} lg={8}>
         {
           feeds.map((post) => (
             <Post key={post._id} post={post} />
@@ -75,7 +90,6 @@ const Feed = () => {
             <Box
               sx={{
                 backgroundColor: theme.palette.foreground.main,
-                width: 400,
                 padding: theme.spacing(1.5, 2, 1.5, 2),
                 borderRadius: 1,
                 display: "flex",
@@ -92,7 +106,7 @@ const Feed = () => {
             <Box
               sx={{
                 backgroundColor: theme.palette.foreground.main,
-                width: 400,
+
                 padding: theme.spacing(1.5),
                 borderRadius: 1,
               }}
@@ -115,16 +129,7 @@ const Feed = () => {
                       avatar={teacher.avatar}
                       size="small"
                     />
-                    {teacher.followed ? (
-                      <IconButton>
-                        <Icon
-                          icon="teenyicons:tick-circle-outline"
-                          style={iconStyle.action.ticked}
-                        />
-                      </IconButton>
-                    ) : (
-                      <Button>Theo dõi</Button>
-                    )}
+                    <Button>Xem trang</Button>
                     {/*  */}
                   </Box>
                 ))}
@@ -133,7 +138,6 @@ const Feed = () => {
             <Box
               sx={{
                 backgroundColor: theme.palette.foreground.main,
-                width: 400,
                 padding: theme.spacing(1.5),
                 borderRadius: "10px",
               }}
@@ -146,7 +150,7 @@ const Feed = () => {
                   padding: theme.spacing(1, 0),
                 }}
               >
-                <CourseCard />
+                <CourseCard gridView data={""} />
               </Box>
             </Box>
           </Stack>

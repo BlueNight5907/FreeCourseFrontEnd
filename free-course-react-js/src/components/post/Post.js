@@ -5,9 +5,10 @@ import {
   ChatBubbleOutline,
   Favorite,
   FavoriteBorder,
-  FavoriteBorderRounded,
-  MoreHoriz,
-  SendOutlined,
+  ImportContactsOutlined,
+  ImportContactsRounded,
+  LaunchOutlined,
+  OpenInFullOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -16,26 +17,25 @@ import {
   CardContent as MuiCardContent,
   CardHeader,
   CardMedia,
-  Grid,
   IconButton,
-  Paper,
   Typography,
   useTheme,
   styled,
-  Tooltip,
   Divider,
   Snackbar,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { format, subDays } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import UserCard from "components/user-card/UserCard";
-import TextField from "components/text-field/TextField";
-import Button from "components/button/Button";
+
 import Caption from "components/caption/Caption";
 import PostActionDropDown from "containers/dropdowns/post-action-dropdown/PostActionDropDown";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
-
+import viLocale from "date-fns/locale/vi";
+import PostDialog from "pages/community/post/PostDialog";
+import { LIKE_BLOG } from "store/types/data-types/blog-type";
+import { useNavigate } from "react-router-dom";
 const CardActions = styled(MuiCardActions)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
@@ -43,12 +43,6 @@ const CardActions = styled(MuiCardActions)(({ theme }) => ({
 
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: theme.spacing(0, 1.6),
-}));
-
-const InputWrapper = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 0.6),
 }));
 
 const Post = ({ post }) => {
@@ -66,10 +60,13 @@ const Post = ({ post }) => {
   let { like } = post;
   const theme = useTheme();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  const { sideOpen } = useSelector((state) => state.setting);
 
   const iconStyle = {
     default: {
-      color: "#000",
+      color: theme.palette.text3,
       fontSize: theme.typography.pxToRem(34),
     },
     action: {
@@ -82,20 +79,6 @@ const Post = ({ post }) => {
         fontSize: theme.typography.pxToRem(34),
       },
     },
-  };
-
-  // Like react
-  const [likeNum, setLikeNum] = useState(likes.length);
-  const [isLiked, setIsLike] = useState(false);
-  const toggleLike = () => {
-    setIsLike(!isLiked);
-    setLikeNum(isLiked ? likeNum - 1 : likeNum + 1);
-  };
-
-  // Mark
-  const [isMarked, setIsMark] = useState(false);
-  const toggleMark = () => {
-    setIsMark(!isMarked);
   };
 
   // Creator data
@@ -116,7 +99,25 @@ const Post = ({ post }) => {
         callback: (data) => setCreatorData(data),
       });
     }
-  }, [creator, dispatch]);
+    // console.log(likes);
+    // console.log("Id:", user._id);
+    // console.log();
+  }, [creator, dispatch, setCreatorData]);
+
+  // Like react
+  const [likeNum, setLikeNum] = useState(likes.length);
+  const [isLiked, setIsLike] = useState(likes.indexOf(user._id) !== -1);
+  const toggleLike = () => {
+    setIsLike(!isLiked);
+    setLikeNum(isLiked ? likeNum - 1 : likeNum + 1);
+    dispatch({ type: LIKE_BLOG, id: _id });
+  };
+
+  // Mark
+  const [isMarked, setIsMark] = useState(false);
+  const toggleMark = () => {
+    setIsMark(!isMarked);
+  };
 
   const [openSnack, setOpenSnack] = React.useState(false);
 
@@ -135,12 +136,17 @@ const Post = ({ post }) => {
 
     setOpenSnack(false);
   };
+  const [openCommentDialog, setOpenCommentDialog] = useState(false);
+
   return (
     <Card
       elevation={0}
       sx={{
         margin: theme.spacing(2, 0),
-        width: 600,
+        width: {
+          lg: sideOpen ? 700 : 800,
+          sm: sideOpen ? 600 : 700,
+        },
         backgroundColor: theme.palette.foreground.main,
       }}
     >
@@ -148,9 +154,12 @@ const Post = ({ post }) => {
         avatar={
           <UserCard
             name={creatorData.userInformation.fullName}
-            subtitle={/*format(subDays(createdAt, 0), "dd/MM/yyyy")*/ createdAt}
+            subtitle={formatDistanceToNow(new Date(createdAt), {
+              locale: viLocale,
+              addSuffix: true,
+            })}
             avatar={creatorData.userInformation.avatar}
-            subLink={"/community/post/" + _id}
+            subLink={`/community/post/${_id}`}
           />
         }
         action={<PostActionDropDown />}
@@ -166,10 +175,16 @@ const Post = ({ post }) => {
             )}
           </IconButton>
 
-          <IconButton>
+          <IconButton onClick={() => setOpenCommentDialog(true)}>
             <ChatBubbleOutline sx={iconStyle.default} />
           </IconButton>
-
+          <IconButton
+            onClick={() => {
+              navigate(`/community/post/${_id}`);
+            }}
+          >
+            <LaunchOutlined sx={iconStyle.default} />
+          </IconButton>
           <IconButton onClick={handleClick}>
             {/* <SendOutlined sx={iconStyle.default} /> */}
             <Icon icon="bx:share-alt" style={iconStyle.default} />
@@ -185,34 +200,26 @@ const Post = ({ post }) => {
         </IconButton>
       </CardActions>
 
-      <CardContent>
+      <CardContent sx={{ padding: theme.spacing(1, 1.6) }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
           {likeNum} {likeNum > 2 ? "likes" : "like"}
         </Typography>
         <Caption caption={description} />
       </CardContent>
       <Divider />
-      <InputWrapper>
-        <IconButton>
-          <Icon icon="ant-design:smile-outlined" style={iconStyle.default} />
-        </IconButton>
-        <TextField
-          padding={theme.spacing(0.2, 0)}
-          placeholder="Bình luận cho bài viết..."
-          border={false}
-          fullWidth
-        />
-        <Button>
-          <Typography variant="subtitle1" fontFamily="monospace">
-            Gửi
-          </Typography>
-        </Button>
-      </InputWrapper>
       <Snackbar
         open={openSnack}
         autoHideDuration={2000}
         onClose={handleClose}
         message="Sao chép địa chỉ thành công"
+      />
+      <PostDialog
+        openCommentDialog={openCommentDialog}
+        setOpenCommentDialog={setOpenCommentDialog}
+        creatorData={creatorData}
+        post={post}
+        comments={comments}
+        user={user}
       />
     </Card>
   );

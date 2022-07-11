@@ -10,6 +10,8 @@ const apiPath = {
   postBlog: "/community/post",
   updateBlog: (id) => `/community/post/${id}`,
   deleteBlog: (id) => `/community/post/${id}`,
+  likePost: (id) => `/community/post/${id}/like`,
+  postComment: (id) => `/community/post/${id}/comment`,
   getCourseDetail: (id) => `/course/detail/${id}`,
   getAccountInfor: (id) => `/account/${id}`,
   getLearningProcess: (courseId) => `/course/${courseId}/learning-process`,
