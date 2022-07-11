@@ -14,6 +14,9 @@ import {
   DELETE_BLOG_REQUEST,
   DELETE_BLOG_SUCCESS,
   DELETE_BLOG_ERROR,
+  POST_COMMENT_REQUEST,
+  POST_COMMENT_SUCCESS,
+  POST_COMMENT_ERROR,
 } from "../../types/data-types/blog-type";
 
 const initialState = {
@@ -25,6 +28,7 @@ const initialState = {
   loadingAddBlog: false,
   loadingUpdateBlog: false,
   loadingDeleteBlog: false,
+  loadingAddComment: false,
   message: null,
   error: null,
 };
@@ -117,7 +121,21 @@ const BlogReducer = (state = initialState, action) => {
         ...state,
         error: payload,
       };
-
+    case POST_COMMENT_REQUEST:
+      return {
+        ...state,
+        loadingAddComment: true,
+      };
+    case POST_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loadingAddComment: false,
+      };
+    case POST_COMMENT_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
     default:
       return state;
   }

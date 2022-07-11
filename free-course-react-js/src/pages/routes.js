@@ -22,6 +22,7 @@ import Post from "./community/post/Post";
 import PostCreate from "./community/post/PostCreate";
 import DetailCourse from "./manage-course/detail-course/DetailCourse";
 import Protected from "guards/Protected";
+import UserProfile from "./user/User";
 
 const Routes = () => {
   const routes = useRoutes([
@@ -89,6 +90,10 @@ const Routes = () => {
         {
           path: "community/post/:id",
           element: <Post />,
+        },
+        {
+          path: "user/profile/:id",
+          element: <UserProfile />,
         },
       ],
     },

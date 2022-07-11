@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography, useTheme } from "@mui/material";
 
-const Caption = ({ caption }) => {
+const Caption = ({ caption, ...other }) => {
   const [isReadMore, setIsReadMore] = useState(false);
   const [captionText, setCaptionText] = useState(caption || "");
   const theme = useTheme();
@@ -15,6 +15,7 @@ const Caption = ({ caption }) => {
       sx={{
         margin: theme.spacing(1, 0),
       }}
+      {...other}
     >
       {
         /* {isReadMore && caption.length > 100 ? caption : caption.slice(0, 100)} */
