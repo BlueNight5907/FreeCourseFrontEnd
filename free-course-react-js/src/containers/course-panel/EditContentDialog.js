@@ -25,7 +25,6 @@ const EditContentDialog = ({ open, setOpen, initialValue, setContent }) => {
   const editorRef = useRef(null);
   const handleClose = () => setOpen(false);
   const handleSaveContent = () => {
-    console.log(value);
     if (setContent) {
       setContent(value);
     }

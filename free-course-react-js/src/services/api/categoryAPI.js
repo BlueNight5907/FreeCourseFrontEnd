@@ -9,3 +9,7 @@ export const getAllCategories = () => {
 export const getAllTags = () => {
   return request(GET, apiPath.getAllTags);
 };
+
+export const getAllLevels = () => {
+  return request(GET, apiPath.getAllLevels);
+};

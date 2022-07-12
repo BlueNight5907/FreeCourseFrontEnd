@@ -30,7 +30,7 @@ const LearningProgress = (props) => {
     return <BorderLinearProgress value={value} variant={variant} />;
   }
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div className="flex flex-row w-full items-center gap-1">
       <BorderLinearProgress sx={progressSx} value={value} variant={variant} />
       <Typography
         sx={{

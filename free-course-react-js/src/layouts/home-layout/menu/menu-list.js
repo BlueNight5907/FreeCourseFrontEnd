@@ -20,6 +20,7 @@ const mainMenuList = [
     icon: HomeRounded,
     href: "/",
     end: true,
+    roles: ["teacher", "student", "admin"],
   },
   {
     name: "Tìm kiếm",
@@ -30,6 +31,7 @@ const mainMenuList = [
         md: "none",
       },
     },
+    roles: ["teacher", "student", "admin"],
   },
   {
     type: "divider",
@@ -39,38 +41,45 @@ const mainMenuList = [
     name: "Khóa học của tôi",
     icon: MenuBookRounded,
     href: "/my-courses",
+    roles: ["teacher", "student", "admin"],
   },
   {
     name: "Quản lý khóa học",
     icon: DashboardRounded,
     href: "/manage/courses",
+    roles: ["teacher", "admin"],
     callFunction: (callback) => callback,
   },
   {
     name: "Danh mục khóa học",
     icon: BallotRounded,
     href: "/courses",
+    roles: ["teacher", "student", "admin"],
   },
   {
     type: "divider",
     title: "Mạng xã hội",
+    roles: ["teacher", "student", "admin"],
   },
   {
     name: "Tạo bài viết",
     icon: AddRounded,
     href: "/community/post/create",
+    roles: ["teacher", "student", "admin"],
   },
 
   {
     name: "Cộng đồng",
     icon: PublicRounded,
     href: "/community",
+    roles: ["teacher", "student", "admin"],
   },
   {
     name: "Nhắn tin",
     icon: ChatBubbleOutlineRounded,
     href: "/groups",
     badge: "15",
+    roles: ["teacher", "student", "admin"],
   },
   {
     type: "divider",
@@ -90,6 +99,7 @@ const mainMenuList = [
         md: "none",
       },
     },
+    roles: ["teacher", "student", "admin"],
   },
   {
     type: "divider",
@@ -109,6 +119,7 @@ const mainMenuList = [
         md: "none",
       },
     },
+    roles: ["teacher", "student", "admin"],
   },
 ];
 

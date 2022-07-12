@@ -32,6 +32,13 @@ import Wrapper from "components/wrapper/Wrapper";
 import Prism from "prismjs";
 import ReactHtmlParser from "react-html-parser";
 import EditContentDialog from "containers/course-panel/EditContentDialog";
+import ReactPlayer from "react-player";
+import { millisecondsToHours, millisecondsToMinutes } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CREATE_LESSON_REQUEST,
+  UPDATE_LESSON_REQUEST,
+} from "store/types/data-types/manage-course-types";
 
 const UploadFile = (props) => {
   const theme = useTheme();
@@ -64,7 +71,13 @@ const UploadFile = (props) => {
         >
           Tải lên
         </Button>
-        <input ref={fileRef} type="file" hidden onChange={handleChange} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept="video/*"
+          hidden
+          onChange={handleChange}
+        />
       </Stack>
       <Stack
         sx={{
@@ -82,12 +95,14 @@ const UploadFile = (props) => {
   );
 };
 
-const EmbedYoutube = (props) => {
+const EmbedYoutube = ({ setValue, value }) => {
   const theme = useTheme();
-  const fileRef = useRef();
-  const [href, setHref] = useState("");
+  const [href, setHref] = useState(value || "");
   const handleChange = (event) => {
     setHref(event.target.value);
+    if (!event.target.value) {
+      setValue("");
+    }
   };
   return (
     <Box>
@@ -101,7 +116,7 @@ const EmbedYoutube = (props) => {
         />
         <Button
           variant="contained"
-          onClick={() => fileRef.current.click()}
+          onClick={() => setValue(href)}
           disableElevation
           color="tomato"
           sx={{
@@ -118,15 +133,68 @@ const EmbedYoutube = (props) => {
   );
 };
 
-function LessonForm({ goBack, open }) {
+function LessonForm({ goBack, open, moduleData, close }) {
   const theme = useTheme();
   const matchLg = useMediaQuery(theme.breakpoints.up("md"));
-  const [resourceType, setResourceType] = useState("default");
   const [openContentDialog, setOpenContentDialog] = useState(false);
-  const [content, setContent] = useState("");
+  const { step } = useSelector((state) => state.manageCourse);
+  const [formData, setFormData] = useState({
+    title: "",
+    url: "",
+    content: "",
+    type: "youtube",
+    stepType: "lesson",
+    time: 5 * 60 * 1000,
+  });
+  const dispatch = useDispatch();
+
   useEffect(() => {
     Prism.highlightAll();
-  }, [content]);
+  }, [formData.content]);
+
+  useEffect(() => {
+    if (step) {
+      setFormData({
+        title: step.title,
+        url: step.content.url,
+        content: step.content.content,
+        type: step.content.type,
+        stepType: "lesson",
+        time: step.time,
+      });
+    }
+  }, [step]);
+
+  const canSubmit =
+    (formData.type === "default" ||
+      (formData.url &&
+        (formData.type === "youtube" || formData.type === "video"))) &&
+    formData.title;
+
+  const submitForm = () => {
+    const { courseId, id: moduleId } = moduleData;
+    const body = formData;
+    console.log(body, courseId, moduleId);
+    if (step) {
+      dispatch({
+        type: UPDATE_LESSON_REQUEST,
+        body,
+        courseId,
+        moduleId,
+        stepId: step._id,
+        callback: close,
+      });
+    } else {
+      dispatch({
+        type: CREATE_LESSON_REQUEST,
+        body,
+        courseId,
+        moduleId,
+        callback: close,
+      });
+    }
+  };
+
   return (
     <>
       <Slide direction="left" in={open}>
@@ -163,8 +231,9 @@ function LessonForm({ goBack, open }) {
                 autoFocus
                 disableElevation
                 variant="contained"
+                disabled={!canSubmit}
                 onClick={() => {
-                  goBack();
+                  submitForm();
                 }}
               >
                 Lưu
@@ -182,15 +251,24 @@ function LessonForm({ goBack, open }) {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography ml={0.5} gutterBottom className="font-medium">
-                      Các thông tin cơ bản của khóa học
+                      Các thông tin cơ bản của bài học
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
                       label="Tên bài học"
-                      helperText="Tiêu đề cho mỗi bài học"
+                      helperText={
+                        formData.title
+                          ? "Tiêu đề cho mỗi bài học"
+                          : "Tên bài học không được để trống"
+                      }
                       variant="outlined"
                       fullWidth
+                      error={!formData.title}
+                      value={formData.title}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={9}>
@@ -200,23 +278,50 @@ function LessonForm({ goBack, open }) {
                     <Stack className="flex-row" gap={2} maxWidth={500}>
                       <FormControl className="grow">
                         <InputLabel>Giờ</InputLabel>
-                        <Select label="Giờ" defaultValue="">
-                          {Array(12)
+                        <Select
+                          label="Giờ"
+                          value={millisecondsToHours(formData.time)}
+                          onChange={(e) => {
+                            const time =
+                              e.target.value * 60 * 60 * 1000 +
+                              (millisecondsToMinutes(formData.time) -
+                                millisecondsToHours(formData.time) * 60) *
+                                60 *
+                                1000;
+                            setFormData({ ...formData, time });
+                          }}
+                        >
+                          {Array(13)
                             .fill(0)
                             .map((item, index) => (
                               <MenuItem key={index} value={index}>
-                                {index + 1} giờ
+                                {index} giờ
                               </MenuItem>
                             ))}
                         </Select>
                       </FormControl>
                       <FormControl className="grow">
                         <InputLabel>Phút</InputLabel>
-                        <Select label="phút" defaultValue="">
+                        <Select
+                          label="phút"
+                          value={
+                            millisecondsToMinutes(formData.time) -
+                            millisecondsToHours(formData.time) * 60
+                          }
+                          onChange={(e) => {
+                            const time =
+                              e.target.value * 60 * 1000 +
+                              millisecondsToHours(formData.time) *
+                                60 *
+                                60 *
+                                1000;
+                            setFormData({ ...formData, time });
+                          }}
+                        >
                           {Array(12)
                             .fill(0)
                             .map((item, index) => (
-                              <MenuItem key={index} value={index}>
+                              <MenuItem key={index} value={index * 5}>
                                 {index * 5} phút
                               </MenuItem>
                             ))}
@@ -231,14 +336,13 @@ function LessonForm({ goBack, open }) {
                     {!matchLg ? (
                       <FormControl fullWidth>
                         <InputLabel>Loại bài học</InputLabel>
-                        <Select label="Loại bài học" defaultValue="">
-                          {Array(12)
-                            .fill(0)
-                            .map((item, index) => (
-                              <MenuItem key={index} value={index}>
-                                {index + 1} giờ
-                              </MenuItem>
-                            ))}
+                        <Select label="Loại bài học" value={formData.type}>
+                          <MenuItem value="video">Video tải lên</MenuItem>
+                          <MenuItem value="document">Tài liệu</MenuItem>
+                          <MenuItem value="youtube">Youtube</MenuItem>
+                          <MenuItem value="default">
+                            Mặc định(Chỉ bao gồm nội dung)
+                          </MenuItem>
                         </Select>
                       </FormControl>
                     ) : (
@@ -247,12 +351,14 @@ function LessonForm({ goBack, open }) {
                           className="h-[46px] w-[170px]"
                           startIcon={<Upload />}
                           variant={
-                            resourceType === "video" ? "contained" : "outlined"
+                            formData.type === "video" ? "contained" : "outlined"
                           }
-                          {...(resourceType === "video" && {
+                          {...(formData.type === "video" && {
                             style: { color: "#fff" },
                           })}
-                          onClick={() => setResourceType("video")}
+                          onClick={() =>
+                            setFormData({ ...formData, type: "video" })
+                          }
                           color="mintygreen"
                           disableElevation
                         >
@@ -261,13 +367,15 @@ function LessonForm({ goBack, open }) {
                         <Button
                           className="h-[46px] w-[170px]"
                           startIcon={<Article />}
-                          onClick={() => setResourceType("document")}
+                          onClick={() =>
+                            setFormData({ ...formData, type: "document" })
+                          }
                           variant={
-                            resourceType === "document"
+                            formData.type === "document"
                               ? "contained"
                               : "outlined"
                           }
-                          {...(resourceType === "document" && {
+                          {...(formData.type === "document" && {
                             style: { color: "#fff" },
                           })}
                           disableElevation
@@ -278,13 +386,15 @@ function LessonForm({ goBack, open }) {
                         <Button
                           className="h-[46px] w-[170px]"
                           startIcon={<YouTube />}
-                          onClick={() => setResourceType("youtube")}
+                          onClick={() =>
+                            setFormData({ ...formData, type: "youtube" })
+                          }
                           variant={
-                            resourceType === "youtube"
+                            formData.type === "youtube"
                               ? "contained"
                               : "outlined"
                           }
-                          {...(resourceType === "youtube" && {
+                          {...(formData.type === "youtube" && {
                             style: { color: "#fff" },
                           })}
                           disableElevation
@@ -292,13 +402,14 @@ function LessonForm({ goBack, open }) {
                         >
                           Youtube
                         </Button>
-
                         <Button
                           className="h-[46px]"
                           startIcon={<Source />}
-                          onClick={() => setResourceType("default")}
+                          onClick={() =>
+                            setFormData({ ...formData, type: "default" })
+                          }
                           variant={
-                            resourceType === "default"
+                            formData.type === "default"
                               ? "contained"
                               : "outlined"
                           }
@@ -310,13 +421,19 @@ function LessonForm({ goBack, open }) {
                     )}
                   </Grid>
                   <Grid item xs={12}>
-                    {resourceType === "video" && <UploadFile />}
-                    {resourceType === "document" && <UploadFile />}
-                    {resourceType === "youtube" && <EmbedYoutube />}
+                    {formData.type === "video" && <UploadFile />}
+                    {formData.type === "document" && <UploadFile />}
+                    {formData.type === "youtube" && (
+                      <EmbedYoutube
+                        setValue={(data) =>
+                          setFormData({ ...formData, url: data })
+                        }
+                      />
+                    )}
                   </Grid>
                 </Grid>
               </Box>
-              {(resourceType === "video" || resourceType === "youtube") && (
+              {(formData.type === "video" || formData.type === "youtube") && (
                 <Stack
                   sx={{
                     flexGrow: 1,
@@ -330,14 +447,20 @@ function LessonForm({ goBack, open }) {
                   <Typography gutterBottom color="foreground.main">
                     Xem trước video
                   </Typography>
-                  <Box square className=" aspect-video xl:aspect-[18/9]">
-                    <iframe
-                      src="https://www.youtube.com/embed/E7wJTI-1dvQ"
-                      frameborder="0"
-                      allow="autoplay; encrypted-media"
-                      allowfullscreen
-                      title="video"
-                      className="h-full w-full"
+                  <Box
+                    square
+                    className="relative aspect-video xl:aspect-[18/9]"
+                  >
+                    <ReactPlayer
+                      className="absolute inset-0 bg-black rounded-sm"
+                      width="100%"
+                      height="100%"
+                      url={formData.url}
+                      config={{
+                        youtube: {
+                          playerVars: { showinfo: 0 },
+                        },
+                      }}
                     />
                   </Box>
                 </Stack>
@@ -355,6 +478,7 @@ function LessonForm({ goBack, open }) {
                 title="Nội dung"
                 titleVariant="body1"
                 elevation={0}
+                BoxProps={{ className: "content" }}
                 actions={
                   <Button
                     startIcon={<EditRounded />}
@@ -366,7 +490,7 @@ function LessonForm({ goBack, open }) {
                   </Button>
                 }
               >
-                {content && ReactHtmlParser(content)}
+                {formData.content && ReactHtmlParser(formData.content)}
               </Wrapper>
             </Box>
           </Wrapper>
@@ -375,8 +499,8 @@ function LessonForm({ goBack, open }) {
       <EditContentDialog
         open={openContentDialog}
         setOpen={setOpenContentDialog}
-        setContent={setContent}
-        initialValue={content}
+        setContent={(value) => setFormData({ ...formData, content: value })}
+        initialValue={formData.content}
       />
     </>
   );

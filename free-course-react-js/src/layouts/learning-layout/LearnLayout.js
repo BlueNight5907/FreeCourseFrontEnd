@@ -64,7 +64,7 @@ const HomeLayout = () => {
       }, []);
 
       const stepIndex = allSteps.findIndex((item) => item.step._id === stepId);
-
+      console.log(stepIndex, stepId, allSteps, learned);
       if (stepIndex <= learned.length) {
         const selectedStep = allSteps[stepIndex];
         if (selectedStep.step.type === "lesson") {

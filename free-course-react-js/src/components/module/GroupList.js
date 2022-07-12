@@ -73,7 +73,17 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 export default function GroupList(props) {
-  const { editMode, data, index, move, remove, update, isEnded } = props;
+  const {
+    editMode,
+    data,
+    index,
+    move,
+    remove,
+    update,
+    isEnded,
+    stepProps,
+    createStep,
+  } = props;
   const [expanded, setExpanded] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
@@ -88,7 +98,7 @@ export default function GroupList(props) {
   const moveNext = () => move(index, index + 1);
 
   const deleteItem = () => {
-    remove(index);
+    remove(data);
   };
 
   React.useEffect(() => {
@@ -127,7 +137,10 @@ export default function GroupList(props) {
                       <Button
                         disableElevation
                         variant="contained"
-                        onClick={() => setOpenStepForm(true)}
+                        onClick={() => {
+                          createStep();
+                          setOpenStepForm(true);
+                        }}
                       >
                         Thêm bài học
                       </Button>
@@ -196,10 +209,15 @@ export default function GroupList(props) {
                   key={index}
                   type={item.type}
                   title={item.name}
+                  id={item.id}
+                  courseId={data.courseId}
+                  moduleId={data.id}
                   href={item.href}
                   time={item.time}
                   active={item.active}
                   disabled={item.disabled}
+                  setOpenStepForm={setOpenStepForm}
+                  {...stepProps}
                 />
               ))}
             </List>
@@ -214,7 +232,7 @@ export default function GroupList(props) {
         onAccept={deleteItem}
       >
         <Typography>
-          Bạn có chắc muốn xóa chủ đề{" "}
+          Bạn có chắc muốn xóa chương{" "}
           <Typography component="span" fontWeight={500} color="error.light">
             {data.name}
           </Typography>{" "}
@@ -243,7 +261,7 @@ export default function GroupList(props) {
               disabled={value.length === 0}
               onClick={() => {
                 setOpenEditDialog(false);
-                update(index, { ...data, name: value });
+                update({ ...data, name: value });
               }}
             >
               Lưu lại

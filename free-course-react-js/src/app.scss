@@ -184,3 +184,40 @@ $i: 2;
 .tox-statusbar__branding {
   display: none;
 }
+
+.content {
+  * {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+  ul,
+  ol {
+    padding-left: 20px;
+  }
+  td {
+    padding: 10px;
+  }
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  a {
+    color: rgba(#f62a45, 0.88);
+    font-weight: 500;
+    text-decoration: underline;
+  }
+  &:not([dir="rtl"]) blockquote {
+    border-left: 4px solid rgba(#f62a45, 0.88);
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  blockquote {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+  }
+}
