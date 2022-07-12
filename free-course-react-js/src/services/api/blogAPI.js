@@ -42,6 +42,10 @@ export const likeBlog = async (id) => {
   return request(POST, apiPath.likePost(id));
 };
 
+export const likeComment = async (postId, commentId) => {
+  return request(POST, apiPath.likeComment(postId, commentId));
+};
+
 export const postComment = async (id, content, url) => {
   const body = { content, url };
   const data = await request(POST, apiPath.postComment(id), { body });

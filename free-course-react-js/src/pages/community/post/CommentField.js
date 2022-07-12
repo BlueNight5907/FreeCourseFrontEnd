@@ -130,12 +130,6 @@ const CommentField = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (listComment) {
-      console.log(listComment);
-    }
-  }, [listComment]);
-
   const openEmojiPicker = Boolean(showEmojiPicker);
   return (
     <Box>

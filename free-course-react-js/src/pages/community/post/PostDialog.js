@@ -1,22 +1,18 @@
-import { CameraAltOutlined as ImageIcon } from "@mui/icons-material";
 import {
-  Paper,
-  Typography,
   useTheme,
   styled,
   Dialog as MuiDialog,
   DialogContent,
   DialogActions as MuiDialogActions,
   DialogTitle,
+  Typography,
+  Box,
 } from "@mui/material";
-import Button from "components/button/Button";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import UserCard from "components/user-card/UserCard";
 import viLocale from "date-fns/locale/vi";
-import Image from "components/image/Image";
-import { Icon } from "@iconify/react";
 import CommentField from "./CommentField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Comment from "components/comment/Comment2";
 
 const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
@@ -42,11 +38,6 @@ const PostDialog = (props) => {
   const theme = useTheme();
   const [listComment, setListComment] = useState(comments || []);
 
-  // useEffect(() => {
-  //   if (comments) {
-  //     setListComment(comments);
-  //   }
-  // }, [comments]);
   return (
     <MuiDialog
       sx={{
@@ -75,9 +66,15 @@ const PostDialog = (props) => {
         sx={{ background: theme.palette.background.main }}
         dividers={true}
       >
-        {listComment.map((comment, index) => (
-          <Comment key={index} data={comment} user={user} />
-        ))}
+        {listComment.length > 0 ? (
+          listComment.map((comment, index) => (
+            <Comment key={index} data={comment} post={post} user={user} />
+          ))
+        ) : (
+          <Box display="flex" justifyContent="center">
+            <Typography>Chưa có bình luận</Typography>
+          </Box>
+        )}
       </DialogContent>
 
       <DialogActions sx={{ background: theme.palette.foreground.main }}>

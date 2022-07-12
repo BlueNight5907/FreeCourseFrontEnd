@@ -28,6 +28,7 @@ import {
   POST_COMMENT_SUCCESS,
   POST_COMMENT_ERROR,
   LIKE_BLOG,
+  LIKE_COMMENT,
 } from "../types/data-types/blog-type";
 import * as firebase from "../../firebase";
 
@@ -141,11 +142,20 @@ function* deleteBlog(postId) {
 function* likeBlog(id) {
   try {
     yield call(blogAPI.likeBlog, id);
-    console.log("Like:", id);
   } catch (error) {
     console.log(error);
   }
 }
+
+function* likeComment(postId, commentId) {
+  try {
+    console.log("like:", postId, "+", commentId);
+    yield call(blogAPI.likeComment, postId, commentId);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* uploadComment(postId, content, image, callback) {
   try {
     let imageUrl = "";
@@ -225,6 +235,13 @@ function* likeBlogWatcher() {
   }
 }
 
+function* likeCommentWatcher() {
+  while (true) {
+    const { postId, commentId } = yield take(LIKE_COMMENT);
+    yield call(likeComment, postId, commentId);
+  }
+}
+
 function* postCommentFlow() {
   while (true) {
     const { postId, content, image, callback } = yield take(
@@ -241,6 +258,7 @@ const blogSagaList = [
   fork(updateBlogFlow),
   fork(deleteBlogFlow),
   fork(likeBlogWatcher),
+  fork(likeCommentWatcher),
   fork(postCommentFlow),
 ];
 export default blogSagaList;

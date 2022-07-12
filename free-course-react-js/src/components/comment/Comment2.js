@@ -26,11 +26,10 @@ import Caption from "components/caption/Caption";
 import Image from "components/image/Image";
 import UserCard from "components/user-card/UserCard";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { LIKE_COMMENT } from "store/types/data-types/blog-type";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 import { shortenNumber } from "utils/number-utils";
-
-import avatarSrc from "../../assets/avatar/u35.jfif";
 import Button from "../button/Button";
 import Dropdown from "../dropdown/Dropdown";
 import DropdownItem from "../dropdown/DropdownItem";
@@ -38,7 +37,7 @@ import DropdownMenu from "../dropdown/DropdownMenu";
 import DropdownToggle from "../dropdown/DropdownToggle";
 
 function Comment(props) {
-  const { owner, data, likes, user } = props;
+  const { owner, data, user, post } = props;
   const theme = useTheme();
   const dispatch = useDispatch();
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -107,7 +106,10 @@ function Comment(props) {
   const toggleLike = () => {
     setIsLike(!isLiked);
     setLikeNum(isLiked ? likeNum - 1 : likeNum + 1);
-    // dispatch({ type: LIKE_BLOG, id: _id });
+    isLiked
+      ? data.likes?.splice(data.likes.indexOf(user._id), 1)
+      : data.likes?.push(user._id);
+    dispatch({ type: LIKE_COMMENT, postId: post._id, commentId: data._id });
   };
 
   // Creator data
@@ -128,9 +130,6 @@ function Comment(props) {
         callback: (data) => setCreatorData(data),
       });
     }
-    // console.log(likes);
-    // console.log("Id:", user._id);
-    // console.log();
   }, [data, dispatch, setCreatorData]);
 
   return (

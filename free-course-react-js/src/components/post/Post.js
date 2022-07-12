@@ -5,10 +5,7 @@ import {
   ChatBubbleOutline,
   Favorite,
   FavoriteBorder,
-  ImportContactsOutlined,
-  ImportContactsRounded,
   LaunchOutlined,
-  OpenInFullOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -25,7 +22,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import UserCard from "components/user-card/UserCard";
 
 import Caption from "components/caption/Caption";
@@ -57,7 +54,6 @@ const Post = ({ post }) => {
     likes,
     creator,
   } = post;
-  let { like } = post;
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -99,9 +95,6 @@ const Post = ({ post }) => {
         callback: (data) => setCreatorData(data),
       });
     }
-    // console.log(likes);
-    // console.log("Id:", user._id);
-    // console.log();
   }, [creator, dispatch, setCreatorData]);
 
   // Like react
@@ -199,14 +192,15 @@ const Post = ({ post }) => {
           )}
         </IconButton>
       </CardActions>
-
-      <CardContent sx={{ padding: theme.spacing(1, 1.6) }}>
+      {/* <Divider /> */}
+      <CardContent sx={{ padding: theme.spacing(0, 1.6) }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {likeNum} {likeNum > 2 ? "likes" : "like"}
+          {likeNum} {likeNum > 1 ? "likes" : "like"}
         </Typography>
+        <Divider />
         <Caption caption={description} />
       </CardContent>
-      <Divider />
+
       <Snackbar
         open={openSnack}
         autoHideDuration={2000}
