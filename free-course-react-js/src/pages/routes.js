@@ -115,7 +115,7 @@ const Routes = () => {
           ),
         },
         {
-          path: "/manage-course/detail-course/:id/student",
+          path: "/manage-course/detail-course/:courseId/student",
           element: (
             <MatchRoles roles={["teacher", "admin"]}>
               <DetailCourse />

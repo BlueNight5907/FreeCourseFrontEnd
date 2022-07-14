@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   RESET_AUTH_PENDING,
   LOGOUT,
+  AUTH_ERROR,
 } from "../../types/data-types/auth-types";
 
 const initState = {
@@ -27,11 +28,15 @@ const authReducer = (state = initState, action) => {
         ...state,
         loadingLogin: true,
       };
-
+    case AUTH_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
-        accessToken:payload.accessToken || state.accessToken,
+        accessToken: payload.accessToken || state.accessToken,
         isLogin: true,
         user: payload?.user || state.user,
         accessToken: payload.accessToken || state.accessToken,

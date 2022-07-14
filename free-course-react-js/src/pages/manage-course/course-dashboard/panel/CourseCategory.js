@@ -1,6 +1,5 @@
 import { Box, Chip, Paper, Stack } from "@mui/material";
 import RenderTable from "components/render-table/RenderTable";
-import Wrapper from "components/wrapper/Wrapper";
 import React, { useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Visibility, Edit } from "@mui/icons-material";

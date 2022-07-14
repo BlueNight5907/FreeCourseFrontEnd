@@ -1,31 +1,35 @@
 import { Backdrop, Box, Typography, useTheme } from "@mui/material";
 import React, { useEffect } from "react";
+import { usePromiseTracker } from "react-promise-tracker";
 import { useSelector } from "react-redux";
 
 const PageLoading = () => {
   const theme = useTheme();
   const { pageLoading } = useSelector((state) => state.setting);
+  const { promiseInProgress } = usePromiseTracker({ area: "general" });
   useEffect(() => {
-    if (pageLoading) {
+    if (pageLoading || promiseInProgress) {
       document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "15px";
     } else {
       document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "unset";
     }
     return () => (document.body.style.overflow = "unset");
-  }, [pageLoading]);
+  }, [pageLoading, promiseInProgress]);
   return (
     <Backdrop
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
         background:
           theme.palette.mode === "light"
-            ? "linear-gradient(45deg, rgba(0,0,0,0.6) 0%, rgba(145,145,145,0.7) 10%, rgba(204,204,204,0.8) 20%, rgba(212,212,212,0.85) 30%, rgba(218,218,218,0.85) 40%, rgba(241,239,239,0.9) 49%, rgba(255,255,255,0.95) 100%)"
-            : "linear-gradient(45deg, rgba(0,0,0,0.65) 0%, rgba(45,45,45,0.7) 10%, rgba(15,15,15,0.75) 20%, rgba(1,1,1,0.8) 30%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.9) 49%, rgba(0,0,0,0.9) 100%)",
+            ? "#fff"
+            : "linear-gradient(45deg, rgba(0,0,0,0.8855917366946778) 0%, rgba(0,0,0,0.9360119047619048) 10%, rgba(1,1,1,0.9612219887955182) 20%, rgba(1,1,1,0.9808298319327731) 30%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 49%, rgba(0,0,0,0.9) 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
-      open={pageLoading}
+      open={pageLoading || promiseInProgress}
     >
       <Box className="loader">
         <div>

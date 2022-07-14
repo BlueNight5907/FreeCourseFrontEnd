@@ -4,6 +4,7 @@ import { LOCAL_STORAGE } from "../../constants/storage-constants";
 import * as authAPI from "../../services/api/authAPI";
 import {
   AUTHENTICATION_REQUEST,
+  AUTH_ERROR,
   CHANGE_PASSWORD_REQUEST,
   LOGIN_ERROR,
   LOGIN_REQUEST,
@@ -11,6 +12,7 @@ import {
   LOGOUT,
   REGISTER_REQUEST,
   RESET_AUTH_PENDING,
+  UPDATE_ACCOUNT,
 } from "../types/data-types/auth-types";
 
 function* authorize(email, password) {
@@ -45,7 +47,7 @@ function* authorizeWithToken() {
     const { user } = yield call(authAPI.getMyAccount);
     yield put({ type: LOGIN_SUCCESS, payload: { user } });
   } catch (error) {
-    yield put({ type: LOGIN_ERROR, payload: error });
+    yield put({ type: LOGIN_ERROR, payload: error.message });
     yield put({ type: LOGOUT });
   } finally {
     if (yield cancelled()) {
@@ -114,10 +116,27 @@ function* changePassWatcher() {
   }
 }
 
+function* doEditAccount(body) {
+  try {
+    yield call(authAPI.updateUserAccount, body);
+    yield put({ type: AUTHENTICATION_REQUEST });
+  } catch (error) {
+    yield put({ type: AUTH_ERROR, payload: error.message });
+  }
+}
+
+function* editAccountWatcher() {
+  while (true) {
+    const { body } = yield take(UPDATE_ACCOUNT);
+    yield call(doEditAccount, body);
+  }
+}
+
 const authSagaList = [
   fork(loginFlow),
   fork(authenFlow),
   fork(registerWatcher),
   fork(changePassWatcher),
+  fork(editAccountWatcher),
 ];
 export default authSagaList;

@@ -67,7 +67,7 @@ function MyCourseDropdown(props) {
             <Typography>Lớp học của tôi</Typography>
             <MuiLink
               component={Link}
-              to="/"
+              to="/my-courses"
               sx={{
                 fontSize: 14,
                 fontWeight: 500,

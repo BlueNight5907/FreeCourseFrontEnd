@@ -1,6 +1,7 @@
-import { take, call, put, fork, delay } from "redux-saga/effects";
+import { take, call, put, fork, delay, takeLatest } from "redux-saga/effects";
 import { getAccountInfor } from "services/api/accountAPI";
 import {
+  getAllStudent,
   getCourseComments,
   getCourseDetail,
   getCoursesWithCategory,
@@ -10,6 +11,7 @@ import {
 } from "services/api/courseAPI";
 import {
   ADD_COURSE_COMMENT_REQUEST,
+  GET_ALL_STUDENT_REQUEST,
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_REQUEST,
   GET_COURSES_WITH_CATEGORY_SUCCESS,
@@ -156,6 +158,20 @@ function* watchJoinCourse() {
   }
 }
 
+function* getStudents(courseId, callback) {
+  try {
+    const students = yield call(getAllStudent, courseId);
+    yield call(callback, students);
+  } catch (error) {}
+}
+
+function* watchGetAllStudent() {
+  while (true) {
+    const { courseId, callback } = yield take(GET_ALL_STUDENT_REQUEST);
+    yield fork(getStudents, courseId, callback);
+  }
+}
+
 const courseDetailSagaList = [
   fork(watchGetCourse),
   fork(watchGetTeacherInfor),
@@ -164,5 +180,6 @@ const courseDetailSagaList = [
   fork(watchAddComment),
   fork(watchGetComment),
   fork(watchRatingCourse),
+  fork(watchGetAllStudent),
 ];
 export default courseDetailSagaList;

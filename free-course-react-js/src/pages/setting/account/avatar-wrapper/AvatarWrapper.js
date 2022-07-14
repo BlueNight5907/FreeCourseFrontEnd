@@ -1,21 +1,79 @@
 import {
+  Avatar,
   Box,
   IconButton,
-  Paper,
   Stack,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { width } from "@mui/system";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import bg from "../../../../assets/background/course-slide-bg.jpg";
 import avt from "../../../../assets/avatar/u34.jfif";
-import Button from "../../../../components/button/Button";
-import { EditRounded, PhotoCamera } from "@mui/icons-material";
-const AvatarWrapper = () => {
+import { PhotoCamera } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { accountType } from "constants/auth-constants";
+import { Upload } from "./../../../../firebase";
+
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+const AvatarWrapper = ({ data, setAvatar, setBg }) => {
+  const [file, setFile] = useState(null);
+  const [fileAvt, setFileAvt] = useState(null);
   const theme = useTheme();
-  const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
+  const { user } = useSelector((s) => s.auth);
+  const bgRef = useRef(null);
+  const avtRef = useRef(null);
+
+  const changeBgHandler = (e) => {
+    const file = e.target.files[0];
+    if (!file?.type.match(imageMimeType)) {
+      alert("Image mime type is not valid");
+      return;
+    }
+    setFile(file);
+  };
+
+  const changeAvtHandler = (e) => {
+    const avt = e.target.files[0];
+    if (!avt?.type.match(imageMimeType)) {
+      alert("Image mime type is not valid");
+      return;
+    }
+    setFileAvt(avt);
+  };
+
+  useEffect(() => {
+    let uploadTask;
+    if (file) {
+      // upload file
+      uploadTask = new Upload("user-bg", file, (res) => {
+        setBg(res);
+        setFile(null);
+      });
+      uploadTask.start();
+    }
+
+    return () => {
+      uploadTask?.stop();
+    };
+  }, [file, setBg]);
+
+  useEffect(() => {
+    let uploadTask;
+    if (fileAvt) {
+      // upload file
+      uploadTask = new Upload("user-avt", fileAvt, (res) => {
+        setAvatar(res);
+        setFileAvt(null);
+      });
+      uploadTask.start();
+    }
+
+    return () => {
+      uploadTask?.stop();
+    };
+  }, [fileAvt, setAvatar]);
+
   return (
     <Box
       sx={{
@@ -26,13 +84,20 @@ const AvatarWrapper = () => {
     >
       <Box
         style={{
-          backgroundImage: `url(${bg})`,
+          backgroundImage: `url(${data.background || bg})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           borderRadius: 10,
         }}
         className="md:aspect-[20/7] lg:aspect-[20/6] aspect-[20/8] w-full relative"
       >
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          ref={bgRef}
+          onChange={changeBgHandler}
+        />
         <IconButton
           sx={{
             bottom: 5,
@@ -43,6 +108,7 @@ const AvatarWrapper = () => {
               backgroundColor: theme.palette.background.main + "90",
             },
           }}
+          onClick={() => bgRef.current.click()}
         >
           <PhotoCamera />
         </IconButton>
@@ -56,11 +122,6 @@ const AvatarWrapper = () => {
         }}
       >
         <Box
-          style={{
-            backgroundImage: `url(${avt})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
           sx={{
             width: {
               md: 140,
@@ -90,6 +151,14 @@ const AvatarWrapper = () => {
             },
           }}
         >
+          <Avatar className="w-full h-full" src={data.avatar} />
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            ref={avtRef}
+            onChange={changeAvtHandler}
+          />
           <IconButton
             sx={{
               bottom: {
@@ -111,13 +180,14 @@ const AvatarWrapper = () => {
                 backgroundColor: theme.palette.background.main + "90",
               },
             }}
+            onClick={() => avtRef.current.click()}
           >
             <PhotoCamera fontSize="small" />
           </IconButton>
         </Box>
         <Stack flexDirection="column" gap={0.5} flexGrow={1}>
-          <Typography>Nguyễn Văn Huy</Typography>
-          <Typography variant="caption">Sinh viên</Typography>
+          <Typography>{user?.userInformation?.fullName}</Typography>
+          <Typography variant="caption">{accountType[data.type]}</Typography>
         </Stack>
       </Stack>
     </Box>
