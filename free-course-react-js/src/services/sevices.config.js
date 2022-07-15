@@ -1,6 +1,7 @@
 const apiPath = {
   login: "/auth/signin",
   register: "/auth/signup",
+  editAccount: "account/edit",
   changePassword: "/auth/updatePassword",
   getCourse: (id) => "/course/" + id,
   getModule: (courseId, moduleId) => `/module/${courseId}/${moduleId}`,
@@ -35,6 +36,8 @@ const apiPath = {
   getLearningProcess: (courseId) => `/course/${courseId}/learning-process`,
   getAllMyCourse: "/course/me",
   joinCourse: (id) => `/course/join/${id}`,
+  allStudent: (id) => `/course/people/${id}`,
+  newStudent: (id) => `/course/${id}/new-register`,
   getMyCreatedCourses: "course/created-by-me",
   getStep: (module, step) => `/module/${module}/step/${step}`,
   completeLesson: (module, step) => `/module/${module}/step/${step}/complete`,

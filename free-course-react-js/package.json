@@ -1,6 +1,9 @@
 {
   "name": "free-course-react-js",
   "version": "0.1.0",
+  "engines": {
+    "yarn": "1.22.15"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -29,6 +32,7 @@
     "react-hook-form": "^7.31.3",
     "react-html-parser": "^2.0.2",
     "react-player": "^2.10.1",
+    "react-promise-tracker": "^2.1.0",
     "react-quill": "^1.3.5",
     "react-redux": "^7.2.8",
     "react-router-dom": "^6.3.0",

@@ -1,15 +1,18 @@
-import { take, call, put, fork, delay } from "redux-saga/effects";
+import { take, call, put, fork, delay, takeLatest } from "redux-saga/effects";
 import { getAccountInfor } from "services/api/accountAPI";
 import {
+  getAllStudent,
   getCourseComments,
   getCourseDetail,
   getCoursesWithCategory,
+  getNewStudent,
   joinCourse,
   ratingCourse,
   sendCourseComment,
 } from "services/api/courseAPI";
 import {
   ADD_COURSE_COMMENT_REQUEST,
+  GET_ALL_STUDENT_REQUEST,
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_REQUEST,
   GET_COURSES_WITH_CATEGORY_SUCCESS,
@@ -19,6 +22,7 @@ import {
   GET_COURSE_DETAIL_ERROR,
   GET_COURSE_DETAIL_REQUEST,
   GET_COURSE_DETAIL_SUCCESS,
+  GET_NEW_STUDENT_REQUEST,
   GET_TEACHER_INFOR_ERROR,
   GET_TEACHER_INFOR_REQUEST,
   GET_TEACHER_INFOR_SUCCESS,
@@ -156,6 +160,34 @@ function* watchJoinCourse() {
   }
 }
 
+function* getStudents(courseId, callback) {
+  try {
+    const students = yield call(getAllStudent, courseId);
+    yield call(callback, students);
+  } catch (error) {}
+}
+
+function* watchGetAllStudent() {
+  while (true) {
+    const { courseId, callback } = yield take(GET_ALL_STUDENT_REQUEST);
+    yield fork(getStudents, courseId, callback);
+  }
+}
+
+function* getNewStudents(courseId, callback) {
+  try {
+    const students = yield call(getNewStudent, courseId);
+    yield call(callback, students);
+  } catch (error) {}
+}
+
+function* watchGetNewStudent() {
+  while (true) {
+    const { courseId, callback } = yield take(GET_NEW_STUDENT_REQUEST);
+    yield fork(getNewStudents, courseId, callback);
+  }
+}
+
 const courseDetailSagaList = [
   fork(watchGetCourse),
   fork(watchGetTeacherInfor),
@@ -164,5 +196,7 @@ const courseDetailSagaList = [
   fork(watchAddComment),
   fork(watchGetComment),
   fork(watchRatingCourse),
+  fork(watchGetAllStudent),
+  fork(watchGetNewStudent),
 ];
 export default courseDetailSagaList;

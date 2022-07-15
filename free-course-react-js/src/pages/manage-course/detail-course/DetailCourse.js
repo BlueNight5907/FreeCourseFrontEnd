@@ -14,7 +14,7 @@ const DetailCourse = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { courseId } = useParams();
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState(0);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const DetailCourse = () => {
               }
               disableElevation
             >
-              Detail
+              Tổng quan khóa học
             </Button>
             <Button
               variant="contained"
@@ -71,7 +71,7 @@ const DetailCourse = () => {
               }
               disableElevation
             >
-              Student
+              Người học
             </Button>
           </Stack>
           <Button

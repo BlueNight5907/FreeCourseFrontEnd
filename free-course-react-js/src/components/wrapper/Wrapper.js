@@ -1,21 +1,24 @@
 import { Box, Paper, Typography, useTheme } from "@mui/material";
-import React from "react";
+import React, { forwardRef } from "react";
 
-const Wrapper = ({
-  elevation,
-  actions,
-  title,
-  children,
-  flex,
-  rounded = 1,
-  sx,
-  titleVariant,
-  titleIcon,
-  flexDirection,
-  BoxProps,
-  marginY,
-  ...others
-}) => {
+const Wrapper = (
+  {
+    elevation,
+    actions,
+    title,
+    children,
+    flex,
+    rounded = 1,
+    sx,
+    titleVariant,
+    titleIcon,
+    flexDirection,
+    BoxProps,
+    marginY,
+    ...others
+  },
+  ref
+) => {
   const theme = useTheme();
   const styles = {
     paper: {
@@ -46,7 +49,7 @@ const Wrapper = ({
     },
   };
   return (
-    <Paper {...others} sx={styles.paper} elevation={elevation}>
+    <Paper {...others} sx={styles.paper} elevation={elevation} ref={ref}>
       {title || actions ? (
         <>
           <Box className="flex flex-row items-center justify-between mb-1">
@@ -73,4 +76,4 @@ const Wrapper = ({
   );
 };
 
-export default Wrapper;
+export default forwardRef(Wrapper);

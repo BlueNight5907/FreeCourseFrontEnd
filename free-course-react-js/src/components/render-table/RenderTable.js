@@ -64,9 +64,9 @@ function RenderTable(props) {
             },
         }}
         page={searchParams.page}
-        onPageChange={(value) =>
-          setSearchParams({ ...searchParams, page: value })
-        }
+        onPageChange={(value) => {
+          setSearchParams({ ...searchParams, page: value });
+        }}
         components={{
           NoRowsOverlay: () => (
             <Stack className="justify-center items-center absolute inset-0">

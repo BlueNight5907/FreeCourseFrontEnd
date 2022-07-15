@@ -83,14 +83,6 @@ const Routes = () => {
           ),
         },
         {
-          path: "/manage-course/dashboard",
-          element: (
-            <MatchRoles roles={["teacher", "admin"]}>
-              <CourseDashboard />
-            </MatchRoles>
-          ),
-        },
-        {
           path: "/manage-course/category",
           element: (
             <MatchRoles roles={["teacher", "admin"]}>
@@ -115,7 +107,7 @@ const Routes = () => {
           ),
         },
         {
-          path: "/manage-course/detail-course/:id/student",
+          path: "/manage-course/detail-course/:courseId/student",
           element: (
             <MatchRoles roles={["teacher", "admin"]}>
               <DetailCourse />

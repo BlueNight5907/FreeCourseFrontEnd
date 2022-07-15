@@ -19,7 +19,7 @@ const style = {
   borderRadius: "0px",
 };
 
-const ViewStudentAction = ({ params }) => {
+const ViewStudentAction = ({ params: { row } }) => {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   return (
@@ -46,7 +46,7 @@ const ViewStudentAction = ({ params }) => {
           <Box className="w-full">
             <Avatar
               alt="Remy Sharp"
-              src="https://d5nunyagcicgy.cloudfront.net/external_assets/hero_examples/hair_beach_v391182663/original.jpeg"
+              src={row.avatar}
               sx={{ width: 100, height: 100, margin: "auto" }}
             />
           </Box>
@@ -63,7 +63,7 @@ const ViewStudentAction = ({ params }) => {
                 width: "100%",
               }}
             >
-              <Typography variant="body1">Nguyễn Thành Luân</Typography>
+              <Typography variant="body1">{row.fullName}</Typography>
             </Box>
           </Box>
           <Box className="w-full mt-2">
@@ -79,7 +79,7 @@ const ViewStudentAction = ({ params }) => {
                 width: "100%",
               }}
             >
-              <Typography variant="body1">51900707</Typography>
+              <Typography variant="body1">{row.studentId}</Typography>
             </Box>
             <Box
               sx={{ display: "flex", justifyContent: "space-between" }}
@@ -98,12 +98,12 @@ const ViewStudentAction = ({ params }) => {
                     width: "100%",
                   }}
                 >
-                  <Typography variant="body1">26/5/2021</Typography>
+                  <Typography variant="body1">{row.registerDay}</Typography>
                 </Box>
               </Box>
               <Box>
                 <Typography ml={0.5} gutterBottom className="font-bold">
-                  Ngày bắt đầu
+                  Ngày học gần nhất
                 </Typography>
                 <Box
                   className="pl-2 pr-[80px] py-2"
@@ -114,7 +114,7 @@ const ViewStudentAction = ({ params }) => {
                     width: "100%",
                   }}
                 >
-                  <Typography variant="body1">26/5/2021</Typography>
+                  <Typography variant="body1">{row.endDate}</Typography>
                 </Box>
               </Box>
             </Box>
@@ -124,8 +124,8 @@ const ViewStudentAction = ({ params }) => {
               Tiến độ học tập
             </Typography>
             <LearningProgress
-              total={params.row.learningProgress.total}
-              learned={params.row.learningProgress.learned}
+              total={row.total}
+              learned={row.learned}
               showLabel
               variant="determinate"
             />
@@ -143,27 +143,7 @@ const ViewStudentAction = ({ params }) => {
                 width: "100%",
               }}
             >
-              <Typography variant="body1">
-                Quickly manage the layout, alignment, and sizing of grid
-                columns, navigation, components, and more with a full suite of
-                responsive flexbox utilities.
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            className="w-full mt-5 py-2"
-            sx={{
-              borderRadius: 1,
-              background: theme.palette.subbackground.main,
-              color: "#000",
-              width: "100%",
-            }}
-          >
-            <Box className="flex gap-2">
-              <Add />
-              <Typography variant="body1" className="mr-2">
-                Lorem ipsum dolor sit amet
-              </Typography>
+              <Typography variant="body1">{row.desc}</Typography>
             </Box>
           </Box>
         </Wrapper>

@@ -76,11 +76,6 @@ const Setting = () => {
           className="capitalize items-start"
           {...a11yProps(1)}
         />
-        <Tab
-          label="Các quyền trong tài khoản"
-          className="capitalize items-start"
-          {...a11yProps(2)}
-        />
 
         <Tab
           label="Chế độ nền tối"
@@ -96,10 +91,7 @@ const Setting = () => {
         <LoginAndSecuritySetting />
       </TabPanel>
       <TabPanel value={selected} index={2}>
-        Tài khoản 2
-      </TabPanel>
-      <TabPanel value={selected} index={3}>
-        Tài khoản 3
+        Chế độ nền tối
       </TabPanel>
     </Wrapper>
   );

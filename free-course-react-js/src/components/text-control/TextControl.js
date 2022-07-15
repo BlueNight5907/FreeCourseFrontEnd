@@ -1,6 +1,6 @@
 import { EditRounded } from "@mui/icons-material";
 import { Divider, Grid, Typography, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../button/Button";
 import TextField from "./../text-field/TextField";
 
@@ -11,6 +11,12 @@ const TextControl = (props) => {
   const toggeEditedMode = () => {
     setEditedMode((state) => !state);
   };
+
+  const [text, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(value);
+  }, [value]);
 
   return (
     <>
@@ -55,7 +61,10 @@ const TextControl = (props) => {
             placeholder={placeholder}
             fullWidth
             type={type}
-            value={value}
+            value={text}
+            onChange={(e) => {
+              setValue(e.target ? e.target.value : e);
+            }}
             helper={helper}
             margin={"none"}
             {...others}
@@ -65,12 +74,23 @@ const TextControl = (props) => {
               variant="contained"
               color="tomato"
               sx={{ color: "#fff" }}
-              onClick={toggeEditedMode}
+              onClick={() => {
+                toggeEditedMode();
+                setValue(value);
+              }}
               width={80}
             >
               Hủy
             </Button>
-            <Button width={80} variant="contained">
+            <Button
+              width={80}
+              variant="contained"
+              onClick={() => {
+                onSave &&
+                  onSave(type === "date" ? text.toLocaleDateString() : text);
+                toggeEditedMode();
+              }}
+            >
               Lưu
             </Button>
           </Stack>

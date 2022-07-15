@@ -12,21 +12,56 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupList from "components/module/GroupList";
 import Wrapper from "components/wrapper/Wrapper";
 import ReactEcharts from "echarts-for-react";
 import { newStudent } from "mock-data/module.mock";
-import React, { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import bgImage from "assets/background/social-network-bg.jpg";
 import Prism from "prismjs";
 import ReactHtmlParser from "react-html-parser";
+import { GET_NEW_STUDENT_REQUEST } from "store/types/data-types/course-detail-types";
 
 const Detail = () => {
   const theme = useTheme();
   const { sideOpen } = useSelector((s) => s.setting);
   const { courseDetail } = useSelector((s) => s.courseDetail);
+  const [newStudents, setNewStudents] = useState([]);
+  const [rateData, setRateData] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (courseDetail) {
+      Prism.highlightAll();
+      dispatch({
+        type: GET_NEW_STUDENT_REQUEST,
+        courseId: courseDetail._id,
+        callback: (data) => setNewStudents(data),
+      });
+
+      const data = courseDetail.rates.reduce(
+        (array, item) => {
+          if (item.point < 3) {
+            array[0].value += 1;
+          } else if (item.point < 4) {
+            array[1].value += 1;
+          } else {
+            array[2].value += 1;
+          }
+          return array;
+        },
+        [
+          { name: "Đánh giá kém", value: 0 },
+          { name: "Đánh giá tích cực", value: 0 },
+          { name: "Đánh giá tốt", value: 0 },
+        ]
+      );
+      setRateData(data);
+    }
+  }, [courseDetail, dispatch]);
+
   const option2 = {
     tooltip: {
       trigger: "item",
@@ -41,13 +76,7 @@ const Detail = () => {
         type: "pie",
         top: "-15%",
         radius: ["40%", "60%"],
-        data: [
-          { value: 1048, name: "Search Engine" },
-          { value: 735, name: "Direct" },
-          { value: 580, name: "Email" },
-          { value: 484, name: "Union Ads" },
-          { value: 300, name: "Video Ads" },
-        ],
+        data: rateData,
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -58,12 +87,6 @@ const Detail = () => {
       },
     ],
   };
-
-  useEffect(() => {
-    if (courseDetail) {
-      Prism.highlightAll();
-    }
-  }, [courseDetail]);
 
   const courseModules = useMemo(() => {
     if (!courseDetail) {
@@ -148,50 +171,59 @@ const Detail = () => {
             <Typography ml={1}>Background khóa học</Typography>
           </Stack>
         </Grid>
-        <Grid item xs={12} sx={{ my: 2 }}>
-          <Box>
-            <Grid container spacing={1}>
-              <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
-                <Paper sx={{ position: "relative", pb: "75%" }} elevation={0}>
-                  <Box
-                    className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
-                    padding={1}
-                  >
-                    <Typography fontWeight={500}>
-                      Đánh giá của học viên
-                    </Typography>
-                    <Box flexGrow={1}>
-                      <ReactEcharts
-                        theme={
-                          theme.palette.mode === "dark" ? "dark" : "default"
-                        }
-                        option={option2}
-                        style={{ width: "100%", height: "100%" }}
-                        className="bar-chart"
-                      />
+        {courseDetail?.rates?.length > 0 && (
+          <Grid item xs={12} sx={{ my: 2 }}>
+            <Box>
+              <Grid container spacing={1}>
+                <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
+                  <Paper sx={{ position: "relative", pb: "75%" }} elevation={0}>
+                    <Box
+                      className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
+                      padding={1}
+                    >
+                      <Typography fontWeight={500}>
+                        Đánh giá của học viên
+                      </Typography>
+                      <Box flexGrow={1}>
+                        <ReactEcharts
+                          theme={
+                            theme.palette.mode === "dark" ? "dark" : "default"
+                          }
+                          option={option2}
+                          style={{ width: "100%", height: "100%" }}
+                          className="bar-chart"
+                        />
+                      </Box>
                     </Box>
-                  </Box>
-                </Paper>
+                  </Paper>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </Grid>
+            </Box>
+          </Grid>
+        )}
+
         <Grid item xs={12} sx={{ my: 2 }}>
           <Wrapper>
             <Typography sx={{ mb: 2 }} fontWeight={500}>
-              New Student Attend
+              Người học đăng ký mới
             </Typography>
             <Stack gap={1}>
-              {newStudent.map((item, index) => (
+              {newStudents.map((item, index) => (
                 <Card key={index} elevation={0}>
                   <CardHeader
                     avatar={
-                      <Avatar alt="N" src={item.avatar} aria-label="recipe">
+                      <Avatar
+                        alt="N"
+                        src={item.userInformation.avatar}
+                        aria-label="recipe"
+                      >
                         R
                       </Avatar>
                     }
-                    title={item.name}
-                    subheader={item.date}
+                    title={item.userInformation.fullName}
+                    subheader={new Date(
+                      item.learningProccess.createdAt
+                    ).toLocaleString()}
                   />
                 </Card>
               ))}
