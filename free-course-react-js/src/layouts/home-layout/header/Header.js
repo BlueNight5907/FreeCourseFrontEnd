@@ -9,10 +9,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MiniSearch from "../../../components/search/MiniSearch";
 import MyCourseDropdown from "../../../containers/dropdowns/my-courses-dropdown/MyCoursesDropdown";
-import NotificationDropDown from "../../../containers/dropdowns/notification-dropdown/NotificationDropDown";
 import UserDropdown from "../../../containers/dropdowns/user-dropdown/UserDropdown";
 import { AppBar } from "../styled-components";
 import {
@@ -132,7 +131,7 @@ const Header = () => {
                 <TravelExploreRounded />
               </IconButton>
             )}
-            <NotificationDropDown />
+
             {matchSm && <MyCourseDropdown />}
             <UserDropdown />
           </Box>

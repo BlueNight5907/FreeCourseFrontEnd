@@ -74,7 +74,7 @@ const Feed = () => {
     }
   }, [message]);
   return (
-    <Grid container spacing={1} sx={{ justifyContent: "flex-end" }}>
+    <Grid container spacing={3} sx={{ justifyContent: "flex-end" }}>
       {matchSm && (
         <Fab
           color="primary"

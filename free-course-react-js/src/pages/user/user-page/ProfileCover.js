@@ -10,22 +10,23 @@ import {
   IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
+import bg from "assets/background/network-intro.png";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
 import ArrowForwardTwoToneIcon from "@mui/icons-material/ArrowForwardTwoTone";
 import UploadTwoToneIcon from "@mui/icons-material/UploadTwoTone";
 import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
+import { accountType } from "constants/auth-constants";
 
 const Input = styled("input")({
   display: "none",
 });
 
-const AvatarWrapper = styled(Card)(
+const AvatarWrapper = styled(Box)(
   ({ theme }) => `
     position: relative;
     overflow: visible;
     display: inline-block;
-    margin-top: -${theme.spacing(9)};
+    margin-top: -${theme.spacing(11)};
     margin-left: ${theme.spacing(2)};
     .MuiAvatar-root {
       width: ${theme.spacing(16)};
@@ -34,34 +35,11 @@ const AvatarWrapper = styled(Card)(
 `
 );
 
-const ButtonUploadWrapper = styled(Box)(
-  ({ theme }) => `
-    position: absolute;
-    width: ${theme.spacing(4)};
-    height: ${theme.spacing(4)};
-    bottom: -${theme.spacing(1)};
-    right: -${theme.spacing(1)};
-    .MuiIconButton-root {
-      border-radius: 100%;
-      background: ${theme.palette.primary.main};
-      color: #000000;
-      box-shadow: ${theme.palette.shadow.main};
-      width: ${theme.spacing(4)};
-      height: ${theme.spacing(4)};
-      padding: 0;
-  
-      &:hover {
-        background: ${theme.palette.primary.dark};
-      }
-    }
-`
-);
-
 const CardCover = styled(Card)(
   ({ theme }) => `
     position: relative;
     .MuiCardMedia-root {
-      height: ${theme.spacing(26)};
+      height: ${theme.spacing(30)};
     }
 `
 );
@@ -85,15 +63,15 @@ const ProfileCover = ({ user }) => {
         </Tooltip>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Profile for {user.name}
+            Profile của {user?.userInformation.fullName}
           </Typography>
           <Typography variant="subtitle2">
-            This is a profile page. Easy to modify, always blazing fast
+            Người dùng của TDT - Learning
           </Typography>
         </Box>
       </Box>
       <CardCover>
-        <CardMedia image={user.coverImg} />
+        <CardMedia image={user?.userInformation.background || bg} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -108,44 +86,35 @@ const ProfileCover = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
-        <ButtonUploadWrapper>
-          <Input
-            accept="image/*"
-            id="icon-button-file"
-            name="icon-button-file"
-            type="file"
-          />
-          <label htmlFor="icon-button-file">
-            <IconButton component="span" color="primary">
-              <UploadTwoToneIcon />
-            </IconButton>
-          </label>
-        </ButtonUploadWrapper>
+        <Avatar
+          sx={{
+            border: (theme) => "3px solid " + theme.palette.foreground.main,
+          }}
+          alt={user?.userInformation.fullName}
+          src={user?.userInformation.avatar}
+        />
       </AvatarWrapper>
       <Box py={2} pl={2} mb={3}>
         <Typography gutterBottom variant="h4">
-          {user.name}
+          {user?.userInformation.fullName}
         </Typography>
-        <Typography variant="subtitle2">{user.description}</Typography>
-        <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
-          {user.jobtitle} | {user.location} | {user.followers} followers
+        <Typography variant="subtitle2">
+          {user?.userInformation.desc}
         </Typography>
+
         <Box
           display={{ xs: "block", md: "flex" }}
+          mt={4}
           alignItems="center"
           justifyContent="space-between"
         >
           <Box>
-            <Button size="small" variant="contained">
-              Follow
-            </Button>
-            <Button size="small" sx={{ mx: 1 }} variant="outlined">
-              View website
-            </Button>
-            <IconButton color="primary" sx={{ p: 0.5 }}>
-              <MoreHorizTwoToneIcon />
-            </IconButton>
+            <Button variant="contained">Bài viết</Button>
+            {user?.type.name !== "student" && (
+              <Button sx={{ mx: 1 }} variant="outlined">
+                Khóa học
+              </Button>
+            )}
           </Box>
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
@@ -153,7 +122,7 @@ const ProfileCover = ({ user }) => {
             variant="text"
             endIcon={<ArrowForwardTwoToneIcon />}
           >
-            See all {user.followers} connections
+            See all {user?.followers} connections
           </Button>
         </Box>
       </Box>

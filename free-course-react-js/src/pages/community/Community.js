@@ -3,16 +3,7 @@ import React from "react";
 import Feed from "./feed/feed";
 
 const Community = (props) => {
-  return (
-    <Container
-      maxWidth="xl"
-      sx={{
-        padding: 0,
-      }}
-    >
-      <Feed />
-    </Container>
-  );
+  return <Feed />;
 };
 
 export default Community;

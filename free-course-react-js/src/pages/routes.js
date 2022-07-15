@@ -131,7 +131,7 @@ const Routes = () => {
           ),
         },
         {
-          path: "community/post/create",
+          path: "post/create",
           element: (
             <MatchRoles>
               <PostCreate />

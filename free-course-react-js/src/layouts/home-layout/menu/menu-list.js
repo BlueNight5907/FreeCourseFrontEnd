@@ -64,7 +64,7 @@ const mainMenuList = [
   {
     name: "Tạo bài viết",
     icon: AddRounded,
-    href: "/community/post/create",
+    href: "/post/create",
     roles: ["teacher", "student", "admin"],
   },
 
