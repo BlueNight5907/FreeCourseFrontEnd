@@ -29,71 +29,72 @@ const ListTag = ({ row }) => {
   );
 };
 
+const columns = [
+  {
+    headerName: "Ảnh nền",
+    field: "background",
+    width: 210,
+    renderCell: ({ row }) => (
+      <Image className="aspect-video w-full p-2" src={row.background} />
+    ),
+  },
+  {
+    headerName: "Tên khóa học",
+    field: "title",
+    width: 350,
+  },
+  {
+    headerName: "Danh mục",
+    field: "category",
+    valueGetter: ({ row }) => row.category?.name,
+    width: 180,
+    editable: true,
+  },
+  {
+    headerName: "Cấp độ",
+    field: "level",
+    valueGetter: ({ row }) => row.level?.name,
+    width: 130,
+    editable: true,
+  },
+  {
+    headerName: "Nhãn",
+    field: "tag",
+    sortable: false,
+    flex: 1,
+    minWidth: 320,
+    renderCell: ListTag,
+  },
+  {
+    headerName: "Học viên",
+    field: "participants",
+    valueGetter: ({ row }) => row.participants.length,
+    type: "number",
+  },
+  {
+    headerName: "Hành động",
+    field: "action",
+    width: 250,
+    renderCell: (params) => (
+      <Box>
+        <Link to={"/manage-course/detail-course/" + params.row._id}>
+          <Button variant="contained" startIcon={<Visibility />} />
+        </Link>
+        <Link to={{ pathname: "/manage-course/edit/" + params.row._id }}>
+          <Button
+            style={{ marginLeft: 16 }}
+            variant="contained"
+            startIcon={<Edit />}
+          />
+        </Link>
+        <DeleteAction params={params} />
+      </Box>
+    ),
+  },
+];
+
 const CourseCategory = () => {
   const dispatch = useDispatch();
-  const columns = [
-    {
-      headerName: "Ảnh nền",
-      field: "background",
-      width: 210,
-      renderCell: ({ row }) => (
-        <Image className="aspect-video w-full p-2" src={row.background} />
-      ),
-    },
-    {
-      headerName: "Tên khóa học",
-      field: "title",
-      width: 350,
-    },
-    {
-      headerName: "Danh mục",
-      field: "category",
-      valueGetter: ({ row }) => row.category?.name,
-      width: 180,
-      editable: true,
-    },
-    {
-      headerName: "Cấp độ",
-      field: "level",
-      valueGetter: ({ row }) => row.level?.name,
-      width: 130,
-      editable: true,
-    },
-    {
-      headerName: "Nhãn",
-      field: "tag",
-      sortable: false,
-      flex: 1,
-      minWidth: 320,
-      renderCell: ListTag,
-    },
-    {
-      headerName: "Học viên",
-      field: "participants",
-      valueGetter: ({ row }) => row.participants.length,
-      type: "number",
-    },
-    {
-      headerName: "Hành động",
-      field: "action",
-      width: 250,
-      renderCell: (params) => (
-        <Box>
-          <Link to={"/manage-course/detail-course/" + params.row._id}>
-            <Button variant="contained" startIcon={<Visibility />} />
-          </Link>
-          <Link to={{ pathname: "/manage-course/edit/" + params.row._id }}>
-            <Button
-              style={{ marginLeft: 16 }}
-              variant="contained"
-              startIcon={<Edit />}
-            />
-          </Link>
-          <DeleteAction params={params} />
-        </Box>
-      ),
-    },
-  ];
 
   const getData = useCallback(async () => {
     const { data, total: totalRows } = await new Promise((resolve, reject) => {
@@ -110,11 +111,12 @@ const CourseCategory = () => {
     return { data, totalRows };
   }, [dispatch]);
 
+  const params = useMemo(() => ({ page: 0, page_size: 10 }), []);
   return (
     <Stack gap={1} className="h-full">
       <Paper className="grow flex flex-col min-h-[700px] p-1">
         <RenderTable
-          params={{ page: 0, page_size: 10 }}
+          params={params}
           columns={columns}
           rowIdField="_id"
           rowHeight={100}

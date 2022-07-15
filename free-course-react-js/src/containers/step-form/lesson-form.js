@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button, { buttonBg } from "components/button/Button";
 import {
   AppBar,
@@ -25,7 +25,7 @@ import {
   EditRounded,
   Save,
   Source,
-  Upload,
+  Upload as UploadIcon,
   YouTube,
 } from "@mui/icons-material";
 import Wrapper from "components/wrapper/Wrapper";
@@ -39,14 +39,44 @@ import {
   CREATE_LESSON_REQUEST,
   UPDATE_LESSON_REQUEST,
 } from "store/types/data-types/manage-course-types";
+import { Upload } from "../../firebase";
 
-const UploadFile = (props) => {
+const UploadFile = ({ setValue }) => {
   const theme = useTheme();
   const fileRef = useRef();
   const [file, setFile] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [uploadTask, setUploadTask] = useState(null);
   const handleChange = (event) => {
     setFile(event.target.files[0]);
   };
+
+  useEffect(() => {
+    if (file && uploadTask) {
+      uploadTask?.start();
+    }
+    return () => {
+      uploadTask?.stop();
+      setProgress(0);
+    };
+  }, [file, uploadTask]);
+
+  const doUpload = useCallback(() => {
+    if (file) {
+      const task = new Upload(
+        "course-data",
+        file,
+        (res) => {
+          setValue(res);
+          setFile(null);
+          setTimeout(() => setProgress(0), 500);
+        },
+        (res) => setProgress(res)
+      );
+      setUploadTask(task);
+    }
+  }, [file, setValue]);
+
   return (
     <Box>
       <Typography gutterBottom>Tải lên tài liệu</Typography>
@@ -66,7 +96,9 @@ const UploadFile = (props) => {
         </Button>
         <Button
           variant="outlined"
-          startIcon={<Upload />}
+          startIcon={<UploadIcon />}
+          onClick={doUpload}
+          disabled={progress !== 0}
           sx={{ height: "unset", ml: 1, width: 130 }}
         >
           Tải lên
@@ -88,8 +120,18 @@ const UploadFile = (props) => {
           gap: 1,
         }}
       >
-        <LinearProgress className="grow" variant="determinate" value={70} />
-        <Typography variant="body2">80%</Typography>
+        {progress > 0 && (
+          <>
+            <LinearProgress
+              className="grow"
+              variant="determinate"
+              value={progress}
+            />
+            <Typography variant="body2">
+              {Number(progress).toFixed(2)}%
+            </Typography>
+          </>
+        )}
       </Stack>
     </Box>
   );
@@ -349,7 +391,7 @@ function LessonForm({ goBack, open, moduleData, close }) {
                       <Stack gap={1} className="flex-row flex-wrap grow">
                         <Button
                           className="h-[46px] w-[170px]"
-                          startIcon={<Upload />}
+                          startIcon={<UploadIcon />}
                           variant={
                             formData.type === "video" ? "contained" : "outlined"
                           }
@@ -421,8 +463,14 @@ function LessonForm({ goBack, open, moduleData, close }) {
                     )}
                   </Grid>
                   <Grid item xs={12}>
-                    {formData.type === "video" && <UploadFile />}
-                    {formData.type === "document" && <UploadFile />}
+                    {formData.type === "video" && (
+                      <UploadFile
+                        setValue={(data) =>
+                          setFormData({ ...formData, url: data })
+                        }
+                      />
+                    )}
+
                     {formData.type === "youtube" && (
                       <EmbedYoutube
                         setValue={(data) =>

@@ -1,34 +1,15 @@
 import Wrapper from "components/wrapper/Wrapper";
 import React, { useState } from "react";
-import { Box, Grid, Stack, useTheme } from "@mui/material";
+import { Box, Grid, Paper, Stack, useTheme } from "@mui/material";
 import Button from "components/button/Button";
 import { Add } from "@mui/icons-material";
 import TabPanel from "components/tab-panel/TabPanel";
-import Dashboard from "./panel/Dashboard";
 import CourseCategory from "./panel/CourseCategory";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { GET_MY_CREATED_COURSES_REQUEST } from "store/types/data-types/manage-course-types";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function CourseDashboard() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const [selected, setSelected] = useState(-1);
-  const styles = {
-    grpButton: {},
-  };
-
-  useEffect(() => {
-    if (location.pathname === "/manage-course/dashboard") {
-      setSelected(0);
-    }
-    if (location.pathname === "/manage-course/category") {
-      setSelected(1);
-    }
-  }, [location.pathname]);
 
   return (
     <Stack my={1} gap={2} flexGrow={1}>
@@ -42,22 +23,7 @@ function CourseDashboard() {
             borderRadius={1}
             bgcolor={theme.palette.foreground.main}
           >
-            <Button
-              variant="contained"
-              color={selected === 0 ? "primary" : "foreground"}
-              onClick={() => navigate("/manage-course/dashboard")}
-              disableElevation
-            >
-              Dashboard
-            </Button>
-            <Button
-              variant="contained"
-              color={selected === 1 ? "primary" : "foreground"}
-              onClick={() => navigate("/manage-course/category")}
-              disableElevation
-            >
-              Khóa học của tôi
-            </Button>
+            <Paper className="p-3">Danh sách khóa học</Paper>
           </Stack>
           <Button
             variant="contained"
@@ -72,10 +38,7 @@ function CourseDashboard() {
         </Stack>
       </Box>
       <Box className="grow">
-        <TabPanel index={0} value={selected}>
-          <Dashboard />
-        </TabPanel>
-        <TabPanel className="h-full" index={1} value={selected}>
+        <TabPanel className="h-full" index={1} value={1}>
           <CourseCategory />
         </TabPanel>
       </Box>

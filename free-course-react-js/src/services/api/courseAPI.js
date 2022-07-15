@@ -50,12 +50,16 @@ export const getAllStudent = (id) => {
   return request(GET, apiPath.allStudent(id));
 };
 
+export const getNewStudent = (id) => {
+  return request(GET, apiPath.newStudent(id));
+};
+
 export const getLearningProcess = (id) => {
   return request(GET, apiPath.getLearningProcess(id));
 };
 
 export const getStep = (module, step) => {
-  return request(GET, apiPath.getStep(module, step));
+  return request(GET, apiPath.getStep(module, step), {}, {}, "get-step");
 };
 
 export const completeLesson = (module, step) => {

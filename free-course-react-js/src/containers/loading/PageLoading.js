@@ -8,14 +8,15 @@ const PageLoading = () => {
   const { pageLoading } = useSelector((state) => state.setting);
   const { promiseInProgress } = usePromiseTracker({ area: "general" });
   useEffect(() => {
+    const oldStyle = document.body.style.overflow;
     if (pageLoading || promiseInProgress) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = oldStyle;
       document.body.style.paddingRight = "unset";
     }
-    return () => (document.body.style.overflow = "unset");
+    return () => (document.body.style.overflow = oldStyle);
   }, [pageLoading, promiseInProgress]);
   return (
     <Backdrop

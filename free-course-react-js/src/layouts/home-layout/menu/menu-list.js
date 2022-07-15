@@ -130,11 +130,6 @@ export const teacherSubMenuList = [
     href: "/manage-course/create",
   },
   {
-    name: "Dashboard",
-    icon: GridViewRounded,
-    href: "/manage-course/dashboard",
-  },
-  {
     name: "Danh sách khóa học",
     icon: ViewListRounded,
     href: "/manage-course/category",
@@ -142,7 +137,7 @@ export const teacherSubMenuList = [
   {
     name: "Danh hiệu",
     icon: EmojiEventsRounded,
-    href: "/manage-course/awards",
+    href: "./",
   },
 ];
 

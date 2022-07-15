@@ -5,6 +5,7 @@ import {
   getCourseComments,
   getCourseDetail,
   getCoursesWithCategory,
+  getNewStudent,
   joinCourse,
   ratingCourse,
   sendCourseComment,
@@ -21,6 +22,7 @@ import {
   GET_COURSE_DETAIL_ERROR,
   GET_COURSE_DETAIL_REQUEST,
   GET_COURSE_DETAIL_SUCCESS,
+  GET_NEW_STUDENT_REQUEST,
   GET_TEACHER_INFOR_ERROR,
   GET_TEACHER_INFOR_REQUEST,
   GET_TEACHER_INFOR_SUCCESS,
@@ -172,6 +174,20 @@ function* watchGetAllStudent() {
   }
 }
 
+function* getNewStudents(courseId, callback) {
+  try {
+    const students = yield call(getNewStudent, courseId);
+    yield call(callback, students);
+  } catch (error) {}
+}
+
+function* watchGetNewStudent() {
+  while (true) {
+    const { courseId, callback } = yield take(GET_NEW_STUDENT_REQUEST);
+    yield fork(getNewStudents, courseId, callback);
+  }
+}
+
 const courseDetailSagaList = [
   fork(watchGetCourse),
   fork(watchGetTeacherInfor),
@@ -181,5 +197,6 @@ const courseDetailSagaList = [
   fork(watchGetComment),
   fork(watchRatingCourse),
   fork(watchGetAllStudent),
+  fork(watchGetNewStudent),
 ];
 export default courseDetailSagaList;
