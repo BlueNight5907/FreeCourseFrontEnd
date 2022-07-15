@@ -17,21 +17,18 @@ const Caption = ({ caption, ...other }) => {
       }}
       {...other}
     >
-      {
-        /* {isReadMore && caption.length > 100 ? caption : caption.slice(0, 100)} */
-        captionText.length < 100
-          ? captionText
-          : isReadMore
-          ? captionText
-          : captionText.slice(0, 100)
-      }
+      {captionText.length < 150
+        ? captionText
+        : isReadMore
+        ? captionText
+        : captionText.slice(0, 150)}
       <Typography
         component="span"
         className="font-semibold cursor-pointer"
         onClick={toggleReadMore}
       >
         {" "}
-        {captionText.length < 100 ? "" : isReadMore ? "less" : "...more"}
+        {captionText.length < 150 ? "" : isReadMore ? "less" : "...more"}
       </Typography>
     </Typography>
   );

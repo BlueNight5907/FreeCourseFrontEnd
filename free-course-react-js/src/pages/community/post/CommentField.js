@@ -119,7 +119,7 @@ const CommentField = (props) => {
     dispatch({
       type: POST_COMMENT_REQUEST,
       postId: id,
-      content: commentText,
+      content: commentText + " ",
       image: file,
       callback: updateListComment,
     });
@@ -129,12 +129,6 @@ const CommentField = (props) => {
       setFileDataURL();
     }
   };
-
-  useEffect(() => {
-    if (listComment) {
-      console.log(listComment);
-    }
-  }, [listComment]);
 
   const openEmojiPicker = Boolean(showEmojiPicker);
   return (
@@ -226,15 +220,11 @@ const CommentField = (props) => {
         />
         <IconButton title="Thêm ảnh" onClick={() => imageRef.current.click()}>
           <ImageIcon sx={iconStyle.default} />
-          {/* <input
-            type="file"
-            hidden
-            ref={null}
-            accept=".png, .jpg, .jpeg"
-            onChange={null}
-          /> */}
         </IconButton>
-        <Button disabled={commentText ? false : true} onClick={handleComment}>
+        <Button
+          disabled={commentText || fileDataURL ? false : true}
+          onClick={handleComment}
+        >
           <Typography
             variant="subtitle1"
             fontWeight={600} /*fontFamily="monospace"*/

@@ -1,64 +1,162 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  AppBar,
-  Dialog,
   Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Paper,
-  Toolbar,
   Typography,
   Box,
   useTheme,
   Grid,
   useMediaQuery,
-  Stack,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_BLOG_REQUEST } from "store/types/data-types/blog-type";
-import Image from "components/image/Image";
+import UserCard from "components/user-card/UserCard";
+import CommentField from "./CommentField";
+import Comment from "components/comment/Comment2";
+import FeatureCourseSlide from "containers/courses-slide/FeatureCourseSlide";
+import {
+  Bookmark,
+  BookmarkBorderOutlined,
+  MoreHoriz,
+} from "@mui/icons-material";
+import { format } from "date-fns";
+import CourseCard from "components/course-card/CourseCard";
 
 const Post = (props) => {
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
-  const matchMd = useMediaQuery(theme.breakpoints.up("md"));
+  const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
   const { id } = useParams();
   const { post } = useSelector((state) => state.blog);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const iconStyle = {
+    default: {
+      color: theme.palette.text3,
+      fontSize: theme.typography.pxToRem(34),
+    },
+    action: {
+      love: {
+        color: theme.palette.tomato.main,
+        fontSize: theme.typography.pxToRem(34),
+      },
+      mark: {
+        color: theme.palette.warning.main,
+        fontSize: theme.typography.pxToRem(34),
+      },
+    },
+  };
+
+  const [isMarked, setIsMark] = useState(false);
+  const toggleMark = () => {
+    setIsMark(!isMarked);
+  };
 
   useEffect(() => {
     dispatch({ type: GET_BLOG_REQUEST, id });
   }, [id, dispatch]);
 
+  const [listComment, setListComment] = useState([]);
+
+  useEffect(() => {
+    if (post?.comments) {
+      setListComment(post?.comments);
+    }
+  }, [post, setListComment]);
   return (
     <Grid container spacing={2} minHeight={0}>
       <Grid item xs={12}>
-        <Typography variant="h4">{post?.title}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Image
-          src={post?.backgroundUrl}
-          alt="course"
-          style={{ objectFit: "cover" }}
-          border={"0.5px solid #d1d7dc"}
+        <Paper
+          elevation={0}
           sx={{
-            width: matchSm ? 260 : 80,
-            height: matchSm ? 145 : 80,
+            margin: theme.spacing(1, 0, 0, 0),
+            display: "flex",
+            flexDirection: "column",
+            padding: theme.spacing(2, 4),
           }}
-        />
+        >
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <UserCard
+              name={post?.creator && post.creator.userInformation.fullName}
+              avatar={post?.creator && post.creator.userInformation.avatar}
+            />
+            {/* <IconButton onClick={toggleMark}>
+              {isMarked ? (
+                <Bookmark sx={iconStyle.action.mark} />
+              ) : (
+                <BookmarkBorderOutlined sx={iconStyle.default} />
+              )}
+            </IconButton> */}
+          </Box>
+          <Divider sx={{ margin: theme.spacing(2, 0) }} />
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+          >
+            <Box>
+              <Typography variant="h2" fontSize={45} fontWeight={700}>
+                {post?.title && post.title}
+              </Typography>
+              <Typography variant="h6" fontSize={13} fontWeight={400}>
+                {"Đã đăng vào " +
+                  (post?.createdAt &&
+                    format(new Date(post.createdAt), "dd/MM/yyyy HH:mm:ss"))}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Paper
+          elevation={0}
+          sx={{
+            padding: theme.spacing(1.5, 4),
+            lineHeight: 1.8,
+          }}
+        >
+          <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+        </Paper>
       </Grid>
       <Grid item xs={12}>
-        <Stack>
-          <Typography>{post?.creator.userInformation.fullName}</Typography>
-          <Typography>{post?.createdAt}</Typography>
-        </Stack>
+        <Paper elevation={0}>
+          <Box padding={theme.spacing(2, 3)}>
+            <Typography variant="h6" fontWeight={500}>
+              Bình luận
+            </Typography>
+            <CommentField
+              id={post?._id}
+              setListComment={setListComment}
+              listComment={listComment}
+            />
+            <Divider />
+          </Box>
+
+          <Box padding={theme.spacing(2, 3)}>
+            {listComment.length > 0 ? (
+              listComment.map((comment, index) => (
+                <Comment key={index} data={comment} post={post} user={user} />
+              ))
+            ) : (
+              <Box display="flex" justifyContent="center">
+                <Typography>Chưa có bình luận</Typography>
+              </Box>
+            )}
+          </Box>
+        </Paper>
       </Grid>
       <Grid item xs={12}>
-        <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+        <FeatureCourseSlide />
       </Grid>
+      <Grid item xs={12}></Grid>
     </Grid>
   );
 };

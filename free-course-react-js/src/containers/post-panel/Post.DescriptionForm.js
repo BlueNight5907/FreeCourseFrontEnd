@@ -1,33 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  FormHelperText,
   Box,
-  Chip,
   Grid,
-  ListItem,
-  MenuItem,
   Paper,
   Stack,
   TextField,
-  FormControl,
   useTheme,
   Typography,
-  useMediaQuery,
-  Divider,
-  OutlinedInput,
 } from "@mui/material";
-import Wrapper from "components/wrapper/Wrapper";
-import {
-  AddCircle,
-  TagFaces,
-  Delete,
-  EditRounded,
-  Save,
-  DeleteOutline,
-  Add,
-} from "@mui/icons-material";
-import Button, { buttonBg } from "components/button/Button";
-import { scrollSetting } from "utils/classUltis";
+import { Delete } from "@mui/icons-material";
+import Button from "components/button/Button";
 import { useSelector } from "react-redux";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -91,6 +73,9 @@ const ImageInput = ({ background, setBackground }) => {
           ref={bgRef}
           accept=".png, .jpg, .jpeg"
           onChange={changeBgHandler}
+          onClick={(e) => {
+            e.target.value = null;
+          }}
         />
         <Stack
           sx={{
@@ -109,7 +94,10 @@ const ImageInput = ({ background, setBackground }) => {
               sx={{ minWidth: 40 }}
               variant="contained"
               color="background"
-              onClick={() => setFile(null)}
+              onClick={() => {
+                setFile();
+                setFileDataURL();
+              }}
             >
               <Delete color="error" />
             </Button>
@@ -133,20 +121,6 @@ const DescriptionForm = ({
 }) => {
   const theme = useTheme();
   const { sideOpen } = useSelector((s) => s.setting);
-
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: "Angular" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 3, label: "React" },
-    { key: 4, label: "Vue.js" },
-  ]);
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
-  };
 
   return (
     <Box className="flex h-full flex-col" gap={2}>
@@ -180,69 +154,6 @@ const DescriptionForm = ({
             }}
             value={description}
           />
-          <FormControl className="flex-grow w-full">
-            <Paper
-              className="flex self-start gap-3 items-center w-full"
-              elevation={0}
-              sx={{ border: "1px solid " + theme.palette.divider, p: 0.6 }}
-            >
-              <Button className="flex-shrink-0" variant="outlined">
-                Thêm Tag
-              </Button>
-              <Box className="h-[42px]  relative flex-grow">
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    gap: 0.5,
-                    listStyle: "none",
-                    p: 0.5,
-                    m: 0,
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    ...scrollSetting({
-                      overflowX: "overlay",
-                      overflowY: "hidden",
-                      width: 5,
-                    }),
-                  }}
-                  component="ul"
-                >
-                  {chipData.map((data) => {
-                    let icon;
-
-                    if (data.label === "React") {
-                      icon = <TagFaces />;
-                    }
-
-                    return (
-                      <ListItem
-                        sx={{ p: 0, width: "fit-content" }}
-                        key={data.key}
-                      >
-                        <Chip
-                          icon={icon}
-                          label={data.label}
-                          onDelete={
-                            data.label === "React"
-                              ? undefined
-                              : handleDelete(data)
-                          }
-                        />
-                      </ListItem>
-                    );
-                  })}
-                </Box>
-              </Box>
-            </Paper>
-            <FormHelperText>
-              Thêm tag để khóa học dễ dàng được tìm thấy
-            </FormHelperText>
-          </FormControl>
         </Grid>
 
         <Grid

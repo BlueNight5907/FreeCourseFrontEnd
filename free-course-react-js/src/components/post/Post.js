@@ -5,10 +5,8 @@ import {
   ChatBubbleOutline,
   Favorite,
   FavoriteBorder,
-  ImportContactsOutlined,
-  ImportContactsRounded,
   LaunchOutlined,
-  OpenInFullOutlined,
+  MoreHoriz,
 } from "@mui/icons-material";
 import {
   Box,
@@ -23,9 +21,13 @@ import {
   styled,
   Divider,
   Snackbar,
+  Menu,
+  MenuItem,
+  Fade,
+  Button,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { format, formatDistanceToNow } from "date-fns";
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 import UserCard from "components/user-card/UserCard";
 
 import Caption from "components/caption/Caption";
@@ -57,12 +59,10 @@ const Post = ({ post }) => {
     likes,
     creator,
   } = post;
-  let { like } = post;
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const { sideOpen } = useSelector((state) => state.setting);
 
   const iconStyle = {
     default: {
@@ -80,7 +80,6 @@ const Post = ({ post }) => {
       },
     },
   };
-
   // Creator data
   const [creatorData, setCreatorData] = useState({
     id: "",
@@ -99,9 +98,6 @@ const Post = ({ post }) => {
         callback: (data) => setCreatorData(data),
       });
     }
-    // console.log(likes);
-    // console.log("Id:", user._id);
-    // console.log();
   }, [creator, dispatch, setCreatorData]);
 
   // Like react
@@ -119,7 +115,8 @@ const Post = ({ post }) => {
     setIsMark(!isMarked);
   };
 
-  const [openSnack, setOpenSnack] = React.useState(false);
+  // Copy link
+  const [openSnack, setOpenSnack] = useState(false);
 
   const handleClick = () => {
     navigator.clipboard
@@ -136,6 +133,7 @@ const Post = ({ post }) => {
 
     setOpenSnack(false);
   };
+
   const [openCommentDialog, setOpenCommentDialog] = useState(false);
 
   return (
@@ -143,10 +141,6 @@ const Post = ({ post }) => {
       elevation={0}
       sx={{
         margin: theme.spacing(2, 0),
-        width: {
-          lg: sideOpen ? 700 : 800,
-          sm: sideOpen ? 600 : 700,
-        },
         backgroundColor: theme.palette.foreground.main,
       }}
     >
@@ -154,17 +148,35 @@ const Post = ({ post }) => {
         avatar={
           <UserCard
             name={creatorData.userInformation.fullName}
-            subtitle={formatDistanceToNow(new Date(createdAt), {
-              locale: viLocale,
-              addSuffix: true,
-            })}
+            subtitle={
+              differenceInDays(new Date(), new Date(createdAt)) <= 3
+                ? formatDistanceToNow(new Date(createdAt), {
+                    locale: viLocale,
+                    addSuffix: true,
+                  })
+                : format(new Date(createdAt), "dd/MM/yyyy HH:mm:ss")
+              //differenceInDays(new Date(), new Date(createdAt))
+            }
             avatar={creatorData.userInformation.avatar}
             subLink={`/community/post/${_id}`}
           />
         }
-        action={<PostActionDropDown />}
+        action={
+          <PostActionDropDown
+            post={post}
+            user={user}
+            isMarked={isMarked}
+            setIsMark={setIsMark}
+          />
+        }
       />
       {backgroundUrl && <CardMedia component="img" image={backgroundUrl} />}
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message="Sao chép địa chỉ thành công"
+      />
       <CardActions>
         <Box>
           <IconButton onClick={toggleLike}>
@@ -178,41 +190,37 @@ const Post = ({ post }) => {
           <IconButton onClick={() => setOpenCommentDialog(true)}>
             <ChatBubbleOutline sx={iconStyle.default} />
           </IconButton>
-          <IconButton
-            onClick={() => {
-              navigate(`/community/post/${_id}`);
-            }}
-          >
-            <LaunchOutlined sx={iconStyle.default} />
-          </IconButton>
           <IconButton onClick={handleClick}>
-            {/* <SendOutlined sx={iconStyle.default} /> */}
             <Icon icon="bx:share-alt" style={iconStyle.default} />
           </IconButton>
         </Box>
-
-        <IconButton onClick={toggleMark}>
-          {isMarked ? (
-            <Bookmark sx={iconStyle.action.mark} />
-          ) : (
-            <BookmarkBorderOutlined sx={iconStyle.default} />
-          )}
-        </IconButton>
+        <Button
+          onClick={() => {
+            navigate(`/community/post/${_id}`);
+          }}
+        >
+          <Typography
+            fontSize="15px"
+            fontWeight={500}
+            color={theme.palette.text.main}
+          >
+            Chi tiết
+          </Typography>
+        </Button>
       </CardActions>
-
-      <CardContent sx={{ padding: theme.spacing(1, 1.6) }}>
+      {/* <Divider /> */}
+      <CardContent
+        sx={{ padding: theme.spacing(0, 1.6), paddingBottom: "0 !important" }}
+      >
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {likeNum} {likeNum > 2 ? "likes" : "like"}
+          {likeNum} {likeNum > 1 ? "likes" : "like"}
         </Typography>
-        <Caption caption={description} />
+        <Divider />
+        <Box padding={theme.spacing(1, 0)}>
+          <Typography fontWeight="bold">{title}</Typography>
+          <Caption caption={description} />
+        </Box>
       </CardContent>
-      <Divider />
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={2000}
-        onClose={handleClose}
-        message="Sao chép địa chỉ thành công"
-      />
       <PostDialog
         openCommentDialog={openCommentDialog}
         setOpenCommentDialog={setOpenCommentDialog}
