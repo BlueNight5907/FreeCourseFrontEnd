@@ -11,6 +11,7 @@ function DropdownItem(props) {
     disabledClick,
     selected,
     disabled = false,
+    hover,
     ...others
   } = props;
 
@@ -20,7 +21,7 @@ function DropdownItem(props) {
       backgroundColor: (theme) => theme.palette.select.main,
     }),
     "&:hover": {
-      backgroundColor: (theme) => theme.palette.select.main,
+      backgroundColor: (theme) => theme.palette.hover.main,
       "": {
         borderRadius: square ? 0 : 1,
       },

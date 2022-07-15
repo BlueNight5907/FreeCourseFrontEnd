@@ -1,43 +1,143 @@
-import { MoreHoriz } from "@mui/icons-material";
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
-import Dropdown from "../../../components/dropdown/Dropdown";
-import DropdownItem from "../../../components/dropdown/DropdownItem";
-import DropdownMenu from "../../../components/dropdown/DropdownMenu";
-import DropdownToggle from "../../../components/dropdown/DropdownToggle";
+import {
+  AutoStoriesRounded,
+  DeleteRounded,
+  EditRounded,
+  InsertLinkRounded,
+  MoreHoriz,
+  ReportRounded,
+} from "@mui/icons-material";
+import {
+  Divider,
+  Fade,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Snackbar,
+  Typography,
+} from "@mui/material";
+import PostEditDialog from "pages/community/post/PostEditDialog";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { DELETE_BLOG_REQUEST } from "store/types/data-types/blog-type";
 
-const PostActionDropDown = ({ props }) => {
-  const theme = useTheme();
+const PostActionDropDown = (props) => {
+  const { post, user, isMarked, setIsMark } = props;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const owned = post.creator === user._id;
+  const [snackMessage, setSnackMessage] = useState("");
+
+  // Copy link
+  const [openSnack, setOpenSnack] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(`http://localhost:3000/community/post/${post._id}`)
+      .then(() => {
+        setSnackMessage("Sao chép địa chỉ thành công");
+        setOpenSnack(true);
+        handleActionClose();
+      });
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleActionOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleActionClose = () => {
+    setAnchorEl(null);
+  };
+  // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  // Delete post
+  const handleDeletePost = () => {
+    dispatch({ type: DELETE_BLOG_REQUEST, postId: post._id });
+    handleActionClose();
+  };
+
+  const handleClickOpen = () => {
+    setOpenEdit(true);
+    handleActionClose();
+  };
   return (
-    <Dropdown>
-      <DropdownToggle
-        render={({ toggleDropdown }) => (
-          <IconButton onClick={toggleDropdown}>
-            <MoreHoriz />
-          </IconButton>
-        )}
-      />
-      <DropdownMenu
-        shadow={8}
-        width={{
-          md: 300,
-          xs: 280,
+    <div>
+      <IconButton onClick={handleActionOpen}>
+        <MoreHoriz />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleActionClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
         }}
-        direction="right"
+        TransitionComponent={Fade}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <DropdownItem>
-          {/* <Box display="flex" justifyContent="space-between"> */}
-          <MoreHoriz />
-          <Typography color={theme.palette.tomato.main} fontWeight={550}>
-            Báo cáo
-          </Typography>
-          {/* </Box> */}
-        </DropdownItem>
+        {owned ? (
+          <div>
+            <MenuItem onClick={handleClickOpen}>
+              <ListItemIcon>
+                <EditRounded />
+              </ListItemIcon>
+              <Typography fontWeight={500}>Chỉnh sửa</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleDeletePost}>
+              <ListItemIcon>
+                <DeleteRounded />
+              </ListItemIcon>
+              <Typography fontWeight={500}>Xóa bài viết</Typography>
+            </MenuItem>
+          </div>
+        ) : (
+          <MenuItem>
+            <ListItemIcon>
+              <ReportRounded />
+            </ListItemIcon>
+            <Typography fontWeight={500}>Báo cáo</Typography>
+          </MenuItem>
+        )}
         <Divider />
-        <DropdownItem>Theo dõi/Hủy theo dõi</DropdownItem>
-        <DropdownItem>Sao chép liên kết</DropdownItem>
-        <DropdownItem>Đánh dấu</DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
+        <MenuItem onClick={handleCopyLink}>
+          <ListItemIcon>
+            <InsertLinkRounded />
+          </ListItemIcon>
+          <Typography fontWeight={500}>Sao chép liên kết</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/community/post/${post._id}`);
+          }}
+        >
+          <ListItemIcon>
+            <AutoStoriesRounded />
+          </ListItemIcon>
+          <Typography fontWeight={500}>Xem chi tiết</Typography>
+        </MenuItem>
+      </Menu>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message={snackMessage}
+      />
+      <PostEditDialog open={openEdit} setOpen={setOpenEdit} post={post} />
+    </div>
   );
 };
 

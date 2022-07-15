@@ -3,13 +3,13 @@ import Wrapper from "./../../../components/wrapper/Wrapper";
 import { AddCircle, Save, ArrowCircleUp } from "@mui/icons-material";
 import CourseForm from "containers/course-panel/CourseForm";
 import Button from "components/button/Button";
-import { Stack, Tab, Tabs } from "@mui/material";
+import { Snackbar, Stack, Tab, Tabs } from "@mui/material";
 import TabPanel from "components/tab-panel/TabPanel";
 import DescriptionForm from "containers/post-panel/Post.DescriptionForm";
-// import ContentForm from "containers/course-panel/ContentForm";
 import ContentForm from "containers/post-panel/Post.ContentForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { POST_BLOG_REQUEST } from "store/types/data-types/blog-type";
+import { useNavigate } from "react-router-dom";
 
 function a11yProps(index) {
   return {
@@ -27,9 +27,27 @@ const PostCreate = () => {
   const handleSelectedChange = (event, newValue) => {
     setSelected(newValue);
   };
-
+  const navigate = useNavigate();
+  const { message } = useSelector((state) => state.blog);
   const dispatch = useDispatch();
 
+  const [openSnack, setOpenSnack] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
+  useEffect(() => {
+    if (message) {
+      setSnackMessage(message);
+      setOpenSnack(true);
+    }
+  }, [message]);
   const handleUploadBlog = () => {
     dispatch({
       type: POST_BLOG_REQUEST,
@@ -54,7 +72,13 @@ const PostCreate = () => {
       titleIcon={<AddCircle color="primary" />}
       actions={
         <Stack className="flex-row justify-end gap-3">
-          <Button>Hủy</Button>
+          <Button
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Quay lại
+          </Button>
           <Button
             variant="contained"
             startIcon={<ArrowCircleUp />}
@@ -62,6 +86,12 @@ const PostCreate = () => {
           >
             Đăng bài
           </Button>
+          <Snackbar
+            open={openSnack}
+            autoHideDuration={2000}
+            onClose={handleClose}
+            message={snackMessage}
+          />
         </Stack>
       }
     >

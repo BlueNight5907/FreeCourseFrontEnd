@@ -7,6 +7,7 @@ import {
   Typography,
   IconButton,
   Fab,
+  Snackbar,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
@@ -22,6 +23,7 @@ import CourseSlide from "containers/courses-slide/CourseSlide";
 import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { getRandomItem } from "utils/array-utils";
 
 const Feed = () => {
   const theme = useTheme();
@@ -29,16 +31,27 @@ const Feed = () => {
   const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
   const matchSm = useMediaQuery(theme.breakpoints.up("md"));
 
+  const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => state.blog);
+  const { posts, message } = useSelector((state) => state.blog);
   const [feeds, setFeeds] = useState([]);
   const [frontendCourses, setFrontendCourses] = useState([]);
+
+  const [openSnack, setOpenSnack] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
 
   useEffect(() => {
     dispatch({
       type: GET_FEEDS_REQUEST,
       page_size: 10,
-      callback: setFeeds,
     });
     dispatch({
       type: GET_COURSES_WITH_FILTER,
@@ -48,19 +61,22 @@ const Feed = () => {
     });
   }, [dispatch]);
 
-  // On scroll
-  // useEffect(() => {
-  //   if (posts) {
-  //     setFeeds(posts);
-  //   }
-  // }, [posts, setFeeds]);
+  useEffect(() => {
+    if (posts) {
+      setFeeds(posts);
+    }
+  }, [posts]);
+
+  useEffect(() => {
+    if (message) {
+      setSnackMessage(message);
+      setOpenSnack(true);
+    }
+  }, [message]);
   return (
     <Grid container spacing={1} sx={{ justifyContent: "flex-end" }}>
       {matchSm && (
         <Fab
-          // sx={{
-          //   background: theme.palette.primary,
-          // }}
           color="primary"
           size="medium"
           elevation={2}
@@ -73,16 +89,16 @@ const Feed = () => {
       )}
       {/* Post */}
       <Grid item xs={12} lg={8}>
-        {
-          feeds.map((post) => (
-            <Post key={post._id} post={post} />
-          ))
-          // posts.map((post) => {
-          //   console.log(post);
-          // })
-        }
+        {posts.map((post, index) => (
+          <Post key={index} post={post} />
+        ))}
       </Grid>
-
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message={snackMessage}
+      />
       {/* Right of post */}
       {matchLg && (
         <Grid item xs={12} lg={4}>
@@ -97,16 +113,22 @@ const Feed = () => {
               }}
             >
               <UserCard
-                name={"Nguyen Van Huy"}
-                subtitle={"Sinh viên"}
-                avatar={"A"}
+                name={
+                  user?.userInformation?.fullName &&
+                  user.userInformation.fullName
+                }
+                subtitle={
+                  user?.userInformation?.major && user.userInformation.major
+                }
+                avatar={
+                  user?.userInformation?.avatar && user.userInformation.avatar
+                }
               />
               <Button>Đăng xuất</Button>
             </Box>
             <Box
               sx={{
                 backgroundColor: theme.palette.foreground.main,
-
                 padding: theme.spacing(1.5),
                 borderRadius: 1,
               }}
@@ -129,8 +151,9 @@ const Feed = () => {
                       avatar={teacher.avatar}
                       size="small"
                     />
-                    <Button>Xem trang</Button>
-                    {/*  */}
+                    <Button onClick={() => navigate(teacher.link)}>
+                      Xem trang
+                    </Button>
                   </Box>
                 ))}
               </Stack>
@@ -150,7 +173,7 @@ const Feed = () => {
                   padding: theme.spacing(1, 0),
                 }}
               >
-                <CourseCard gridView data={""} />
+                <CourseCard gridView data={getRandomItem(frontendCourses)} />
               </Box>
             </Box>
           </Stack>

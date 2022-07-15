@@ -25,6 +25,7 @@ import {
 import Caption from "components/caption/Caption";
 import Image from "components/image/Image";
 import UserCard from "components/user-card/UserCard";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { LIKE_COMMENT } from "store/types/data-types/blog-type";
@@ -45,7 +46,6 @@ function Comment(props) {
     box: {
       marginBottom: theme.spacing(0.5),
       padding: theme.spacing(1, 1),
-      // border: "solid black 1px",
       borderRadius: 1,
       backgroundColor: (theme) => theme.palette.addOnBackground.main,
     },
@@ -153,13 +153,6 @@ function Comment(props) {
           width="100%"
         >
           {!owner ? (
-            // <Button
-            //   sx={styles.rightAction}
-            //   className="absolute action-button"
-            //   startIcon={<ReplyRounded />}
-            // >
-            //   Báo cáo
-            // </Button>
             <IconButton sx={styles.rightAction} className="action-button">
               <MoreHoriz fontSize="small" />
             </IconButton>
@@ -213,13 +206,16 @@ function Comment(props) {
           )}
           <UserCard
             name={creatorData.userInformation.fullName}
-            subtitle={data.createdAt}
+            subtitle={
+              data?.createdAt &&
+              format(new Date(data.createdAt), "dd/MM/yyyy HH:mm:ss")
+            }
             avatar={creatorData.userInformation.avatar}
           />
 
           {data.content !== "" && (
             <Caption
-              sx={{ margin: theme.spacing(0, 0) }}
+              sx={{ margin: theme.spacing(0, 0, 0, 3), fontWeight: 400 }}
               caption={data.content}
             />
           )}
@@ -227,7 +223,7 @@ function Comment(props) {
         <Box
           display="flex"
           flexDirection="column"
-          justifyContent="center"
+          justifyContent="flex-start"
           alignItems="center"
           // margin={theme.spacing(0.5, 0)}
         >

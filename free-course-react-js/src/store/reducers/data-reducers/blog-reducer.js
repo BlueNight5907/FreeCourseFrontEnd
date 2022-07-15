@@ -76,10 +76,13 @@ const BlogReducer = (state = initialState, action) => {
         loadingAddBlog: true,
       };
     case POST_BLOG_SUCCESS:
+      let newPost = payload.post;
+      console.log(newPost);
       return {
         ...state,
         loadingAddBlog: false,
-        posts: [payload.post, ...state.posts],
+        posts: [newPost, ...state.posts],
+        message: payload.message,
       };
     case POST_BLOG_ERROR:
       return {
@@ -111,9 +114,14 @@ const BlogReducer = (state = initialState, action) => {
         message: null,
       };
     case DELETE_BLOG_SUCCESS:
+      const index = state.posts.map((p) => p._id).indexOf(payload.postId);
       return {
         ...state,
         loadingDeleteBlog: false,
+        posts: [
+          ...state.posts.slice(0, index),
+          ...state.posts.slice(index + 1),
+        ],
         message: payload.message,
       };
     case DELETE_BLOG_ERROR:
