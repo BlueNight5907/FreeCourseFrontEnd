@@ -1,3 +1,4 @@
+import { RESET_ERROR } from "store/types/data-types/common-types";
 import {
   CREATE_COURSE_ERROR,
   CREATE_COURSE_SUCCESS,
@@ -20,6 +21,11 @@ const initState = {
 const manageCourseReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case RESET_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
     case CREATE_NEW_COURSE:
       return {
         ...state,

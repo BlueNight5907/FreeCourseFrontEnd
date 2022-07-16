@@ -1,12 +1,4 @@
-import {
-  take,
-  call,
-  put,
-  fork,
-  cancelled,
-  race,
-  delay,
-} from "redux-saga/effects";
+import { take, call, put, fork, select, delay } from "redux-saga/effects";
 import * as blogAPI from "../../services/api/blogAPI";
 import {
   GET_FEEDS_REQUEST,
@@ -32,12 +24,32 @@ import {
 } from "../types/data-types/blog-type";
 import * as firebase from "../../firebase";
 
-function* getNewFeeds(time, page_size, callback) {
+function* getNewFeeds(time, page_size) {
   try {
-    const feeds = yield call(blogAPI.getNewFeeds, time, page_size);
-    yield delay(500);
-    // callback(feeds);
-    yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds } });
+    const { currentPage, isEndFeed, total } = yield select(
+      (state) => state.blog
+    );
+
+    if (isEndFeed) {
+      const itemReminder = (total || 30) % page_size;
+      if (itemReminder === 0) return;
+
+      const { feeds, total, size } = yield call(
+        blogAPI.getNewFeeds,
+        time,
+        itemReminder,
+        currentPage
+      );
+      yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds, total, size } });
+    } else {
+      const { feeds, total, size } = yield call(
+        blogAPI.getNewFeeds,
+        time,
+        page_size,
+        currentPage
+      );
+      yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds, total, size } });
+    }
   } catch (error) {
     yield put({ type: GET_FEEDS_ERROR, payload: error });
   }
@@ -197,8 +209,8 @@ function* uploadComment(postId, content, image, callback) {
 // Watcher
 function* getFeedsFlow() {
   while (true) {
-    const { time, page_size, callback } = yield take(GET_FEEDS_REQUEST);
-    yield call(getNewFeeds, time, page_size, callback);
+    const { time, page_size } = yield take(GET_FEEDS_REQUEST);
+    yield call(getNewFeeds, time, page_size);
   }
 }
 

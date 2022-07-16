@@ -34,8 +34,8 @@ const Feed = () => {
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const { posts, message } = useSelector((state) => state.blog);
-  const [feeds, setFeeds] = useState([]);
+  const { posts, message, isEndFeed } = useSelector((state) => state.blog);
+  // const [feeds, setFeeds] = useState([]);
   const [frontendCourses, setFrontendCourses] = useState([]);
 
   const [openSnack, setOpenSnack] = useState(false);
@@ -48,24 +48,47 @@ const Feed = () => {
     setOpenSnack(false);
   };
 
+  //infinite
+  const [isBottom, setIsBottom] = useState(false);
+
+  function handleWindowScroll() {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+
+    // check if user is near to the bottom of the body
+    if (scrollTop + window.innerHeight + 50 >= scrollHeight) {
+      console.log("bottom");
+      setIsBottom(true);
+    }
+  }
+
+  // on mount
+  useEffect(() => {
+    window.addEventListener("scroll", handleWindowScroll);
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
+
   useEffect(() => {
     dispatch({
       type: GET_FEEDS_REQUEST,
       page_size: 10,
     });
-    dispatch({
-      type: GET_COURSES_WITH_FILTER,
-      category: "frontend",
-      params: { page: 1, page_size: 8 },
-      callback: setFrontendCourses,
-    });
   }, [dispatch]);
 
   useEffect(() => {
-    if (posts) {
-      setFeeds(posts);
+    if (isBottom) {
+      dispatch({
+        type: GET_FEEDS_REQUEST,
+        page_size: 10,
+      });
+      setIsBottom(false);
     }
-  }, [posts]);
+  }, [isBottom, setIsBottom, dispatch]);
+  // useEffect(() => {
+  //   if (posts) {
+  //     setFeeds(posts);
+  //   }
+  // }, [posts]);
 
   useEffect(() => {
     if (message) {

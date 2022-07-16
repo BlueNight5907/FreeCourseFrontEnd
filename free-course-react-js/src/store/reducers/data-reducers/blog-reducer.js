@@ -1,3 +1,4 @@
+import { RESET_ERROR } from "store/types/data-types/common-types";
 import {
   GET_FEEDS_REQUEST,
   GET_FEEDS_SUCCESS,
@@ -19,6 +20,10 @@ import {
   POST_COMMENT_ERROR,
 } from "../../types/data-types/blog-type";
 
+export const checkEndFeed = (currentPage, page_size, totalFeed) => {
+  return currentPage * page_size > totalFeed;
+};
+
 const initialState = {
   posts: [],
   post: null,
@@ -29,23 +34,41 @@ const initialState = {
   loadingUpdateBlog: false,
   loadingDeleteBlog: false,
   loadingAddComment: false,
+  isEndFeed: false,
+  totalFeed: 10,
+  currentPage: 1,
   message: null,
   error: null,
 };
 
 const BlogReducer = (state = initialState, action) => {
+  const isEndFeed = checkEndFeed(state.currentPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
+    case RESET_ERROR:
+      return {
+        error: null,
+      };
     case GET_FEEDS_REQUEST:
       return {
         ...state,
         loadingGetFeeds: true,
+        error: null,
       };
     case GET_FEEDS_SUCCESS:
+      if (isEndFeed) {
+        return {
+          ...state,
+          loadingGetFeeds: false,
+          isEndFeed: true,
+        };
+      }
       return {
         ...state,
         loadingGetFeeds: false,
+        totalFeed: payload.total,
         posts: [...state.posts, ...payload.feeds],
+        currentPage: state.currentPage + 1,
       };
     case GET_FEEDS_ERROR:
       return {
