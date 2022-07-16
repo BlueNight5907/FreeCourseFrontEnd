@@ -1,3 +1,4 @@
+import { RESET_ERROR } from "store/types/data-types/common-types";
 import {
   GET_FEEDS_REQUEST,
   GET_FEEDS_SUCCESS,
@@ -36,6 +37,10 @@ const initialState = {
 const BlogReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case RESET_ERROR:
+      return {
+        error: null,
+      };
     case GET_FEEDS_REQUEST:
       return {
         ...state,

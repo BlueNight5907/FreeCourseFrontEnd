@@ -1,3 +1,4 @@
+import { RESET_ERROR } from "store/types/data-types/common-types";
 import {
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_SUCCESS,
@@ -22,6 +23,11 @@ const initState = {
 const courseDetailReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case RESET_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
     case GET_COURSE_DETAIL_REQUEST:
       return {
         teacher: null,

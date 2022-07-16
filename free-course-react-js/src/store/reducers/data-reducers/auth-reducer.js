@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE } from "constants/storage-constants";
+import { RESET_ERROR } from "store/types/data-types/common-types";
 import { getItem } from "utils/storeData";
 import {
   LOGIN_REQUEST,
@@ -67,6 +68,11 @@ const authReducer = (state = initState, action) => {
         refreshToken: null,
         loadingLogin: false,
         loadingRegister: false,
+        error: null,
+      };
+    case RESET_ERROR:
+      return {
+        ...state,
         error: null,
       };
     default:
