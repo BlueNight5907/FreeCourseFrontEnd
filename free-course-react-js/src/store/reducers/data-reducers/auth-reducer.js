@@ -40,7 +40,7 @@ const authReducer = (state = initState, action) => {
         accessToken: payload.accessToken || state.accessToken,
         isLogin: true,
         user: payload?.user || state.user,
-        accessToken: payload.accessToken || state.accessToken,
+        // accessToken: payload.accessToken || state.accessToken,
         refreshToken: payload.refreshToken || state.refreshToken,
         loadingLogin: false,
       };

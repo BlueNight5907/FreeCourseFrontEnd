@@ -2,8 +2,8 @@ import { GET, POST, PUT, DELETE } from "constants/services-constant";
 import request from "services/axios-client/request";
 import apiPath from "services/sevices.config";
 
-export const getNewFeeds = async (time, page_size) => {
-  return request(GET, apiPath.getNewFeeds(time, page_size));
+export const getNewFeeds = async (time, page_size, page) => {
+  return request(GET, apiPath.getNewFeeds(time, page_size, page));
 };
 
 export const postBlog = async (
