@@ -18,7 +18,10 @@ import Posts from "mock-data/post";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_FEEDS_REQUEST } from "store/types/data-types/blog-type";
+import {
+  GET_FEEDS_REQUEST,
+  GET_MORE_FEEDS_REQUEST,
+} from "store/types/data-types/blog-type";
 import CourseSlide from "containers/courses-slide/CourseSlide";
 import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
@@ -78,7 +81,7 @@ const Feed = () => {
   useEffect(() => {
     if (isBottom) {
       dispatch({
-        type: GET_FEEDS_REQUEST,
+        type: GET_MORE_FEEDS_REQUEST,
         page_size: 10,
       });
       setIsBottom(false);
