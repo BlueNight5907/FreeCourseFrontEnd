@@ -8,6 +8,7 @@ import {
   GET_TAGS_ERROR,
   GET_TAGS_SUCCESS,
 } from "store/types/data-types/category-types";
+import { RESET_ERROR } from "store/types/data-types/common-types";
 
 const initState = {
   categories: [],
@@ -21,6 +22,11 @@ const initState = {
 const categoryReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case RESET_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
     case GET_LEVELS_SUCCESS:
       return {
         ...state,

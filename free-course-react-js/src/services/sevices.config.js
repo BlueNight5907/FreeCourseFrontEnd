@@ -23,8 +23,8 @@ const apiPath = {
   getAllTags: "/tag/all",
   getAllLevels: "course/levels",
   getCoursesWithCategory: (category) => `/course/category/${category}`,
-  getNewFeeds: (time, page_size) =>
-    `/community/feeds?time=${time}&page_size=${page_size}`,
+  getNewFeeds: (time, page_size, page) =>
+    `/community/feeds?time=${time}&page=${page}&page_size=${page_size}`,
   getBlog: (id) => `/community/post/${id}`,
   postBlog: "/community/post",
   updateBlog: (id) => `/community/post/${id}`,
