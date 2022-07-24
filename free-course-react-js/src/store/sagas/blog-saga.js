@@ -37,6 +37,7 @@ import {
 import * as firebase from "../../firebase";
 
 function* getNewFeeds({ time, page_size }) {
+  console.log("render first");
   try {
     const { feeds, totalSize, size } = yield call(
       blogAPI.getNewFeeds,
@@ -45,9 +46,6 @@ function* getNewFeeds({ time, page_size }) {
       1
     );
     yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds, totalSize, size } });
-    // }
-    // console.log(time);
-    // console.log(page_size);
   } catch (error) {
     yield put({ type: GET_FEEDS_ERROR, payload: error });
   }
@@ -55,12 +53,14 @@ function* getNewFeeds({ time, page_size }) {
 
 function* getMoreNewFeeds({ time, page_size }) {
   // const { currentPage } = select((state) => state.blog);
+  console.log("render more");
   try {
-    const { currentPage, isEndFeed, totalFeed } = yield select(
+    const { nextPage, isEndFeed, totalFeed } = yield select(
       (state) => state.blog
     );
 
     if (isEndFeed) {
+      console.log("end feeds");
       const itemReminder = totalFeed % page_size;
       if (itemReminder === 0) return;
 
@@ -68,7 +68,7 @@ function* getMoreNewFeeds({ time, page_size }) {
         blogAPI.getNewFeeds,
         time,
         itemReminder,
-        currentPage
+        nextPage
       );
       yield put({
         type: GET_MORE_FEEDS_SUCCESS,
@@ -79,7 +79,7 @@ function* getMoreNewFeeds({ time, page_size }) {
       blogAPI.getNewFeeds,
       time,
       page_size,
-      currentPage
+      nextPage
     );
     yield put({
       type: GET_MORE_FEEDS_SUCCESS,

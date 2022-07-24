@@ -39,13 +39,13 @@ const initialState = {
   loadingAddComment: false,
   isEndFeed: false,
   totalFeed: 10,
-  currentPage: 1,
+  nextPage: 1,
   message: null,
   error: null,
 };
 
 const BlogReducer = (state = initialState, action) => {
-  const isEndFeed = checkEndFeed(state.currentPage, 10, state.totalFeed);
+  const isEndFeed = checkEndFeed(state.nextPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
     case RESET_ERROR:
@@ -62,8 +62,8 @@ const BlogReducer = (state = initialState, action) => {
         ...state,
         loadingGetFeeds: false,
         totalFeed: payload.totalSize,
-        posts: payload.feeds,
-        currentPage: state.currentPage + 1,
+        posts: [...state.posts, ...payload.feeds],
+        nextPage: state.nextPage + 1,
       };
     case GET_FEEDS_ERROR:
       return {
@@ -87,7 +87,8 @@ const BlogReducer = (state = initialState, action) => {
       return {
         ...state,
         posts: [...state.posts, ...payload.feeds],
-        currentPage: state.currentPage + 1,
+        nextPage: state.nextPage + 1,
+        loadingGetFeeds: false,
       };
     case GET_MORE_FEEDS_ERROR:
       return {

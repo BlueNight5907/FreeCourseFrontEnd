@@ -9,7 +9,7 @@ import {
   Fab,
   Snackbar,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
@@ -27,6 +27,8 @@ import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
+import { useCallback } from "react";
+import useFetch from "./useFetch";
 
 const Feed = () => {
   const theme = useTheme();
@@ -37,7 +39,9 @@ const Feed = () => {
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const { posts, message, isEndFeed } = useSelector((state) => state.blog);
+  const { posts, message, isEndFeed, nextPage } = useSelector(
+    (state) => state.blog
+  );
   // const [feeds, setFeeds] = useState([]);
   const [frontendCourses, setFrontendCourses] = useState([]);
 
@@ -51,26 +55,6 @@ const Feed = () => {
     setOpenSnack(false);
   };
 
-  //infinite
-  const [isBottom, setIsBottom] = useState(false);
-
-  function handleWindowScroll() {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-
-    // check if user is near to the bottom of the body
-    if (scrollTop + window.innerHeight + 50 >= scrollHeight) {
-      console.log("bottom");
-      setIsBottom(true);
-    }
-  }
-
-  // on mount
-  useEffect(() => {
-    window.addEventListener("scroll", handleWindowScroll);
-    return () => window.removeEventListener("scroll", handleWindowScroll);
-  }, []);
-
   useEffect(() => {
     dispatch({
       type: GET_FEEDS_REQUEST,
@@ -79,19 +63,118 @@ const Feed = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isBottom) {
-      dispatch({
-        type: GET_MORE_FEEDS_REQUEST,
-        page_size: 10,
-      });
-      setIsBottom(false);
-    }
-  }, [isBottom, setIsBottom, dispatch]);
+    dispatch({
+      type: GET_COURSES_WITH_FILTER,
+      category: "frontend",
+      params: { page: 1, page_size: 8 },
+      callback: setFrontendCourses,
+    });
+  }, [dispatch]);
+
+  // const getMoreFeeds = useCallback(() => {
+  //   dispatch({ type: GET_MORE_FEEDS_REQUEST, page_size: 10 });
+  // }, [dispatch]);
+
+  //infinite
+  // const [isBottom, setIsBottom] = useState(false);
+
+  // function handleWindowScroll() {
+  //   const scrollTop = document.documentElement.scrollTop;
+  //   const scrollHeight = document.documentElement.scrollHeight;
+
+  //   // check if user is near to the bottom of the body
+  //   if (scrollTop + window.innerHeight + 100 >= scrollHeight) {
+  //     console.log("bottom");
+  //     setIsBottom(true);
+  //   }
+  // }
+
+  // // on mount
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleWindowScroll);
+  //   return () => window.removeEventListener("scroll", handleWindowScroll);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (isBottom) {
+  //     getMoreFeeds();
+
+  //     setIsBottom(false);
+  //   }
+  // }, [isBottom, setIsBottom, isEndFeed, dispatch, getMoreFeeds]);
+
   // useEffect(() => {
   //   if (posts) {
   //     setFeeds(posts);
   //   }
   // }, [posts]);
+
+  // const [page, setPage] = useState(1);
+  // const loadMoreRef = useRef(null);
+
+  // const handleObserver = useCallback(
+  //   (entries) => {
+  //     const target = entries[0];
+  //     console.log(target);
+  //     if (target.isIntersecting) {
+  //       // setPage((prev) => prev + 1);
+  //       console.log("Get more");
+  //       getMoreFeeds();
+  //     }
+  //   },
+  //   [getMoreFeeds]
+  // );
+
+  // useEffect(() => {
+  //   const option = {
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 1.0,
+  //   };
+
+  //   const observer = new IntersectionObserver(handleObserver, option);
+
+  //   if (loadMoreRef.current) {
+  //     observer.observe(loadMoreRef.current);
+  //   }
+  // }, [handleObserver]);
+  // const [query, setQuery] = useState("");
+
+  // const [page, setPage] = useState(1);
+  // const { loading, error, list } = useFetch(page);
+  // const loader = useRef(null);
+
+  // const handleObserver = useCallback(
+  //   (entries) => {
+  //     const target = entries[0];
+  //     if (target.isIntersecting) {
+  //       setPage((prev) => prev + 1);
+  //       console.log(page);
+  //     }
+  //   },
+  //   [page]
+  // );
+  // const fetchMore = useCallback(() => setPage((prev) => prev + 1), []);
+
+  // useEffect(() => {
+  //   const option = {
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 1.0,
+  //   };
+  //   const observer = new IntersectionObserver((entries) => {
+  //     if (entries[0].isIntersecting) {
+  //       // setPage((prev) => prev + 1);
+  //       fetchMore();
+  //     }
+  //   }, option);
+  //   if (loader.current) observer.observe(loader.current);
+  //   return () => {
+  //     if (loader.current) {
+  //       observer.unobserve(loader.current);
+  //     }
+  //   };
+  // }, [handleObserver]);
 
   useEffect(() => {
     if (message) {
@@ -118,6 +201,8 @@ const Feed = () => {
         {posts.map((post, index) => (
           <Post key={index} post={post} />
         ))}
+        {/* {loading && <p>Loading...</p>}
+        {error && <p>Error!</p>} */}
       </Grid>
       <Snackbar
         open={openSnack}
