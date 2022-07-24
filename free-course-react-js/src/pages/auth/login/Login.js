@@ -29,7 +29,6 @@ function Login() {
   const { accessToken, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const styles = {
