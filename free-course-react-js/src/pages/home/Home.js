@@ -48,15 +48,13 @@ const Home = () => {
       <Grid item xs={12}>
         <TabsCourseSlide />
       </Grid>
-      <Grid item xs={12} lg={7.5} xl={8.5}>
-        <Stack direction="column" gap={2}>
-          <ChatGroupIntroduction />
-          <SocialNetworkIntroduction />
-        </Stack>
+      <Grid item xs={12} md={6}>
+        <ChatGroupIntroduction />
       </Grid>
-      <Grid item xs={12} lg={4.5} xl={3.5}>
-        <TeacherRanking />
+      <Grid item xs={12} md={6}>
+        <SocialNetworkIntroduction />
       </Grid>
+
       <Grid item xs={12}>
         <FeatureCourseSlide />
       </Grid>

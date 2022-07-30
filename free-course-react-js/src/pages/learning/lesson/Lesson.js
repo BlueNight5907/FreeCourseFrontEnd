@@ -40,6 +40,7 @@ const Lesson = () => {
   const { comments } = useSelector((s) => s.learningProcess);
   const { courseId, stepId } = useParams();
   const { lessonDetail } = useSelector((state) => state.learningProcess);
+  const { courseOpen } = useSelector((state) => state.setting);
   const [progress, setProgress] = useState(0);
   const [submit, setSubmit] = useState(false);
   const videoRef = useRef();
@@ -68,7 +69,7 @@ const Lesson = () => {
   }, []);
 
   useEffect(() => {
-    if (stepId && lessonDetail?.moduleId) {
+    if (stepId && lessonDetail?._id === stepId) {
       dispatch({
         type: GET_ALL_LESSON_COMMENT_REQUEST,
         stepId,
@@ -111,7 +112,11 @@ const Lesson = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Box
-                  className="aspect-video overflow-hidden relative w-full"
+                  className={`xl:aspect-[${
+                    courseOpen ? "18/9" : "20/8"
+                  }] lg:aspect-[${
+                    courseOpen ? "18/8" : "18/9"
+                  }]  aspect-video overflow-hidden relative w-full`}
                   borderRadius={1}
                 >
                   <ReactPlayer
@@ -189,18 +194,18 @@ const Lesson = () => {
                   </Grid>
                 </Paper>
               </Grid>
-              <Grid item xs={12}>
-                {lessonDetail?.content && (
+              {lessonDetail?.content?.content && (
+                <Grid item xs={12}>
                   <Paper elevation={0} sx={{ p: 1, minHeight: 200, my: 1 }}>
                     {lessonDetail.content.content}
                   </Paper>
-                )}
-              </Grid>
+                </Grid>
+              )}
               <Grid item xs={12}></Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Box width={400} flexShrink={0} display={{ xs: "none", xl: "block" }}>
+        {/* <Box width={400} flexShrink={0} display={{ xs: "none", xl: "block" }}>
           <Box
             sx={{
               position: "sticky",
@@ -313,7 +318,7 @@ const Lesson = () => {
               </Paper>
             </Slide>
           </Box>
-        </Box>
+        </Box> */}
       </Stack>
       <Drawer
         sx={{ zIndex: theme.zIndex.appBar + 101 }}

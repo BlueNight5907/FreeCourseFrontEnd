@@ -35,7 +35,12 @@ function RenderTable(props) {
       } catch (error) {
         setTotalRows(0);
         setRows([]);
-        setError(error.message);
+        setError(
+          error.response?.data?.message ||
+            error.response?.data ||
+            error.message ||
+            error
+        );
       }
     };
     fetch();

@@ -37,7 +37,14 @@ function* getCourse(courseId) {
     const courseDetail = yield call(getCourseDetail, courseId);
     yield put({ type: GET_COURSE_DETAIL_SUCCESS, payload: courseDetail });
   } catch (error) {
-    yield put({ type: GET_COURSE_DETAIL_ERROR, payload: error.message });
+    yield put({
+      type: GET_COURSE_DETAIL_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -54,7 +61,14 @@ function* getTeacherInfor(teacherId) {
     const teacher = yield call(getAccountInfor, teacherId);
     yield put({ type: GET_TEACHER_INFOR_SUCCESS, payload: teacher });
   } catch (error) {
-    yield put({ type: GET_TEACHER_INFOR_ERROR, payload: error.message });
+    yield put({
+      type: GET_TEACHER_INFOR_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -72,7 +86,14 @@ function* addNewComment(courseId, comment) {
     yield delay(500);
     yield put({ type: GET_COURSE_COMMENTS_REQUEST, courseId });
   } catch (error) {
-    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+    yield put({
+      type: GET_COURSE_COMMENTS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -91,7 +112,14 @@ function* doRatingCourse(courseId, point, callback) {
     callback();
     yield put({ type: GET_COURSE_DETAIL_REQUEST, courseId });
   } catch (error) {
-    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+    yield put({
+      type: GET_COURSE_COMMENTS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -110,7 +138,14 @@ function* getAllComment(courseId) {
       payload: comments?.reverse() || [],
     });
   } catch (error) {
-    yield put({ type: GET_COURSE_COMMENTS_ERROR, payload: error.message });
+    yield put({
+      type: GET_COURSE_COMMENTS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -132,7 +167,11 @@ function* fetchCourseList(category, params) {
   } catch (error) {
     yield put({
       type: GET_COURSES_WITH_CATEGORY_ERROR,
-      payload: error.message,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
     });
   }
 }

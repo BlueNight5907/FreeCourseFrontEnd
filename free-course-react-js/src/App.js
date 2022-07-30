@@ -11,7 +11,7 @@ import "./app.scss";
 import theme from "./theme";
 import Routes from "./pages/routes";
 import PageLoading from "./containers/loading/PageLoading";
-import Protected from "guards/Protected";
+import ErrorPage from "pages/error/ErrorPage";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,
@@ -64,6 +64,7 @@ function App() {
         <Box sx={boxStyle} className="app">
           <Routes />
           <PageLoading />
+          <ErrorPage />
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>

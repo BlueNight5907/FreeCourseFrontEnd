@@ -51,7 +51,14 @@ function* getNewFeeds(time, page_size) {
       yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds, total, size } });
     }
   } catch (error) {
-    yield put({ type: GET_FEEDS_ERROR, payload: error });
+    yield put({
+      type: GET_FEEDS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -61,7 +68,14 @@ function* getBlog(postId) {
     yield delay(500);
     yield put({ type: GET_BLOG_SUCCESS, payload: { post } });
   } catch (error) {
-    yield put({ type: GET_BLOG_ERROR, payload: error });
+    yield put({
+      type: GET_BLOG_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -101,7 +115,14 @@ function* uploadBlog(title, description, content, background) {
     yield delay(500);
     yield put({ type: POST_BLOG_SUCCESS, payload: { post, message } });
   } catch (error) {
-    yield put({ type: POST_BLOG_ERROR, payload: error });
+    yield put({
+      type: POST_BLOG_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -139,7 +160,14 @@ function* updateBlog(postId, title, description, content, background) {
     let message = "Cập nhật bài viết thành công";
     yield put({ type: UPDATE_BLOG_SUCCESS, payload: { post, message } });
   } catch (error) {
-    yield put({ type: UPDATE_BLOG_ERROR, payload: error });
+    yield put({
+      type: UPDATE_BLOG_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -152,7 +180,14 @@ function* deleteBlog(postId) {
     yield delay(500);
     yield put({ type: DELETE_BLOG_SUCCESS, payload: { message, postId } });
   } catch (error) {
-    yield put({ type: DELETE_BLOG_ERROR, payload: error });
+    yield put({
+      type: DELETE_BLOG_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -202,7 +237,14 @@ function* uploadComment(postId, content, image, callback) {
     callback(comment);
     yield put({ type: POST_COMMENT_SUCCESS });
   } catch (error) {
-    yield put({ type: POST_COMMENT_ERROR, payload: error });
+    yield put({
+      type: POST_COMMENT_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 

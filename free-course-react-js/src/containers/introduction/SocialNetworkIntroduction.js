@@ -3,9 +3,11 @@ import { Box } from "@mui/system";
 import React from "react";
 import Button, { buttonBg } from "../../components/button/Button";
 import networkIntro from "../../assets/background/network-intro.png";
+import { useNavigate } from "react-router-dom";
 
 function SocialNetworkIntroduction(props) {
   const { children, sx, ...others } = props;
+  const navigate = useNavigate();
   const style = {
     height: 230,
     borderRadius: 1,
@@ -36,7 +38,11 @@ function SocialNetworkIntroduction(props) {
       >
         Nơi chia sẻ kiến thức của bạn đến với tất cả mọi người
       </Typography>
-      <Button variant="contained" specialBg={buttonBg.red}>
+      <Button
+        variant="contained"
+        specialBg={buttonBg.red}
+        onClick={() => navigate("/community")}
+      >
         Đến trang chủ Mạng xã hội
       </Button>
 
