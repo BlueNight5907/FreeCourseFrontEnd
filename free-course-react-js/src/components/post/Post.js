@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
-  Bookmark,
-  BookmarkBorderOutlined,
   ChatBubbleOutline,
   Favorite,
   FavoriteBorder,
-  LaunchOutlined,
-  MoreHoriz,
 } from "@mui/icons-material";
 import {
   Box,
@@ -21,15 +17,11 @@ import {
   styled,
   Divider,
   Snackbar,
-  Menu,
-  MenuItem,
-  Fade,
   Button,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 import UserCard from "components/user-card/UserCard";
-
 import Caption from "components/caption/Caption";
 import PostActionDropDown from "containers/dropdowns/post-action-dropdown/PostActionDropDown";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +30,7 @@ import viLocale from "date-fns/locale/vi";
 import PostDialog from "pages/community/post/PostDialog";
 import { LIKE_BLOG } from "store/types/data-types/blog-type";
 import { useNavigate } from "react-router-dom";
+import { useObserver } from "hooks/useObserver";
 const CardActions = styled(MuiCardActions)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
@@ -47,14 +40,13 @@ const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: theme.spacing(0, 1.6),
 }));
 
-const Post = ({ post }) => {
+const Post = ({ post, isLast, nextPage }) => {
   const {
     _id,
     title,
     createdAt,
     backgroundUrl,
     description,
-    content,
     comments,
     likes,
     creator,
@@ -63,6 +55,8 @@ const Post = ({ post }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const postRef = useRef();
+  const entry = useObserver(postRef, { rootMargin: "50px" });
 
   const iconStyle = {
     default: {
@@ -99,6 +93,13 @@ const Post = ({ post }) => {
       });
     }
   }, [creator, dispatch, setCreatorData]);
+
+  useEffect(() => {
+    if (!entry) return;
+    if (isLast && entry.isIntersecting) {
+      nextPage();
+    }
+  }, [postRef, isLast, entry]);
 
   // Like react
   const [likeNum, setLikeNum] = useState(likes.length);
@@ -143,6 +144,7 @@ const Post = ({ post }) => {
         margin: theme.spacing(2, 0),
         backgroundColor: theme.palette.foreground.main,
       }}
+      ref={postRef}
     >
       <CardHeader
         avatar={

@@ -63,7 +63,7 @@ const BlogReducer = (state = initialState, action) => {
         loadingGetFeeds: false,
         totalFeed: payload.totalSize,
         posts: [...state.posts, ...payload.feeds],
-        nextPage: state.nextPage + 1,
+        // nextPage: state.nextPage + 1,
       };
     case GET_FEEDS_ERROR:
       return {
@@ -87,7 +87,7 @@ const BlogReducer = (state = initialState, action) => {
       return {
         ...state,
         posts: [...state.posts, ...payload.feeds],
-        nextPage: state.nextPage + 1,
+        // nextPage: state.nextPage + 1,
         loadingGetFeeds: false,
       };
     case GET_MORE_FEEDS_ERROR:
