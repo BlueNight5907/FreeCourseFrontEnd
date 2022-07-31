@@ -5,30 +5,25 @@ import {
   Box,
   Stack,
   Typography,
-  IconButton,
   Fab,
   Snackbar,
 } from "@mui/material";
 import React, { useState, useEffect, useRef } from "react";
-import { Icon } from "@iconify/react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
 import UserCard from "components/user-card/UserCard";
-import Posts from "mock-data/post";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  GET_FEEDS_REQUEST,
-  GET_MORE_FEEDS_REQUEST,
-} from "store/types/data-types/blog-type";
-import CourseSlide from "containers/courses-slide/CourseSlide";
+// import {
+//   GET_FEEDS_REQUEST,
+//   GET_MORE_FEEDS_REQUEST,
+// } from "store/types/data-types/blog-type";
+// import { useCallback } from "react";
 import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
-import { useCallback } from "react";
-import useFetch from "./useFetch";
 import { getNewFeeds } from "services/api/blogAPI";
 
 const Feed = () => {
@@ -57,7 +52,10 @@ const Feed = () => {
   const [page, setPage] = useState(1);
   const [feeds, setFeeds] = useState([]);
 
-  // const nextPage = ;
+  const nextPage = () => {
+    console.log(page);
+    setPage(page + 1);
+  };
 
   useEffect(() => {
     getNewFeeds("", 5, page).then((data) => {
@@ -100,9 +98,7 @@ const Feed = () => {
           <Post
             key={post._id}
             post={post}
-            nextPage={() => {
-              setPage(page + 1);
-            }}
+            nextPage={nextPage}
             isLast={index === feeds.length - 1}
           />
         ))}

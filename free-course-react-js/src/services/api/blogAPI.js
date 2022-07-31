@@ -7,11 +7,17 @@ export const getAllFeeds = async () => {
   return await request(GET, apiPath.getAllFeeds);
 };
 
-export const getNewFeeds = async (time, page_size) => {
-  return request(GET, apiPath.getNewFeeds(time, page_size));
+export const getNewFeeds = async (time, page_size, page) => {
+  return request(GET, apiPath.getNewFeeds(time, page_size, page));
 };
 
-export const postBlog = async (title, description, content, url, backgroundUrl) => {
+export const postBlog = async (
+  title,
+  description,
+  content,
+  url,
+  backgroundUrl
+) => {
   const body = { title, description, content, url, backgroundUrl };
   const data = await request(POST, apiPath.postBlog, { body });
   return data;
@@ -21,7 +27,14 @@ export const getBlog = async (id) => {
   return request(GET, apiPath.getBlog(id));
 };
 
-export const updateBlog = async (id, title, description, content, url, backgroundUrl) => {
+export const updateBlog = async (
+  id,
+  title,
+  description,
+  content,
+  url,
+  backgroundUrl
+) => {
   const body = { title, description, content, url, backgroundUrl };
   return request(PUT, apiPath.updateBlog(id), { body });
 };
