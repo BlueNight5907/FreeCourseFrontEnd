@@ -44,7 +44,14 @@ function* removeModuleWorker(moduleId, courseId) {
     yield call(removeModule, courseId, moduleId);
     yield put({ type: GET_ALL_MODULES_REQUEST, courseId });
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -61,7 +68,14 @@ function* createNewLesson(moduleId, body, callback) {
     yield delay(500);
     callback();
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -80,7 +94,14 @@ function* deleteLesson(moduleId, stepId) {
     yield call(deleteStep, moduleId, stepId);
     yield delay(500);
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -97,7 +118,14 @@ function* editModuleWorker(moduleId, courseId, title) {
     yield call(editModule, moduleId, { title });
     yield put({ type: GET_ALL_MODULES_REQUEST, courseId });
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -113,7 +141,14 @@ function* updateCurentLesson(moduleId, stepId, body, callback) {
     yield call(updateStep, moduleId, stepId, body);
     callback();
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -133,7 +168,14 @@ function* getLessonData(moduleId, stepId) {
     const data = yield call(getStep, moduleId, stepId);
     yield put({ type: GET_LESSON_DATA_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_LESSON_DATA_ERROR, payload: error.message });
+    yield put({
+      type: GET_LESSON_DATA_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -150,7 +192,14 @@ function* createCourseWorker(body, callback) {
     yield put({ type: CREATE_COURSE_SUCCESS, payload: course });
     yield delay(1000);
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -168,7 +217,14 @@ function* createModuleWorker(courseId, body, callback) {
     callback();
     yield put({ type: GET_ALL_MODULES_REQUEST, courseId });
   } catch (error) {
-    yield put({ type: ADD_NEW_MODULE_ERROR, payload: error.message });
+    yield put({
+      type: ADD_NEW_MODULE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -185,7 +241,14 @@ function* getCourses(callback) {
     yield delay(1000);
     yield call(callback, data);
   } catch (error) {
-    yield put({ type: GET_MY_CREATED_COURSES_ERROR, payload: error.message });
+    yield put({
+      type: GET_MY_CREATED_COURSES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -201,7 +264,14 @@ function* getCourseInfor(courseId) {
     const data = yield call(getCourse, courseId);
     yield put({ type: GET_TEACHER_COURSE_INFOR_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_TEACHER_COURSE_INFOR_ERROR, payload: error.message });
+    yield put({
+      type: GET_TEACHER_COURSE_INFOR_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -220,7 +290,14 @@ function* updateCourseWorker(body, courseId) {
     yield delay(1000);
     // yield call(callback);
   } catch (error) {
-    yield put({ type: CREATE_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: CREATE_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -236,7 +313,14 @@ function* getModules(courseId) {
     const data = yield call(getAllModules, courseId);
     yield put({ type: GET_ALL_MODULES_SUCCESS, payload: data.modules });
   } catch (error) {
-    yield put({ type: GET_ALL_MODULES_ERROR, payload: error.message });
+    yield put({
+      type: GET_ALL_MODULES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 

@@ -29,7 +29,14 @@ function* authorize(email, password) {
     yield call(storeItem, LOCAL_STORAGE, "token", accessToken);
     yield call(storeItem, LOCAL_STORAGE, "refreshToken", refreshToken);
   } catch (error) {
-    yield put({ type: LOGIN_ERROR, payload: error });
+    yield put({
+      type: LOGIN_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   } finally {
     if (yield cancelled()) {
       yield put({ type: RESET_AUTH_PENDING });
@@ -47,7 +54,14 @@ function* authorizeWithToken() {
     const { user } = yield call(authAPI.getMyAccount);
     yield put({ type: LOGIN_SUCCESS, payload: { user } });
   } catch (error) {
-    yield put({ type: LOGIN_ERROR, payload: error.message });
+    yield put({
+      type: LOGIN_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
     yield put({ type: LOGOUT });
   } finally {
     if (yield cancelled()) {
@@ -89,7 +103,14 @@ function* registerAccount(body, callback) {
     const data = yield call(authAPI.register, body);
     callback({ success: data, error: null });
   } catch (error) {
-    callback({ success: null, error: error.message });
+    callback({
+      success: null,
+      error:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -121,7 +142,14 @@ function* doEditAccount(body) {
     yield call(authAPI.updateUserAccount, body);
     yield put({ type: AUTHENTICATION_REQUEST });
   } catch (error) {
-    yield put({ type: AUTH_ERROR, payload: error.message });
+    yield put({
+      type: AUTH_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 

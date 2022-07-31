@@ -1,5 +1,5 @@
 import { take, call, put, fork } from "redux-saga/effects";
-import { getCoursesWithCategory } from "services/api/courseAPI";
+import { getCoursesWithCategory, removeCourse } from "services/api/courseAPI";
 import {
   GET_CATEGORIES_ERROR,
   GET_CATEGORIES_REQUEST,
@@ -13,6 +13,8 @@ import {
   GET_TAGS_ERROR,
   GET_TAGS_REQUEST,
   GET_TAGS_SUCCESS,
+  GET_SEARCH_REQUEST,
+  REMOVE_COURSE,
 } from "store/types/data-types/category-types";
 import * as categoryAPI from "../../services/api/categoryAPI";
 
@@ -22,7 +24,14 @@ function* getCategories() {
     const categories = yield call(categoryAPI.getAllCategories);
     yield put({ type: GET_CATEGORIES_SUCCESS, payload: { categories } });
   } catch (error) {
-    yield put({ type: GET_CATEGORIES_ERROR, payload: error.message });
+    yield put({
+      type: GET_CATEGORIES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -39,7 +48,14 @@ function* getTags() {
     const tags = yield call(categoryAPI.getAllTags);
     yield put({ type: GET_TAGS_SUCCESS, payload: { tags } });
   } catch (error) {
-    yield put({ type: GET_TAGS_ERROR, payload: error.message });
+    yield put({
+      type: GET_TAGS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -56,7 +72,14 @@ function* getLevels() {
     const levels = yield call(categoryAPI.getAllLevels);
     yield put({ type: GET_LEVELS_SUCCESS, payload: { levels } });
   } catch (error) {
-    yield put({ type: GET_LEVELS_ERROR, payload: error.message });
+    yield put({
+      type: GET_LEVELS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -77,7 +100,14 @@ function* fetchCourseList(category, params) {
     );
     yield put({ type: GET_COURSES_SUCCESS, payload: { total, courses: data } });
   } catch (error) {
-    yield put({ type: GET_COURSES_ERROR, payload: error.message });
+    yield put({
+      type: GET_COURSES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -88,10 +118,59 @@ function* watchFetchCourseList() {
   }
 }
 
+function* doSearch(search, callback) {
+  try {
+    const courses = yield call(categoryAPI.searchCourse, search);
+    callback(courses);
+  } catch (error) {
+    callback([]);
+    yield put({
+      type: GET_COURSES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
+}
+
+function* watchSearch() {
+  while (true) {
+    const { search, callback } = yield take(GET_SEARCH_REQUEST);
+    yield call(doSearch, search, callback);
+  }
+}
+
+function* removeCourseWorker(courseId, callback) {
+  try {
+    yield call(removeCourse, courseId);
+    callback();
+  } catch (error) {
+    yield put({
+      type: GET_COURSES_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
+}
+
+function* watchRemoveCourse() {
+  while (true) {
+    const { courseId, callback } = yield take(REMOVE_COURSE);
+    yield call(removeCourseWorker, courseId, callback);
+  }
+}
+
 const categorySagaList = [
   fork(watchGetCategories),
   fork(watchGetTags),
   fork(watchFetchCourseList),
   fork(watchGetLevels),
+  fork(watchSearch),
+  fork(watchRemoveCourse),
 ];
 export default categorySagaList;

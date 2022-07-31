@@ -1,15 +1,14 @@
 import { Backdrop, Box, Typography, useTheme } from "@mui/material";
 import React, { useEffect } from "react";
 import { usePromiseTracker } from "react-promise-tracker";
-import { useSelector } from "react-redux";
 
 const PageLoading = () => {
   const theme = useTheme();
-  const { pageLoading } = useSelector((state) => state.setting);
+
   const { promiseInProgress } = usePromiseTracker({ area: "general" });
   useEffect(() => {
     const oldStyle = document.body.style.overflow;
-    if (pageLoading || promiseInProgress) {
+    if (promiseInProgress) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px";
     } else {
@@ -17,7 +16,7 @@ const PageLoading = () => {
       document.body.style.paddingRight = "unset";
     }
     return () => (document.body.style.overflow = oldStyle);
-  }, [pageLoading, promiseInProgress]);
+  }, [promiseInProgress]);
   return (
     <Backdrop
       sx={{
@@ -30,7 +29,7 @@ const PageLoading = () => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      open={pageLoading || promiseInProgress}
+      open={promiseInProgress}
     >
       <Box className="loader">
         <div>

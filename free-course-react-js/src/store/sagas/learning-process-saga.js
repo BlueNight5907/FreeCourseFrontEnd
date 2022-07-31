@@ -30,7 +30,14 @@ function* getAllMyCourses() {
     const data = yield call(getAllMyCourse);
     yield put({ type: GET_MY_COURSE_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_MY_COURSE_ERROR, payload: error.message });
+    yield put({
+      type: GET_MY_COURSE_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -49,7 +56,14 @@ function* senMyComment(moduleId, stepId, comment) {
       payload: data.comments?.reverse() || [],
     });
   } catch (error) {
-    yield put({ type: GET_ALL_LESSON_COMMENT_ERROR, payload: error.message });
+    yield put({
+      type: GET_ALL_LESSON_COMMENT_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -68,7 +82,14 @@ function* getAllLessonComment(moduleId, stepId) {
       payload: data.comments?.reverse() || [],
     });
   } catch (error) {
-    yield put({ type: GET_ALL_LESSON_COMMENT_ERROR, payload: error.message });
+    yield put({
+      type: GET_ALL_LESSON_COMMENT_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -84,7 +105,14 @@ function* getProcess(courseId) {
     const data = yield call(getLearningProcess, courseId);
     yield put({ type: GET_LEARNING_PROCESS_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_LEARNING_PROCESS_ERROR, payload: error.message });
+    yield put({
+      type: GET_LEARNING_PROCESS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -100,7 +128,14 @@ function* getLesson(moduleId, stepId) {
     const data = yield call(getStep, moduleId, stepId);
     yield put({ type: GET_LESSON_DETAIL_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_LESSON_DETAIL_ERROR, payload: error.message });
+    yield put({
+      type: GET_LESSON_DETAIL_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 

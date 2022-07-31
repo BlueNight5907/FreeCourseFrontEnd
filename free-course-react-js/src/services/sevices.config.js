@@ -2,7 +2,10 @@ const apiPath = {
   login: "/auth/signin",
   register: "/auth/signup",
   editAccount: "account/edit",
+  editUserAccount: (id) => `account/${id}`,
   changePassword: "/auth/updatePassword",
+  allAccount: "/account/all",
+  searchCourse: "/course/search",
   getCourse: (id) => "/course/" + id,
   getModule: (courseId, moduleId) => `/module/${courseId}/${moduleId}`,
   updateModule: (id) => `/module/${id}`,
@@ -23,8 +26,9 @@ const apiPath = {
   getAllTags: "/tag/all",
   getAllLevels: "course/levels",
   getCoursesWithCategory: (category) => `/course/category/${category}`,
-  getNewFeeds: (time, page_size, page) =>
-    `/community/feeds?time=${time}&page=${page}&page_size=${page_size}`,
+  getAllFeeds: "community/feeds/all",
+  getNewFeeds: (time, page_size) =>
+    `/community/feeds?time=${time}&page_size=${page_size}`,
   getBlog: (id) => `/community/post/${id}`,
   postBlog: "/community/post",
   updateBlog: (id) => `/community/post/${id}`,
@@ -43,6 +47,12 @@ const apiPath = {
   getMyCreatedCourses: "course/created-by-me",
   getStep: (module, step) => `/module/${module}/step/${step}`,
   completeLesson: (module, step) => `/module/${module}/step/${step}/complete`,
+  addCategory: "/category/create",
+  addTag: "/tag/create",
+  editCategory: (id) => `/category/update/${id}`,
+  editTag: (id) => `/tag/update/${id}`,
+  deleteCategory: (id) => `/category/delete/${id}`,
+  deleteTag: (id) => `/tag/delete/${id}`,
 };
 
 export default apiPath;
