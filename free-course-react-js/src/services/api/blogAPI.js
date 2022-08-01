@@ -7,8 +7,12 @@ export const getAllFeeds = async () => {
   return await request(GET, apiPath.getAllFeeds);
 };
 
-export const getNewFeeds = async (time, page_size, page) => {
-  return request(GET, apiPath.getNewFeeds(time, page_size, page));
+export const getNewFeeds = async (time) => {
+  return request(GET, apiPath.getNewFeeds(time));
+};
+
+export const getUserFeeds = async (time, userId) => {
+  return request(GET, apiPath.getUserFeeds(time, userId));
 };
 
 export const postBlog = async (
@@ -44,11 +48,17 @@ export const deleteBlog = async (id) => {
 };
 
 export const likeBlog = async (id) => {
-  return request(POST, apiPath.likePost(id));
+  return request(POST, apiPath.likePost(id), {}, {}, "comment");
 };
 
 export const likeComment = async (postId, commentId) => {
-  return request(POST, apiPath.likeComment(postId, commentId));
+  return request(
+    POST,
+    apiPath.likeComment(postId, commentId),
+    {},
+    {},
+    "comment"
+  );
 };
 
 export const postComment = async (id, content, url) => {

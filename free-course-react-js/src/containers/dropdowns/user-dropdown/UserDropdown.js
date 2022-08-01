@@ -147,7 +147,7 @@ function UserDropdown(props) {
           <Box
             component={Link}
             className="user-dropdown flex-row items-center gap-3 cursor-pointer flex"
-            to="./"
+            to={`./user/profile/${user?._id}`}
           >
             <Avatar
               src={userInformation.avatar}
@@ -184,7 +184,7 @@ function UserDropdown(props) {
           <Box
             component={Link}
             className="user-dropdown flex-row items-center gap-3 cursor-pointer flex"
-            to="./"
+            to="./post/create"
           >
             <Avatar
               sx={{

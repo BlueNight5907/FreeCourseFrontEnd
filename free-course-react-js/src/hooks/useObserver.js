@@ -6,7 +6,7 @@ export const useObserver = (ref, options) => {
     if (!ref?.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log(entry);
+        // console.log(entry);
         setObserverEntry(entry);
         if (entry.isIntersecting) {
           observer.unobserve(entry.target);

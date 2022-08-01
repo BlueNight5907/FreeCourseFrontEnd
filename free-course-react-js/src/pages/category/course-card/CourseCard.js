@@ -149,7 +149,7 @@ const CourseCard = (props) => {
             </Typography>
             <Stack flexDirection="Row" gap={0.5} alignItems="center">
               <Typography color="orange" variant="subtitle2">
-                {points}
+                {Number(points).toFixed(1)}
               </Typography>
               <Rating size="small" value={points} readOnly precision={0.5} />
               <Typography

@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 import { maxLines } from "utils/classUltis";
 const CourseCard = (props) => {
-  const { gridView, data, setOpenSearch } = props;
+  const { gridView, data } = props;
   const [teacherInfor, setTeacherInfor] = useState({
     id: "",
     email: "",
@@ -37,10 +37,16 @@ const CourseCard = (props) => {
 
   useEffect(() => {
     if (data) {
-      dispatch({
-        type: GET_ACCOUNT_INFORMATION,
-        accountId: data.creator,
-        callback: (data) => setTeacherInfor(data),
+      // dispatch({
+      //   type: GET_ACCOUNT_INFORMATION,
+      //   accountId: data.creator,
+      //   callback: (data) => setTeacherInfor(data),
+      // });
+      setTeacherInfor({
+        userInformation: {
+          fullName: data.creator.fullName,
+          avatar: data.creator.avatar,
+        },
       });
     }
   }, [data, dispatch]);
@@ -87,10 +93,7 @@ const CourseCard = (props) => {
           borderRadius={0.5}
           width={gridView ? "100%" : "fit-content"}
           alignSelf="flex-start"
-          onClick={() => {
-            navigate(`/course/${data?._id}`);
-            setOpenSearch(false);
-          }}
+          onClick={() => navigate(`/course/${data?._id}`)}
         >
           <Image
             src={data?.background || courseImg}
@@ -207,13 +210,7 @@ const CourseCard = (props) => {
           </Box>
           {!gridView && matchMd && (
             <Box flexShrink={0} className="flex flex-col gap-1">
-              <Button
-                component={Link}
-                to={`/course/${data?._id}`}
-                onClick={() => {
-                  setOpenSearch(false);
-                }}
-              >
+              <Button component={Link} to={`/course/${data?._id}`}>
                 Xem chi tiết
               </Button>
             </Box>

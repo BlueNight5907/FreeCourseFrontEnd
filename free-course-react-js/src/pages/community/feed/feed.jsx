@@ -15,16 +15,16 @@ import UserCard from "components/user-card/UserCard";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useDispatch, useSelector } from "react-redux";
-// import {
-//   GET_FEEDS_REQUEST,
-//   GET_MORE_FEEDS_REQUEST,
-// } from "store/types/data-types/blog-type";
-// import { useCallback } from "react";
 import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
 import { getNewFeeds } from "services/api/blogAPI";
+
+export const convertTime = (time) => {
+  const tempTime = new Date(time).getTime();
+  return new Date(tempTime - 1).toISOString();
+};
 
 const Feed = () => {
   const theme = useTheme();
@@ -49,19 +49,22 @@ const Feed = () => {
     setOpenSnack(false);
   };
 
-  const [page, setPage] = useState(1);
+  const [lastPostTime, setLastPostTime] = useState(new Date().toISOString());
   const [feeds, setFeeds] = useState([]);
 
   const nextPage = () => {
-    console.log(page);
-    setPage(page + 1);
+    setLastPostTime(
+      feeds.length > 0
+        ? convertTime(feeds.at(-1)?.createdAt)
+        : new Date().toISOString()
+    );
   };
 
   useEffect(() => {
-    getNewFeeds("", 5, page).then((data) => {
+    getNewFeeds(lastPostTime).then((data) => {
       setFeeds((prev) => [...prev, ...data.feeds]);
     });
-  }, [page]);
+  }, [lastPostTime]);
 
   useEffect(() => {
     dispatch({
@@ -183,7 +186,7 @@ const Feed = () => {
                   padding: theme.spacing(1, 0),
                 }}
               >
-                <CourseCard gridView data={getRandomItem(frontendCourses)} />
+                <CourseCard data={getRandomItem(frontendCourses)} />
               </Box>
             </Box>
           </Stack>

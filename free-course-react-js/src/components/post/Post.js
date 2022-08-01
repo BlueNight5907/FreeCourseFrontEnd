@@ -112,9 +112,6 @@ const Post = ({ post, isLast, nextPage }) => {
 
   // Mark
   const [isMarked, setIsMark] = useState(false);
-  const toggleMark = () => {
-    setIsMark(!isMarked);
-  };
 
   // Copy link
   const [openSnack, setOpenSnack] = useState(false);
@@ -143,6 +140,7 @@ const Post = ({ post, isLast, nextPage }) => {
       sx={{
         margin: theme.spacing(2, 0),
         backgroundColor: theme.palette.foreground.main,
+        width: "100%",
       }}
       ref={postRef}
     >
