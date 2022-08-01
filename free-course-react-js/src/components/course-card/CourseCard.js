@@ -338,7 +338,7 @@ const CourseCard = (props) => {
                 }}
                 className="text-sm font-normal"
               >
-                {points}
+                {Number(points).toFixed(1)}
               </Typography>
               <Rating
                 name="size-small"

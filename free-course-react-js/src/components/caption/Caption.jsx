@@ -28,7 +28,7 @@ const Caption = ({ caption, ...other }) => {
         onClick={toggleReadMore}
       >
         {" "}
-        {captionText.length < 150 ? "" : isReadMore ? "less" : "...more"}
+        {captionText.length < 150 ? "" : isReadMore ? "rút gọn" : "...xem thêm"}
       </Typography>
     </Typography>
   );

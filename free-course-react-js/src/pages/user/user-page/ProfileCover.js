@@ -12,7 +12,6 @@ import {
 import { styled } from "@mui/material/styles";
 import bg from "assets/background/network-intro.png";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import ArrowForwardTwoToneIcon from "@mui/icons-material/ArrowForwardTwoTone";
 import UploadTwoToneIcon from "@mui/icons-material/UploadTwoTone";
 import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
 import { accountType } from "constants/auth-constants";
@@ -75,13 +74,13 @@ const ProfileCover = ({ user }) => {
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
-            <Button
+            {/* <Button
               startIcon={<UploadTwoToneIcon />}
               variant="contained"
               component="span"
             >
               Change cover
-            </Button>
+            </Button> */}
           </label>
         </CardCoverAction>
       </CardCover>
@@ -94,37 +93,13 @@ const ProfileCover = ({ user }) => {
           src={user?.userInformation.avatar}
         />
       </AvatarWrapper>
-      <Box py={2} pl={2} mb={3}>
+      <Box py={1} pl={2}>
         <Typography gutterBottom variant="h4">
           {user?.userInformation.fullName}
         </Typography>
         <Typography variant="subtitle2">
           {user?.userInformation.desc}
         </Typography>
-
-        <Box
-          display={{ xs: "block", md: "flex" }}
-          mt={4}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Box>
-            <Button variant="contained">Bài viết</Button>
-            {user?.type.name !== "student" && (
-              <Button sx={{ mx: 1 }} variant="outlined">
-                Khóa học
-              </Button>
-            )}
-          </Box>
-          <Button
-            sx={{ mt: { xs: 2, md: 0 } }}
-            size="small"
-            variant="text"
-            endIcon={<ArrowForwardTwoToneIcon />}
-          >
-            See all {user?.followers} connections
-          </Button>
-        </Box>
       </Box>
     </>
   );

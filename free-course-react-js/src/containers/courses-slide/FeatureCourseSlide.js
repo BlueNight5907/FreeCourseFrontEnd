@@ -24,7 +24,7 @@ import colors from "utils/colors";
 import { Link } from "react-router-dom";
 import { maxLines } from "utils/classUltis";
 
-const FeatureCourseItem = ({ course }) => {
+export const FeatureCourseItem = ({ course }) => {
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const matchMd = useMediaQuery(theme.breakpoints.up("md"));

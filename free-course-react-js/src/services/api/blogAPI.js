@@ -7,11 +7,21 @@ export const getAllFeeds = async () => {
   return await request(GET, apiPath.getAllFeeds);
 };
 
-export const getNewFeeds = async (time, page_size) => {
-  return request(GET, apiPath.getNewFeeds(time, page_size));
+export const getNewFeeds = async (time) => {
+  return request(GET, apiPath.getNewFeeds(time));
 };
 
-export const postBlog = async (title, description, content, url, backgroundUrl) => {
+export const getUserFeeds = async (time, userId) => {
+  return request(GET, apiPath.getUserFeeds(time, userId));
+};
+
+export const postBlog = async (
+  title,
+  description,
+  content,
+  url,
+  backgroundUrl
+) => {
   const body = { title, description, content, url, backgroundUrl };
   const data = await request(POST, apiPath.postBlog, { body });
   return data;
@@ -21,7 +31,14 @@ export const getBlog = async (id) => {
   return request(GET, apiPath.getBlog(id));
 };
 
-export const updateBlog = async (id, title, description, content, url, backgroundUrl) => {
+export const updateBlog = async (
+  id,
+  title,
+  description,
+  content,
+  url,
+  backgroundUrl
+) => {
   const body = { title, description, content, url, backgroundUrl };
   return request(PUT, apiPath.updateBlog(id), { body });
 };
@@ -31,11 +48,17 @@ export const deleteBlog = async (id) => {
 };
 
 export const likeBlog = async (id) => {
-  return request(POST, apiPath.likePost(id));
+  return request(POST, apiPath.likePost(id), {}, {}, "comment");
 };
 
 export const likeComment = async (postId, commentId) => {
-  return request(POST, apiPath.likeComment(postId, commentId));
+  return request(
+    POST,
+    apiPath.likeComment(postId, commentId),
+    {},
+    {},
+    "comment"
+  );
 };
 
 export const postComment = async (id, content, url) => {

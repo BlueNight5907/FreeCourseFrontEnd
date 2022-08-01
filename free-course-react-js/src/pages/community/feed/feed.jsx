@@ -5,25 +5,26 @@ import {
   Box,
   Stack,
   Typography,
-  IconButton,
   Fab,
   Snackbar,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
 import UserCard from "components/user-card/UserCard";
-import Posts from "mock-data/post";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_FEEDS_REQUEST } from "store/types/data-types/blog-type";
-import CourseSlide from "containers/courses-slide/CourseSlide";
 import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
+import { getNewFeeds } from "services/api/blogAPI";
+
+export const convertTime = (time) => {
+  const tempTime = new Date(time).getTime();
+  return new Date(tempTime - 1).toISOString();
+};
 
 const Feed = () => {
   const theme = useTheme();
@@ -34,7 +35,7 @@ const Feed = () => {
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const { posts, message, isEndFeed } = useSelector((state) => state.blog);
+  const { message } = useSelector((state) => state.blog);
   // const [feeds, setFeeds] = useState([]);
   const [frontendCourses, setFrontendCourses] = useState([]);
 
@@ -48,47 +49,31 @@ const Feed = () => {
     setOpenSnack(false);
   };
 
-  //infinite
-  const [isBottom, setIsBottom] = useState(false);
+  const [lastPostTime, setLastPostTime] = useState(new Date().toISOString());
+  const [feeds, setFeeds] = useState([]);
 
-  function handleWindowScroll() {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
+  const nextPage = () => {
+    setLastPostTime(
+      feeds.length > 0
+        ? convertTime(feeds.at(-1)?.createdAt)
+        : new Date().toISOString()
+    );
+  };
 
-    // check if user is near to the bottom of the body
-    if (scrollTop + window.innerHeight + 50 >= scrollHeight) {
-      console.log("bottom");
-      setIsBottom(true);
-    }
-  }
-
-  // on mount
   useEffect(() => {
-    window.addEventListener("scroll", handleWindowScroll);
-    return () => window.removeEventListener("scroll", handleWindowScroll);
-  }, []);
+    getNewFeeds(lastPostTime).then((data) => {
+      setFeeds((prev) => [...prev, ...data.feeds]);
+    });
+  }, [lastPostTime]);
 
   useEffect(() => {
     dispatch({
-      type: GET_FEEDS_REQUEST,
-      page_size: 10,
+      type: GET_COURSES_WITH_FILTER,
+      category: "frontend",
+      params: { page: 1, page_size: 8 },
+      callback: setFrontendCourses,
     });
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isBottom) {
-      dispatch({
-        type: GET_FEEDS_REQUEST,
-        page_size: 10,
-      });
-      setIsBottom(false);
-    }
-  }, [isBottom, setIsBottom, dispatch]);
-  // useEffect(() => {
-  //   if (posts) {
-  //     setFeeds(posts);
-  //   }
-  // }, [posts]);
 
   useEffect(() => {
     if (message) {
@@ -112,8 +97,13 @@ const Feed = () => {
       )}
       {/* Post */}
       <Grid item xs={12} lg={8}>
-        {posts.map((post, index) => (
-          <Post key={index} post={post} />
+        {feeds.map((post, index) => (
+          <Post
+            key={post._id}
+            post={post}
+            nextPage={nextPage}
+            isLast={index === feeds.length - 1}
+          />
         ))}
       </Grid>
       <Snackbar
@@ -196,7 +186,7 @@ const Feed = () => {
                   padding: theme.spacing(1, 0),
                 }}
               >
-                <CourseCard gridView data={getRandomItem(frontendCourses)} />
+                <CourseCard data={getRandomItem(frontendCourses)} />
               </Box>
             </Box>
           </Stack>

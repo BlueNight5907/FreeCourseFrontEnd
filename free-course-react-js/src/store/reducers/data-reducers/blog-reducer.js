@@ -3,6 +3,9 @@ import {
   GET_FEEDS_REQUEST,
   GET_FEEDS_SUCCESS,
   GET_FEEDS_ERROR,
+  GET_MORE_FEEDS_REQUEST,
+  GET_MORE_FEEDS_SUCCESS,
+  GET_MORE_FEEDS_ERROR,
   GET_BLOG_REQUEST,
   GET_BLOG_SUCCESS,
   GET_BLOG_ERROR,
@@ -21,7 +24,7 @@ import {
 } from "../../types/data-types/blog-type";
 
 export const checkEndFeed = (currentPage, page_size, totalFeed) => {
-  return currentPage * page_size > totalFeed;
+  return currentPage * page_size >= totalFeed;
 };
 
 const initialState = {
@@ -36,13 +39,13 @@ const initialState = {
   loadingAddComment: false,
   isEndFeed: false,
   totalFeed: 10,
-  currentPage: 1,
+  nextPage: 1,
   message: null,
   error: null,
 };
 
 const BlogReducer = (state = initialState, action) => {
-  const isEndFeed = checkEndFeed(state.currentPage, 10, state.totalFeed);
+  const isEndFeed = checkEndFeed(state.nextPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
     case RESET_ERROR:
@@ -53,9 +56,22 @@ const BlogReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingGetFeeds: true,
-        error: null,
       };
     case GET_FEEDS_SUCCESS:
+      return {
+        ...state,
+        loadingGetFeeds: false,
+        totalFeed: payload.totalSize,
+        posts: [...state.posts, ...payload.feeds],
+        // nextPage: state.nextPage + 1,
+      };
+    case GET_FEEDS_ERROR:
+      return {
+        ...state,
+        loadingGetFeeds: false,
+        error: payload,
+      };
+    case GET_MORE_FEEDS_REQUEST:
       if (isEndFeed) {
         return {
           ...state,
@@ -65,15 +81,18 @@ const BlogReducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        loadingGetFeeds: false,
-        totalFeed: payload.total,
-        posts: [...state.posts, ...payload.feeds],
-        currentPage: state.currentPage + 1,
+        loadingGetFeeds: true,
       };
-    case GET_FEEDS_ERROR:
+    case GET_MORE_FEEDS_SUCCESS:
       return {
         ...state,
-        error: payload,
+        posts: [...state.posts, ...payload.feeds],
+        // nextPage: state.nextPage + 1,
+        loadingGetFeeds: false,
+      };
+    case GET_MORE_FEEDS_ERROR:
+      return {
+        ...state,
       };
     case GET_BLOG_REQUEST:
       return {

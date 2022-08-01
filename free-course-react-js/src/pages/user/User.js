@@ -11,23 +11,23 @@ const UserProfile = () => {
 
   return (
     <>
-      <Container sx={{ my: 3 }} maxWidth="xl">
+      <Container sx={{ my: 1 }} maxWidth="xl">
         <Grid
           container
           direction="row"
           justifyContent="center"
           alignItems="stretch"
-          spacing={3}
+          spacing={2}
         >
           <Grid item xs={12}>
             <ProfileCover user={user} />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} /*md={8}*/>
             <UserFeed />
           </Grid>
-          <Grid item xs={12} md={4}>
+          {/* <Grid item xs={12} md={4}>
             <PopularTags />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>
