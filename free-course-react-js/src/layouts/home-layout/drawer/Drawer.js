@@ -102,7 +102,13 @@ const Drawer = () => {
             }}
             className="logo"
           >
-            <Box className=" " component="img" alt="logo" src={logo} />
+            <Box
+              className=" "
+              component="img"
+              alt="logo"
+              src={logo}
+              sx={{ width: sideOpen ? 90 : 50 }}
+            />
             <Typography
               sx={{
                 fontWeight: 500,
@@ -110,7 +116,7 @@ const Drawer = () => {
                 display: sideOpen ? "block" : "none",
               }}
             >
-              TDT Learn
+              TDT Learning
             </Typography>
           </Box>
         )}
