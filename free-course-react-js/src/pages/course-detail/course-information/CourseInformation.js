@@ -108,7 +108,10 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
               </IconButton>
             </Typography>
           </Stack>
-          <TeacherAvatar userInformation={teacherDetail?.userInformation} />
+          <TeacherAvatar
+            userInformation={teacherDetail?.userInformation}
+            userId={teacherDetail?.id}
+          />
           <Stack className="flex-row gap-4 flex-wrap items-center">
             {isRegistered ? (
               <Button variant="contained" onClick={moveToStep} width="12rem">

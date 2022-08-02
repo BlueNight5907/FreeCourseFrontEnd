@@ -28,7 +28,7 @@ import { scrollSetting } from "../../../utils/classUltis";
 import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
 import Comment from "./../../../components/comment/Comment";
 import { format } from "date-fns";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ADD_LESSON_COMMENT,
   COMPLETE_LESSON_REQUEST,
@@ -54,6 +54,7 @@ const Lesson = () => {
   const [openComment, setOpenComment] = useState(false);
   const handleClick = () => setOpen((s) => !s);
   const toggleComment = () => setOpenComment((s) => !s);
+  const navigate = useNavigate();
 
   const handleProgressVideo = useCallback((progress) => {
     // console.log(progress);
@@ -198,8 +199,15 @@ const Lesson = () => {
                       <Stack className="flex-row justify-between items-center">
                         <TeacherAvatar
                           userInformation={teacher?.userInformation}
+                          userId={teacher?.id}
                         />
-                        <Button variant="contained" specialBg={buttonBg.red}>
+                        <Button
+                          variant="contained"
+                          specialBg={buttonBg.red}
+                          onClick={() =>
+                            navigate("/user/profile/" + teacher?.id)
+                          }
+                        >
                           Đi đến trang chủ
                         </Button>
                       </Stack>
