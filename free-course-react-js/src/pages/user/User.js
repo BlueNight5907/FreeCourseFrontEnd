@@ -25,12 +25,12 @@ const UserProfile = () => {
     }
   }, [dispatch, id]);
 
-  useEffect(() => {
-    if (userData) {
-      console.log(userData);
-      console.log(user);
-    }
-  }, [userData, user]);
+  // useEffect(() => {
+  //   if (userData) {
+  //     console.log(userData);
+  //     console.log(user);
+  //   }
+  // }, [userData, user]);
 
   return (
     <>

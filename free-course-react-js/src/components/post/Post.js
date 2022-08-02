@@ -158,6 +158,7 @@ const Post = ({ post, isLast, nextPage }) => {
               //differenceInDays(new Date(), new Date(createdAt))
             }
             avatar={creatorData.userInformation.avatar}
+            headLink={`/user/profile/${creatorData.id}`}
             subLink={`/community/post/${_id}`}
           />
         }

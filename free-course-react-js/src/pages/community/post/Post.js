@@ -47,6 +47,9 @@ const Post = (props) => {
             <UserCard
               name={post?.creator && post.creator.userInformation.fullName}
               avatar={post?.creator && post.creator.userInformation.avatar}
+              headLink={`/user/profile/${
+                post?.creator?._id && post.creator._id
+              }`}
             />
           </Box>
           <Divider sx={{ margin: theme.spacing(2, 0) }} />
