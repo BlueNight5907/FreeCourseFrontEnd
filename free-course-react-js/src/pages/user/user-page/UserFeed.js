@@ -1,29 +1,12 @@
-import {
-  Box,
-  Typography,
-  Card,
-  CardHeader,
-  Divider,
-  Avatar,
-  Grid,
-  Button,
-  useTheme,
-  Stack,
-  Tabs,
-  Tab,
-} from "@mui/material";
-import ArrowForwardTwoToneIcon from "@mui/icons-material/ArrowForwardTwoTone";
-import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
+import { Box, Grid, Tabs, Tab } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getUserFeeds } from "services/api/blogAPI";
 import { useSelector } from "react-redux";
 import Post from "components/post/Post";
-import Wrapper from "components/wrapper/Wrapper";
-import { ArrowCircleUp, ModeEdit } from "@mui/icons-material";
 import TabPanel from "components/tab-panel/TabPanel";
 import { getAllMyCourse } from "services/api/courseAPI";
-import { FeatureCourseItem } from "containers/courses-slide/FeatureCourseSlide";
 import CourseCard from "./course-card/CourseCard";
+import { convertTime } from "utils/number-utils";
 
 function a11yProps(index) {
   return {
@@ -32,19 +15,12 @@ function a11yProps(index) {
   };
 }
 
-const convertTime = (time) => {
-  const tempTime = new Date(time).getTime();
-  return new Date(tempTime - 1).toISOString();
-};
-
-const UserFeed = () => {
-  const theme = useTheme();
-  const { user } = useSelector((state) => state.auth);
+const UserFeed = (props) => {
+  const { user } = props;
   const { sideOpen } = useSelector((state) => state.setting);
 
   const [selected, setSelected] = useState(0);
   const [lastPostTime, setLastPostTime] = useState(new Date().toISOString());
-  const [page, setPage] = useState(1);
   const [feeds, setFeeds] = useState([]);
   const [courses, setCourses] = useState([]);
 
@@ -57,20 +33,12 @@ const UserFeed = () => {
   };
 
   const handleSelectedChange = (event, newValue) => {
-    if (newValue === 0) {
-      setCourses([]);
-    }
-    if (newValue === 1) {
-      setPage(1);
-      setFeeds([]);
-    }
-
     setSelected(newValue);
   };
 
   useEffect(() => {
     if (selected === 0 && user) {
-      getUserFeeds(lastPostTime, user._id).then((data) => {
+      getUserFeeds(lastPostTime, user.id).then((data) => {
         setFeeds((prev) => [...new Set([...prev, ...data.feeds])]);
       });
     }
@@ -137,16 +105,9 @@ const UserFeed = () => {
             </Grid>
           ))}
         </Grid>
-        {/* <Stack spacing={1}>
-          {courses.map((course, index) => (
-            <CourseCard key={course._id} data={course.courseData} />
-          ))}
-        </Stack> */}
       </TabPanel>
-      {/* </Wrapper> */}
       <Grid container spacing={2}></Grid>
     </Box>
-    // </Card>
   );
 };
 

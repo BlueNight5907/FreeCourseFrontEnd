@@ -27,8 +27,9 @@ const PostEditDialog = (props) => {
   const [selected, setSelected] = useState(0);
   const [title, setTitle] = useState(post.title);
   const [description, setDescription] = useState(post.description);
-  const [background, setBackground] = useState(null);
+  const [background, setBackground] = useState(post.backgroundUrl);
   const [content, setContent] = useState(post.content);
+  const [url, setUrl] = useState(post.url);
 
   const handleSelectedChange = (event, newValue) => {
     setSelected(newValue);
@@ -46,6 +47,7 @@ const PostEditDialog = (props) => {
       description,
       background,
       content,
+      url,
     });
 
     // setTitle("");

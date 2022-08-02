@@ -20,11 +20,8 @@ import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { getRandomItem } from "utils/array-utils";
 import { getNewFeeds } from "services/api/blogAPI";
-
-export const convertTime = (time) => {
-  const tempTime = new Date(time).getTime();
-  return new Date(tempTime - 1).toISOString();
-};
+import { convertTime } from "utils/number-utils";
+import { CLEAR_MESSAGE } from "store/types/data-types/blog-type";
 
 const Feed = () => {
   const theme = useTheme();
@@ -46,7 +43,9 @@ const Feed = () => {
     if (reason === "clickaway") {
       return;
     }
+    dispatch({ type: CLEAR_MESSAGE });
     setOpenSnack(false);
+    setSnackMessage("");
   };
 
   const [lastPostTime, setLastPostTime] = useState(new Date().toISOString());
@@ -90,7 +89,7 @@ const Feed = () => {
           elevation={2}
           className="fixed bottom-4 right-1"
           title="Tạo bài viết mới"
-          onClick={() => navigate("/community/post/create")}
+          onClick={() => navigate("/post/create")}
         >
           <Add />
         </Fab>

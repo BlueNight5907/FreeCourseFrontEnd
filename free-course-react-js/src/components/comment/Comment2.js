@@ -25,23 +25,22 @@ import {
 import Caption from "components/caption/Caption";
 import Image from "components/image/Image";
 import UserCard from "components/user-card/UserCard";
+import CommentActionDropDown from "containers/dropdowns/comment-action-dropdown/CommentActionDropdown";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { LIKE_COMMENT } from "store/types/data-types/blog-type";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 import { shortenNumber } from "utils/number-utils";
-import Button from "../button/Button";
 import Dropdown from "../dropdown/Dropdown";
 import DropdownItem from "../dropdown/DropdownItem";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import DropdownToggle from "../dropdown/DropdownToggle";
 
 function Comment(props) {
-  const { owner, data, user, post } = props;
+  const { owner, data, user, post, setListComment } = props;
   const theme = useTheme();
   const dispatch = useDispatch();
-  const matchMd = useMediaQuery(theme.breakpoints.up("md"));
   const styles = {
     box: {
       marginBottom: theme.spacing(0.5),
@@ -153,21 +152,15 @@ function Comment(props) {
           width="100%"
         >
           {!owner ? (
-            <IconButton sx={styles.rightAction} className="action-button">
-              <MoreHoriz fontSize="small" />
-            </IconButton>
-          ) : matchMd ? (
-            <Stack
-              flexDirection="row"
-              className="absolute action-button"
-              sx={styles.rightAction}
-              gap={0.5}
-            >
-              <Button startIcon={<DriveFileRenameOutline />}>Chỉnh sửa</Button>
-              <Button startIcon={<ClearRounded />} color="error">
-                Xóa
-              </Button>
-            </Stack>
+            // <IconButton sx={styles.rightAction} className="action-button">
+            <Box sx={styles.rightAction} className="action-button">
+              <CommentActionDropDown
+                user={user}
+                post={post}
+                comment={data}
+                setListComment={setListComment}
+              />
+            </Box>
           ) : (
             <Box
               sx={{

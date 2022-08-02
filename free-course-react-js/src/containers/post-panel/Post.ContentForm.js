@@ -1,11 +1,26 @@
-import { EditRounded } from "@mui/icons-material";
 import { useTheme } from "@mui/material";
-import Button, { buttonBg } from "components/button/Button";
-import Wrapper from "components/wrapper/Wrapper";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import ReactHtmlParser from "react-html-parser";
 import Prism from "prismjs";
+import { Upload } from "../../firebase";
+
+export const imageUploadCallback = (blobInfo, progress) =>
+  new Promise((resolve, reject) => {
+    try {
+      // console.log(blobInfo);
+      let uploadTask = new Upload(
+        "post-image-data",
+        blobInfo.blob(),
+        (res) => {
+          resolve(res);
+        },
+        (progress) => {}
+      );
+      uploadTask.start();
+    } catch (error) {
+      reject(error);
+    }
+  });
 
 const ContentForm = ({ content, setContent }) => {
   const theme = useTheme();
@@ -18,30 +33,9 @@ const ContentForm = ({ content, setContent }) => {
   useEffect(() => {
     setContent(content || "");
   }, [content, setContent]);
+
   return (
     <>
-      {/* <Wrapper
-        sx={{
-          border: "1px solid " + theme.palette.divider,
-          minHeight: 400,
-          height: "100%",
-        }}
-        elevation={0}
-        title="Nội dung khóa học"
-        titleVariant="body1"
-        actions={
-          <Button
-            startIcon={<EditRounded />}
-            specialBg={buttonBg.red}
-            variant="contained"
-            onClick={() => setOpenContentDialog(true)}
-          >
-            Thêm / Chỉnh sửa
-          </Button>
-        }
-      >
-        {content && ReactHtmlParser(content)}
-      </Wrapper> */}
       <Editor
         apiKey="jv4isigvbusa53vjr4qg9ec2lxc9heu9jc0gp08r618c4zsy"
         onInit={(evt, editor) => (editorRef.current = editor)}
@@ -86,9 +80,7 @@ const ContentForm = ({ content, setContent }) => {
             "removeformat | anchor fullscreen preview | help",
           // images_upload_url: "postAcceptor.php",
           /* we override default upload handler to simulate successful upload*/
-          images_upload_handler: function (blobInfo, success, failure) {
-            console.log("hello world");
-          },
+          images_upload_handler: imageUploadCallback,
           text_patterns: [
             { start: "*", end: "*", format: "italic" },
             { start: "**", end: "**", format: "bold" },

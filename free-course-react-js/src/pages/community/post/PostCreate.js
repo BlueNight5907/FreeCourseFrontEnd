@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Wrapper from "./../../../components/wrapper/Wrapper";
-import { AddCircle, Save, ArrowCircleUp } from "@mui/icons-material";
-import CourseForm from "containers/course-panel/CourseForm";
+import { AddCircle, ArrowCircleUp } from "@mui/icons-material";
+
 import Button from "components/button/Button";
 import { Snackbar, Stack, Tab, Tabs } from "@mui/material";
 import TabPanel from "components/tab-panel/TabPanel";
@@ -41,7 +41,6 @@ const PostCreate = () => {
 
     setOpenSnack(false);
   };
-
   useEffect(() => {
     if (message) {
       setSnackMessage(message);
