@@ -1,14 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Divider,
-  IconButton,
-  Paper,
-  Typography,
-  Box,
-  useTheme,
-  Grid,
-  useMediaQuery,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Divider, Paper, Typography, Box, useTheme, Grid } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_BLOG_REQUEST } from "store/types/data-types/blog-type";
@@ -16,44 +7,14 @@ import UserCard from "components/user-card/UserCard";
 import CommentField from "./CommentField";
 import Comment from "components/comment/Comment2";
 import FeatureCourseSlide from "containers/courses-slide/FeatureCourseSlide";
-import {
-  Bookmark,
-  BookmarkBorderOutlined,
-  MoreHoriz,
-} from "@mui/icons-material";
 import { format } from "date-fns";
-import CourseCard from "components/course-card/CourseCard";
 
 const Post = (props) => {
   const theme = useTheme();
-  const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
-  const matchLg = useMediaQuery(theme.breakpoints.up("lg"));
   const { id } = useParams();
   const { post } = useSelector((state) => state.blog);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
-  const iconStyle = {
-    default: {
-      color: theme.palette.text3,
-      fontSize: theme.typography.pxToRem(34),
-    },
-    action: {
-      love: {
-        color: theme.palette.tomato.main,
-        fontSize: theme.typography.pxToRem(34),
-      },
-      mark: {
-        color: theme.palette.warning.main,
-        fontSize: theme.typography.pxToRem(34),
-      },
-    },
-  };
-
-  const [isMarked, setIsMark] = useState(false);
-  const toggleMark = () => {
-    setIsMark(!isMarked);
-  };
 
   useEffect(() => {
     dispatch({ type: GET_BLOG_REQUEST, id });
@@ -86,14 +47,10 @@ const Post = (props) => {
             <UserCard
               name={post?.creator && post.creator.userInformation.fullName}
               avatar={post?.creator && post.creator.userInformation.avatar}
+              headLink={`/user/profile/${
+                post?.creator?._id && post.creator._id
+              }`}
             />
-            {/* <IconButton onClick={toggleMark}>
-              {isMarked ? (
-                <Bookmark sx={iconStyle.action.mark} />
-              ) : (
-                <BookmarkBorderOutlined sx={iconStyle.default} />
-              )}
-            </IconButton> */}
           </Box>
           <Divider sx={{ margin: theme.spacing(2, 0) }} />
           <Box
@@ -143,7 +100,13 @@ const Post = (props) => {
           <Box padding={theme.spacing(2, 3)}>
             {listComment.length > 0 ? (
               listComment.map((comment, index) => (
-                <Comment key={index} data={comment} post={post} user={user} />
+                <Comment
+                  key={index}
+                  data={comment}
+                  post={post}
+                  user={user}
+                  setListComment={setListComment}
+                />
               ))
             ) : (
               <Box display="flex" justifyContent="center">

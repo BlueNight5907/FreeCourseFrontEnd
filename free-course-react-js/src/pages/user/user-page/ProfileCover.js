@@ -6,15 +6,12 @@ import {
   Tooltip,
   Avatar,
   CardMedia,
-  Button,
   IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import bg from "assets/background/network-intro.png";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import UploadTwoToneIcon from "@mui/icons-material/UploadTwoTone";
-import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
-import { accountType } from "constants/auth-constants";
+import { useNavigate } from "react-router-dom";
 
 const Input = styled("input")({
   display: "none",
@@ -52,11 +49,18 @@ const CardCoverAction = styled(Box)(
 );
 
 const ProfileCover = ({ user }) => {
+  const navigate = useNavigate();
   return (
     <>
       <Box display="flex" mb={3}>
         <Tooltip arrow placement="top" title="Go back">
-          <IconButton color="primary" sx={{ p: 2, mr: 2 }}>
+          <IconButton
+            color="primary"
+            sx={{ p: 2, mr: 2 }}
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
             <ArrowBackTwoToneIcon />
           </IconButton>
         </Tooltip>

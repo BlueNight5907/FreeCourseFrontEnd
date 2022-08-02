@@ -16,6 +16,7 @@ import Button from "components/button/Button";
 import Transition from "components/transition/Transition";
 import React, { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
+import { imageUploadCallback } from "containers/post-panel/Post.ContentForm";
 
 const EditContentDialog = ({ open, setOpen, initialValue, setContent }) => {
   const theme = useTheme();
@@ -131,6 +132,25 @@ const EditContentDialog = ({ open, setOpen, initialValue, setContent }) => {
               " bold italic underline strikethrough forecolor backcolor | emoticons link table |alignleft aligncenter " +
               "alignright alignjustify | bullist numlist outdent indent | " +
               "removeformat | anchor fullscreen preview | help",
+            images_upload_handler: imageUploadCallback,
+            text_patterns: [
+              { start: "*", end: "*", format: "italic" },
+              { start: "**", end: "**", format: "bold" },
+              { start: "_", end: "_", format: "underline" },
+              { start: "--", end: "--", format: "strikethrough" },
+              { start: ">", end: "<", format: "blockquote" },
+              { start: "<", end: ">", format: "code" },
+              { start: "#", format: "h1" },
+              { start: "##", format: "h2" },
+              { start: "###", format: "h3" },
+              { start: "####", format: "h4" },
+              { start: "#####", format: "h5" },
+              { start: "######", format: "h6" },
+              // The following text patterns require the `lists` plugin
+              { start: "1. ", cmd: "InsertOrderedList" },
+              { start: "* ", cmd: "InsertUnorderedList" },
+              { start: "- ", cmd: "InsertUnorderedList" },
+            ],
             content_style: `body { font-family:${theme.typography.fontFamily}; font-size:${theme.typography.body1.fontSize} }`,
           }}
         />

@@ -21,6 +21,7 @@ import {
   POST_COMMENT_REQUEST,
   POST_COMMENT_SUCCESS,
   POST_COMMENT_ERROR,
+  CLEAR_MESSAGE,
 } from "../../types/data-types/blog-type";
 
 export const checkEndFeed = (currentPage, page_size, totalFeed) => {
@@ -48,6 +49,11 @@ const BlogReducer = (state = initialState, action) => {
   const isEndFeed = checkEndFeed(state.nextPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
+    case CLEAR_MESSAGE:
+      return {
+        ...state,
+        message: null,
+      };
     case RESET_ERROR:
       return {
         error: null,
@@ -119,7 +125,6 @@ const BlogReducer = (state = initialState, action) => {
       };
     case POST_BLOG_SUCCESS:
       let newPost = payload.post;
-      console.log(newPost);
       return {
         ...state,
         loadingAddBlog: false,

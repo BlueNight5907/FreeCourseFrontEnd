@@ -33,6 +33,8 @@ import {
   GET_MORE_FEEDS_REQUEST,
   GET_MORE_FEEDS_SUCCESS,
   GET_MORE_FEEDS_ERROR,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT_ERROR,
 } from "../types/data-types/blog-type";
 import * as firebase from "../../firebase";
 
@@ -117,29 +119,8 @@ function* getBlog(postId) {
   }
 }
 
-function* uploadBlog(title, description, content, background) {
+function* uploadBlog(title, description, content, backgroundUrl) {
   try {
-    let backgroundUrl = "";
-    if (background) {
-      let filename =
-        background.name.split(".")[0] +
-        "-" +
-        background.lastModified +
-        "-" +
-        crypto.randomUUID();
-
-      backgroundUrl = yield call(
-        firebase.upload,
-        "post-background",
-        {
-          fileName: filename,
-          file: background,
-        },
-        () => {},
-        () => {}
-      );
-    }
-    yield delay(500);
     const data = yield call(
       blogAPI.postBlog,
       title,
@@ -164,39 +145,21 @@ function* uploadBlog(title, description, content, background) {
   }
 }
 
-function* updateBlog(postId, title, description, content, background) {
+function* updateBlog(postId, title, description, content, url, backgroundUrl) {
   try {
-    let backgroundUrl = "";
-    if (background) {
-      let filename =
-        background.name.split(".")[0] +
-        "-" +
-        background.lastModified +
-        "-" +
-        crypto.randomUUID();
-      backgroundUrl = yield call(
-        firebase.upload,
-        "post-background",
-        {
-          fileName: filename,
-          file: background,
-        },
-        () => {},
-        () => {}
-      );
-    }
-    yield delay(500);
     const post = yield call(
       blogAPI.updateBlog,
       postId,
       title,
       description,
       content,
+      url,
       backgroundUrl
     );
     yield delay(500);
     let message = "Cập nhật bài viết thành công";
     yield put({ type: UPDATE_BLOG_SUCCESS, payload: { post, message } });
+    console.log({ postId, title, description, content, backgroundUrl });
   } catch (error) {
     yield put({
       type: UPDATE_BLOG_ERROR,
@@ -239,7 +202,7 @@ function* likeBlog(id) {
 
 function* likeComment(postId, commentId) {
   try {
-    console.log("like:", postId, "+", commentId);
+    // console.log("like:", postId, "+", commentId);
     yield call(blogAPI.likeComment, postId, commentId);
   } catch (error) {
     console.log(error);
@@ -286,6 +249,21 @@ function* uploadComment(postId, content, image, callback) {
   }
 }
 
+function* deleteComment(postId, commentId) {
+  try {
+    yield call(blogAPI.deleteComment(postId, commentId));
+  } catch (error) {
+    yield put({
+      type: DELETE_COMMENT_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
+}
+
 // Watcher
 function* getFeedsFlow() {
   // while (true) {
@@ -313,10 +291,18 @@ function* postBlogFlow() {
 }
 function* updateBlogFlow() {
   while (true) {
-    const { postId, title, description, content, background } = yield take(
+    const { postId, title, description, content, url, background } = yield take(
       UPDATE_BLOG_REQUEST
     );
-    yield call(updateBlog, postId, title, description, content, background);
+    yield call(
+      updateBlog,
+      postId,
+      title,
+      description,
+      content,
+      url,
+      background
+    );
   }
 }
 
@@ -350,6 +336,13 @@ function* postCommentFlow() {
   }
 }
 
+function* deleteCommentFlow() {
+  while (true) {
+    const { postId, commentId } = yield take(DELETE_COMMENT_REQUEST);
+    yield fork(deleteComment, postId, commentId);
+  }
+}
+
 const blogSagaList = [
   fork(postBlogFlow),
   fork(getBlogFlow),
@@ -359,5 +352,6 @@ const blogSagaList = [
   fork(likeBlogWatcher),
   fork(likeCommentWatcher),
   fork(postCommentFlow),
+  fork(deleteCommentFlow),
 ];
 export default blogSagaList;
