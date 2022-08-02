@@ -10,7 +10,6 @@ import { useParams } from "react-router-dom";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.auth);
   const { id } = useParams();
   const dispatch = useDispatch();
   const [userData, setUserData] = useState(null);
@@ -46,7 +45,7 @@ const UserProfile = () => {
             <ProfileCover user={userData} />
           </Grid>
           <Grid item xs={12} /*md={8}*/>
-            <UserFeed user={userData} />
+            <UserFeed user={userData} userId={id} />
           </Grid>
           {/* <Grid item xs={12} md={4}>
             <PopularTags />

@@ -14,6 +14,9 @@ export const getCourseDetail = (id) =>
 
 export const removeCourse = (id) => request(DELETE, apiPath.getCourse(id));
 
+export const getCoursesCreatedByUser = (id) =>
+  request(GET, apiPath.teacherCourses(id));
+
 export const getAllMyCourse = () => {
   return request(GET, apiPath.getAllMyCourse);
 };

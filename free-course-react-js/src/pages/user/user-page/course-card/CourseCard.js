@@ -37,16 +37,10 @@ const CourseCard = (props) => {
 
   useEffect(() => {
     if (data) {
-      // dispatch({
-      //   type: GET_ACCOUNT_INFORMATION,
-      //   accountId: data.creator,
-      //   callback: (data) => setTeacherInfor(data),
-      // });
-      setTeacherInfor({
-        userInformation: {
-          fullName: data.creator.fullName,
-          avatar: data.creator.avatar,
-        },
+      dispatch({
+        type: GET_ACCOUNT_INFORMATION,
+        accountId: data.creator,
+        callback: (data) => setTeacherInfor(data),
       });
     }
   }, [data, dispatch]);

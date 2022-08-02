@@ -4,7 +4,10 @@ import { getUserFeeds } from "services/api/blogAPI";
 import { useSelector } from "react-redux";
 import Post from "components/post/Post";
 import TabPanel from "components/tab-panel/TabPanel";
-import { getAllMyCourse } from "services/api/courseAPI";
+import {
+  getAllMyCourse,
+  getCoursesCreatedByUser,
+} from "services/api/courseAPI";
 import CourseCard from "./course-card/CourseCard";
 import { convertTime } from "utils/number-utils";
 
@@ -16,7 +19,7 @@ function a11yProps(index) {
 }
 
 const UserFeed = (props) => {
-  const { user } = props;
+  const { user, userId } = props;
   const { sideOpen } = useSelector((state) => state.setting);
 
   const [selected, setSelected] = useState(0);
@@ -37,20 +40,26 @@ const UserFeed = (props) => {
   };
 
   useEffect(() => {
-    if (selected === 0 && user) {
+    if (user) {
+      setFeeds([]);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
       getUserFeeds(lastPostTime, user.id).then((data) => {
         setFeeds((prev) => [...new Set([...prev, ...data.feeds])]);
       });
     }
-  }, [lastPostTime, user, selected]);
+  }, [lastPostTime, user]);
 
   useEffect(() => {
-    if (selected === 1 && user) {
-      getAllMyCourse().then((data) => {
-        setCourses((prev) => [...new Set([...prev, ...data])]);
+    if (userId) {
+      getCoursesCreatedByUser(userId).then((data) => {
+        setCourses((prev) => [...data]);
       });
     }
-  }, [selected, user]);
+  }, [userId]);
   return (
     <Box>
       <Tabs
@@ -72,7 +81,7 @@ const UserFeed = (props) => {
           className="capitalize items-start"
           {...a11yProps(0)}
         />
-        {user?.type.name !== "student" && (
+        {user?.type?.name !== "student" && (
           <Tab
             label="Khóa học"
             className="capitalize items-start"
@@ -101,7 +110,7 @@ const UserFeed = (props) => {
               xl={sideOpen ? 4 : 3}
               key={index}
             >
-              <CourseCard gridView key={course._id} data={course.courseData} />
+              <CourseCard gridView key={course._id} data={course} />
             </Grid>
           ))}
         </Grid>
