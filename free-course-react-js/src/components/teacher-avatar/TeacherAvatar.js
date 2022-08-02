@@ -1,4 +1,4 @@
- import { CheckBox } from "@mui/icons-material";
+import { CheckBox } from "@mui/icons-material";
 import { Avatar, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
@@ -31,7 +31,7 @@ const TeacherAvatar = ({ userInformation }) => {
           color="GrayText"
           className="flex flex-row items-center gap-2"
         >
-          UX/UI <CheckBox sx={{ color: "#FB6D3A" }} size="small" />
+          Giảng viên <CheckBox sx={{ color: "#FB6D3A" }} size="small" />
         </Typography>
       </Box>
     </Stack>

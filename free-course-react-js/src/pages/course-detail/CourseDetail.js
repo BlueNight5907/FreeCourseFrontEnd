@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CourseSlide from "../../containers/courses-slide/CourseSlide";
 import CourseInformation from "./course-information/CourseInformation";
 import bgImage from "../../assets/background/social-network-bg.jpg";
@@ -23,6 +23,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ADD_COURSE_COMMENT_REQUEST,
+  DELETE_COURSE_COMMENT_REQUEST,
   GET_COURSES_WITH_CATEGORY_REQUEST,
   GET_COURSE_COMMENTS_REQUEST,
   GET_COURSE_DETAIL_REQUEST,
@@ -48,6 +49,7 @@ const CourseDetail = () => {
   const { courseDetail, category, teacher, courses, comments } = useSelector(
     (s) => s.courseDetail
   );
+  const { user } = useSelector((s) => s.auth);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   const [openComment, setOpenComment] = useState(false);
@@ -77,6 +79,13 @@ const CourseDetail = () => {
       });
     }
   }, [category, dispatch]);
+
+  const deleteComment = useCallback(
+    (commentId) => {
+      dispatch({ type: DELETE_COURSE_COMMENT_REQUEST, courseId, commentId });
+    },
+    [dispatch, courseId]
+  );
 
   useEffect(() => {
     if (courseDetail) {
@@ -284,7 +293,12 @@ const CourseDetail = () => {
           </Box>
           <Stack gap={1}>
             {comments?.map((item, index) => (
-              <Comment key={index} data={item} />
+              <Comment
+                owner={user._id === item.accountId}
+                onDelete={() => deleteComment(item._id)}
+                key={index}
+                data={item}
+              />
             ))}
           </Stack>
         </Box>

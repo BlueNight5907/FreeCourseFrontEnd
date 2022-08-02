@@ -3,8 +3,10 @@ import {
   GET_ALL_LESSON_COMMENT_ERROR,
   GET_ALL_LESSON_COMMENT_SUCCESS,
   GET_LEARNING_PROCESS_ERROR,
+  GET_LEARNING_PROCESS_REQUEST,
   GET_LEARNING_PROCESS_SUCCESS,
   GET_LESSON_DETAIL_ERROR,
+  GET_LESSON_DETAIL_REQUEST,
   GET_LESSON_DETAIL_SUCCESS,
   GET_MY_COURSE_ERROR,
   GET_MY_COURSE_SUCCESS,
@@ -37,6 +39,13 @@ const learningProcessReducer = (state = initState, action) => {
         ...state,
         error: payload,
       };
+
+    case GET_LEARNING_PROCESS_REQUEST:
+      return {
+        ...state,
+        process: null,
+        error: null,
+      };
     case GET_LEARNING_PROCESS_SUCCESS:
       return {
         ...state,
@@ -48,7 +57,12 @@ const learningProcessReducer = (state = initState, action) => {
         ...state,
         error: payload,
       };
-
+    case GET_LESSON_DETAIL_REQUEST:
+      return {
+        ...state,
+        lessonDetail: null,
+        error: null,
+      };
     case GET_ALL_LESSON_COMMENT_SUCCESS:
       return {
         ...state,

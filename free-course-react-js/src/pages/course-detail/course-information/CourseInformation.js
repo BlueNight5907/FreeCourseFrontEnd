@@ -99,7 +99,7 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
           </Typography>
           <Typography variant="body2">{courseDetail?.shortDesc}</Typography>
           <Stack className="flex-row gap-2 flex-wrap items-center">
-            <Typography>{points}</Typography>
+            <Typography>{Number(points).toFixed(1)}</Typography>
             <Rating value={points} readOnly precision={0.5} />
             <Typography variant="subtitle2">
               {courseDetail?.rates.length || 0} học sinh đã đánh giá{" "}

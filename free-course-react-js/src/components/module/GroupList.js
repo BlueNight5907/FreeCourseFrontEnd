@@ -33,6 +33,7 @@ import DropdownItem from "../dropdown/DropdownItem";
 import ConfirmDialog from "components/dialog/confirm-dialog";
 import Dialog from "components/dialog/dialog";
 import StepFormDialog from "containers/step-form/step-form-dialog";
+import { maxLines } from "utils/classUltis";
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
@@ -122,8 +123,9 @@ export default function GroupList(props) {
             <div className="flex flex-row w-full items-center justify-between">
               <div className="grow h-full flex items-center relative">
                 <Typography
-                  className="absolute left-0 w-full pr-3"
-                  noWrap
+                  variant="body2"
+                  className="absolute left-0 w-full pr-3 whitespace-pre-wrap"
+                  sx={maxLines(2)}
                   {...(editMode && { onClick: handleChange })}
                 >
                   {`${index + 1}.  ${data.name}`}
@@ -197,7 +199,9 @@ export default function GroupList(props) {
                   </Dropdown>
                 </div>
               ) : (
-                <Typography>{data.steps?.length || 0} bài học</Typography>
+                <Typography variant="body2">
+                  {data.steps?.length || 0} bài học
+                </Typography>
               )}
             </div>
           </AccordionSummary>

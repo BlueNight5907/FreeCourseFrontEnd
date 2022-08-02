@@ -203,12 +203,7 @@ function Login() {
                   borderRadius: 1,
                   backgroundColor: "rgba(255,255,255,0.6)",
                 }}
-              >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-                quaerat expedita totam similique, quisquam consectetur deleniti
-                aspernatur est porro ut laudantium exercitationem ullam,
-                repudiandae placeat quos pariatur soluta a provident.
-              </Box>
+              ></Box>
               <Box
                 className="absolute inset-0"
                 sx={{

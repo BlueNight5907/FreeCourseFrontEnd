@@ -3,8 +3,6 @@ import {
   BallotRounded,
   ChatBubbleOutlineRounded,
   DashboardRounded,
-  EmojiEventsRounded,
-  GridViewRounded,
   HomeRounded,
   LogoutRounded,
   MenuBookRounded,
@@ -133,11 +131,6 @@ export const teacherSubMenuList = [
     name: "Danh sách khóa học",
     icon: ViewListRounded,
     href: "/manage-course/category",
-  },
-  {
-    name: "Danh hiệu",
-    icon: EmojiEventsRounded,
-    href: "./",
   },
 ];
 
