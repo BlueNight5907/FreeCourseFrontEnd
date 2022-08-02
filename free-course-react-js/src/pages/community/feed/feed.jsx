@@ -8,20 +8,27 @@ import {
   Fab,
   Snackbar,
 } from "@mui/material";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
 import UserCard from "components/user-card/UserCard";
 import TeacherOfWeek from "mock-data/teacherOfWeek";
 import CourseCard from "components/course-card/CourseCard";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_COURSES_WITH_FILTER } from "store/types/data-types/common-types";
+import {
+  GET_ALL_TEACHER,
+  GET_COURSES_WITH_FILTER,
+} from "store/types/data-types/common-types";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { getRandomItem } from "utils/array-utils";
+import { getRandomItem, shuffleArray } from "utils/array-utils";
 import { getNewFeeds } from "services/api/blogAPI";
 import { convertTime } from "utils/number-utils";
-import { CLEAR_MESSAGE } from "store/types/data-types/blog-type";
+import {
+  CLEAR_MESSAGE,
+  GET_FEEDS_REQUEST,
+  RESET_POST,
+} from "store/types/data-types/blog-type";
 
 const Feed = () => {
   const theme = useTheme();
@@ -30,11 +37,13 @@ const Feed = () => {
   const matchSm = useMediaQuery(theme.breakpoints.up("md"));
 
   const { user } = useSelector((state) => state.auth);
+  const { posts } = useSelector((state) => state.blog);
 
   const dispatch = useDispatch();
   const { message } = useSelector((state) => state.blog);
   // const [feeds, setFeeds] = useState([]);
   const [frontendCourses, setFrontendCourses] = useState([]);
+  const [teacherList, setTeacherList] = useState([]);
 
   const [openSnack, setOpenSnack] = useState(false);
   const [snackMessage, setSnackMessage] = useState("");
@@ -54,16 +63,21 @@ const Feed = () => {
   const nextPage = () => {
     setLastPostTime(
       feeds.length > 0
-        ? convertTime(feeds.at(-1)?.createdAt)
+        ? convertTime(feeds.at(-1)?.updatedAt)
         : new Date().toISOString()
     );
   };
 
   useEffect(() => {
-    getNewFeeds(lastPostTime).then((data) => {
-      setFeeds((prev) => [...prev, ...data.feeds]);
-    });
-  }, [lastPostTime]);
+    dispatch({ type: RESET_POST });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch({ type: GET_FEEDS_REQUEST, time: lastPostTime });
+    // getNewFeeds(lastPostTime).then((data) => {
+    //   setFeeds((prev) => [...prev, ...data.feeds]);
+    // });
+  }, [dispatch, lastPostTime]);
 
   useEffect(() => {
     dispatch({
@@ -71,6 +85,13 @@ const Feed = () => {
       category: "frontend",
       params: { page: 1, page_size: 8 },
       callback: setFrontendCourses,
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch({
+      type: GET_ALL_TEACHER,
+      callback: setTeacherList,
     });
   }, [dispatch]);
 
@@ -96,7 +117,7 @@ const Feed = () => {
       )}
       {/* Post */}
       <Grid item xs={12} lg={8}>
-        {feeds.map((post, index) => (
+        {posts.map((post, index) => (
           <Post
             key={post._id}
             post={post}
@@ -146,28 +167,32 @@ const Feed = () => {
               }}
             >
               <Typography variant="subtitle1" fontWeight={500}>
-                Giáo viên nổi bật (Tuần)
+                Giáo viên của hệ thống
               </Typography>
               <Stack padding={1} spacing={1}>
-                {TeacherOfWeek.map((teacher) => (
-                  <Box
-                    key={teacher.id}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <UserCard
-                      name={teacher.name}
-                      avatar={teacher.avatar}
-                      size="small"
-                    />
-                    <Button onClick={() => navigate(teacher.link)}>
-                      Xem trang
-                    </Button>
-                  </Box>
-                ))}
+                {shuffleArray(teacherList)
+                  .slice(0, 4)
+                  .map((teacher) => (
+                    <Box
+                      key={teacher._id}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <UserCard
+                        name={teacher.userInformation.fullName}
+                        avatar={teacher.userInformation.avatar}
+                        size="small"
+                      />
+                      <Button
+                        onClick={() => navigate(`/user/profile/${teacher._id}`)}
+                      >
+                        Xem trang
+                      </Button>
+                    </Box>
+                  ))}
               </Stack>
             </Box>
             <Box
