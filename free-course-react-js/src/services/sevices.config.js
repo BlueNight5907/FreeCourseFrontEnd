@@ -38,6 +38,8 @@ const apiPath = {
   likeComment: (postId, commentId) =>
     `/community/post/${postId}/comment/${commentId}/like`,
   postComment: (id) => `/community/post/${id}/comment`,
+  deleteComment: (postId, commentId) =>
+    `/community/post/${postId}/comment/${commentId}`,
   getCourseDetail: (id) => `/course/detail/${id}`,
   getAccountInfor: (id) => `/account/${id}`,
   getLearningProcess: (courseId) => `/course/${courseId}/learning-process`,

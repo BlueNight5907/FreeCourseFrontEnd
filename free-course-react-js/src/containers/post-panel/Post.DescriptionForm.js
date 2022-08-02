@@ -11,15 +11,16 @@ import {
 import { Delete } from "@mui/icons-material";
 import Button from "components/button/Button";
 import { useSelector } from "react-redux";
+import { Upload } from "../../firebase";
 
-const imageMimeType = /image\/(png|jpg|jpeg)/i;
+const imageMimeType = /image\/(png|jpg|jpeg|gif)/i;
 
 const ImageInput = ({ background, setBackground }) => {
   const theme = useTheme();
   const bgRef = useRef(null);
 
-  const [fileDataURL, setFileDataURL] = useState(null);
-  const [file, setFile] = useState(background);
+  const [fileDataURL, setFileDataURL] = useState(background);
+  const [file, setFile] = useState(null);
 
   const changeBgHandler = (e) => {
     const file = e.target.files[0];
@@ -28,12 +29,13 @@ const ImageInput = ({ background, setBackground }) => {
       return;
     }
     setFile(file);
-    setBackground(file);
+    // setBackground(file);
   };
 
   useEffect(() => {
     let fileReader,
       isCancel = false;
+    let uploadTask;
     if (file) {
       fileReader = new FileReader();
       fileReader.onload = (e) => {
@@ -43,16 +45,58 @@ const ImageInput = ({ background, setBackground }) => {
         }
       };
       fileReader.readAsDataURL(file);
+      uploadTask = new Upload(
+        "course-bg",
+        file,
+        (res) => {
+          setBackground(res);
+          setFileDataURL(res);
+        },
+        (progress) => {}
+      );
+      uploadTask.start();
     } else {
-      setFileDataURL();
+      setTimeout(() => {
+        if (!background) {
+          setFileDataURL();
+          setBackground();
+        } else {
+          setFileDataURL(background);
+          setBackground(background);
+        }
+      }, [500]);
     }
     return () => {
       isCancel = true;
       if (fileReader && fileReader.readyState === 1) {
         fileReader.abort();
       }
+      uploadTask?.stop();
     };
-  }, [file, background]);
+  }, [background, file, setBackground]);
+
+  // useEffect(() => {
+  //   let fileReader,
+  //     isCancel = false;
+  //   if (file) {
+  //     fileReader = new FileReader();
+  //     fileReader.onload = (e) => {
+  //       const { result } = e.target;
+  //       if (result && !isCancel) {
+  //         setFileDataURL(result);
+  //       }
+  //     };
+  //     fileReader.readAsDataURL(file);
+  //   } else {
+  //     setFileDataURL();
+  //   }
+  //   return () => {
+  //     isCancel = true;
+  //     if (fileReader && fileReader.readyState === 1) {
+  //       fileReader.abort();
+  //     }
+  //   };
+  // }, [file, background]);
   return (
     <Stack gap={1} width="100%" height="100%">
       <Paper

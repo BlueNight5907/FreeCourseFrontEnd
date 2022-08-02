@@ -58,7 +58,7 @@ const CommentField = (props) => {
     setShowEmojiPicker(null);
   };
 
-  const imageMimeType = /image\/(png|jpg|jpeg)/i;
+  const imageMimeType = /image\/(png|jpg|jpeg|gif)/i;
   const imageRef = useRef(null);
   const [fileDataURL, setFileDataURL] = useState(null);
   const [file, setFile] = useState(null);
@@ -90,7 +90,6 @@ const CommentField = (props) => {
       };
       fileReader.onprogress = (data) => {
         if (data.lengthComputable) {
-          console.log(progress);
           setProgress(parseInt((data.loaded / data.total) * 100, 10));
         }
       };

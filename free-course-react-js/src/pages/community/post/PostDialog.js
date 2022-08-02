@@ -68,7 +68,13 @@ const PostDialog = (props) => {
       >
         {listComment.length > 0 ? (
           listComment.map((comment, index) => (
-            <Comment key={index} data={comment} post={post} user={user} />
+            <Comment
+              key={index}
+              data={comment}
+              post={post}
+              user={user}
+              setListComment={setListComment}
+            />
           ))
         ) : (
           <Box display="flex" justifyContent="center">

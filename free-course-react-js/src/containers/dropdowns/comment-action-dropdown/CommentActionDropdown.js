@@ -1,5 +1,4 @@
 import {
-  AutoStoriesRounded,
   DeleteRounded,
   EditRounded,
   InsertLinkRounded,
@@ -16,23 +15,19 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import PostEditDialog from "pages/community/post/PostEditDialog";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { DELETE_BLOG_REQUEST } from "store/types/data-types/blog-type";
+import { DELETE_COMMENT_REQUEST } from "store/types/data-types/blog-type";
 
-const PostActionDropDown = (props) => {
-  const { post, user } = props;
+const CommentActionDropDown = (props) => {
+  const { post, user, comment, setListComment } = props;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const owned = post.creator === user._id;
+  const owned = comment?.accountId === user._id;
   const [snackMessage, setSnackMessage] = useState("");
 
   // Copy link
   const [openSnack, setOpenSnack] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
 
   const handleCopyLink = () => {
     navigator.clipboard
@@ -60,16 +55,24 @@ const PostActionDropDown = (props) => {
   const handleActionClose = () => {
     setAnchorEl(null);
   };
-  // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // Delete post
-  const handleDeletePost = () => {
-    dispatch({ type: DELETE_BLOG_REQUEST, postId: post._id });
+  const handleDeleteComment = () => {
+    setListComment((current) =>
+      current.filter((cmt) => {
+        return cmt._id !== comment._id;
+      })
+    );
+    dispatch({
+      type: DELETE_COMMENT_REQUEST,
+      postId: post._id,
+      commentId: comment._id,
+    });
     handleActionClose();
   };
 
-  const handleClickOpen = () => {
-    setOpenEdit(true);
+  const handleEditComment = () => {
+    console.log({ comment, post, user });
     handleActionClose();
   };
   return (
@@ -91,21 +94,21 @@ const PostActionDropDown = (props) => {
       >
         {owned ? (
           <div>
-            <MenuItem onClick={handleClickOpen}>
+            <MenuItem onClick={handleEditComment}>
               <ListItemIcon>
                 <EditRounded />
               </ListItemIcon>
               <Typography fontWeight={500}>Chỉnh sửa</Typography>
             </MenuItem>
-            <MenuItem onClick={handleDeletePost}>
+            <MenuItem onClick={handleDeleteComment}>
               <ListItemIcon>
                 <DeleteRounded />
               </ListItemIcon>
-              <Typography fontWeight={500}>Xóa bài viết</Typography>
+              <Typography fontWeight={500}>Xóa bình luận</Typography>
             </MenuItem>
           </div>
         ) : (
-          <MenuItem>
+          <MenuItem onClick={handleEditComment}>
             <ListItemIcon>
               <ReportRounded />
             </ListItemIcon>
@@ -119,16 +122,6 @@ const PostActionDropDown = (props) => {
           </ListItemIcon>
           <Typography fontWeight={500}>Sao chép liên kết</Typography>
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            navigate(`/community/post/${post._id}`);
-          }}
-        >
-          <ListItemIcon>
-            <AutoStoriesRounded />
-          </ListItemIcon>
-          <Typography fontWeight={500}>Xem chi tiết</Typography>
-        </MenuItem>
       </Menu>
       <Snackbar
         open={openSnack}
@@ -136,9 +129,8 @@ const PostActionDropDown = (props) => {
         onClose={handleClose}
         message={snackMessage}
       />
-      <PostEditDialog open={openEdit} setOpen={setOpenEdit} post={post} />
     </div>
   );
 };
 
-export default PostActionDropDown;
+export default CommentActionDropDown;

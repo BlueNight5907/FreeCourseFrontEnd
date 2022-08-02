@@ -6,15 +6,11 @@ import {
   Tooltip,
   Avatar,
   CardMedia,
-  Button,
   IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import bg from "assets/background/network-intro.png";
 import ArrowBackTwoToneIcon from "@mui/icons-material/ArrowBackTwoTone";
-import UploadTwoToneIcon from "@mui/icons-material/UploadTwoTone";
-import MoreHorizTwoToneIcon from "@mui/icons-material/MoreHorizTwoTone";
-import { accountType } from "constants/auth-constants";
 
 const Input = styled("input")({
   display: "none",

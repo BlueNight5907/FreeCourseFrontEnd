@@ -66,3 +66,7 @@ export const postComment = async (id, content, url) => {
   const data = await request(POST, apiPath.postComment(id), { body });
   return data;
 };
+
+export const deleteComment = async (postId, commentId) => {
+  return request(DELETE, apiPath.deleteComment(postId, commentId));
+};
