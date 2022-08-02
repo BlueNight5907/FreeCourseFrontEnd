@@ -1,9 +1,10 @@
 import { take, call, fork } from "redux-saga/effects";
-import { getAccountInfor } from "services/api/accountAPI";
+import { getAccountInfor, getAllTeacher } from "services/api/accountAPI";
 import { getCoursesWithCategory } from "services/api/courseAPI";
 import {
   GET_ACCOUNT_INFORMATION,
   GET_COURSES_WITH_FILTER,
+  GET_ALL_TEACHER,
 } from "store/types/data-types/common-types";
 
 // Get teacher infor
@@ -40,5 +41,25 @@ function* watchFetchCourseList() {
   }
 }
 
-const commonSagaList = [fork(watchGetAccountInfor), fork(watchFetchCourseList)];
+function* getTeacherList(callback) {
+  try {
+    const teacher = yield call(getAllTeacher);
+    callback(teacher.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* watchFetchAllTeacher() {
+  while (true) {
+    const { callback } = yield take(GET_ALL_TEACHER);
+    yield call(getTeacherList, callback);
+  }
+}
+
+const commonSagaList = [
+  fork(watchGetAccountInfor),
+  fork(watchFetchCourseList),
+  fork(watchFetchAllTeacher),
+];
 export default commonSagaList;
