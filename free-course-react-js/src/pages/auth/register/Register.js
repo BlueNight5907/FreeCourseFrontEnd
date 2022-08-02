@@ -120,20 +120,6 @@ function Register() {
               sx={{ position: "relative" }}
             >
               <Box
-                display={{ xs: "none", md: "block" }}
-                className="absolute"
-                sx={{
-                  padding: 2,
-                  margin: theme.spacing(4, 3),
-                  zIndex: 2,
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  borderRadius: 1,
-                  backgroundColor: "rgba(255,255,255,0.6)",
-                }}
-              ></Box>
-              <Box
                 className="absolute inset-0"
                 sx={{
                   height: "100%",
@@ -147,9 +133,9 @@ function Register() {
               <Box padding={{ xs: 0, sm: 4, md: 4, lg: 10 }}>
                 <Stack gap={3}>
                   <Stack className="flex-row gap-3 items-center">
-                    <Image src={logo} alt="logo" />
+                    <Image src={logo} alt="logo" sx={{ width: 50 }} />
                     <Typography variant="h6" fontWeight={600}>
-                      TDT Learn - Đăng ký
+                      TDT Learning - Đăng ký
                     </Typography>
                   </Stack>
                   <Typography maxWidth={500}>
