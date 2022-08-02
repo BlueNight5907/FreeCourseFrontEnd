@@ -1,6 +1,7 @@
 import { take, call, fork, put } from "redux-saga/effects";
 import {
   completeLesson,
+  deleteLessonCommentRequest,
   getAllMyCourse,
   getLearningProcess,
   getLessonComment,
@@ -10,6 +11,7 @@ import {
 import {
   ADD_LESSON_COMMENT,
   COMPLETE_LESSON_REQUEST,
+  DELETE_LESSON_COMMENT,
   GET_ALL_LESSON_COMMENT_ERROR,
   GET_ALL_LESSON_COMMENT_REQUEST,
   GET_ALL_LESSON_COMMENT_SUCCESS,
@@ -165,7 +167,28 @@ function* watchCompleteLesson() {
     yield put({ type: GET_MY_COURSE_REQUEST });
   }
 }
+function* deleteLessonComment(moduleId, stepId, commentId) {
+  try {
+    yield call(deleteLessonCommentRequest, moduleId, stepId, commentId);
+    yield put({ type: GET_ALL_LESSON_COMMENT_REQUEST, moduleId, stepId });
+  } catch (error) {
+    yield put({
+      type: GET_LESSON_DETAIL_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
+}
 
+function* watchDeleteComment() {
+  while (true) {
+    const { moduleId, stepId, commentId } = yield take(DELETE_LESSON_COMMENT);
+    yield call(deleteLessonComment, moduleId, stepId, commentId);
+  }
+}
 const learningProcessSagaList = [
   fork(watchGetMyCourses),
   fork(watchGetLearningProcess),
@@ -173,5 +196,6 @@ const learningProcessSagaList = [
   fork(watchCompleteLesson),
   fork(watchSendComment),
   fork(watchGetAllComment),
+  fork(watchDeleteComment),
 ];
 export default learningProcessSagaList;

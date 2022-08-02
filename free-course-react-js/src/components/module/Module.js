@@ -17,6 +17,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { millisecondsToMinutes, millisecondsToSeconds } from "date-fns";
 import ConfirmDialog from "components/dialog/confirm-dialog";
+import { maxLines } from "utils/classUltis";
 
 const Module = (props) => {
   const {
@@ -106,13 +107,15 @@ const Module = (props) => {
             }}
           />
         </ListItemIcon>
-        <div className="flex flex-row w-full justify-between ">
+        <div className="flex flex-row w-full justify-between gap-1">
           <div className="grow relative">
             <Typography
               className="absolute left-0 right-0 w-full top-[50%]"
               style={{
                 transform: "translateY(-50%)",
                 whiteSpace: "normal",
+                lineHeight: 1.2,
+                ...maxLines(2),
               }}
               sx={styles.content}
               variant="body2"

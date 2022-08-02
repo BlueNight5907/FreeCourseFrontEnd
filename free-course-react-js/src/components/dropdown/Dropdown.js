@@ -2,12 +2,19 @@ import { Box } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
 function Dropdown(props) {
-  const { children, sx, ...others } = props;
+  const { children, sx, closeDropdown, ...others } = props;
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const toggleDropdown = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    if (closeDropdown) {
+      setOpen(!closeDropdown?.state);
+    }
+  }, [closeDropdown]);
+
   const childrenWithProps = React.Children.map(children, (child, index) => {
     if (React.isValidElement(child)) {
       if (index === 0) {

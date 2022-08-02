@@ -11,7 +11,11 @@ const apiPath = {
   updateModule: (id) => `/module/${id}`,
   createLesson: (id) => `/module/${id}/step/lesson`,
   addCourseComment: (id) => `/course/${id}/comment`,
+  deleteLessonComment: (moduleId, stepId, commentId) =>
+    `/module/${moduleId}/step/${stepId}/comment/${commentId}`,
   ratingCourse: (id) => `/course/${id}/rating`,
+  deleteCourseComment: (courseId, commentId) =>
+    `/course/${courseId}/comment/${commentId}`,
   getCourseComment: (id) => `/course/${id}/all-comment`,
   getLessonComment: (moduleId, stepId) =>
     `/module/${moduleId}/step/${stepId}/comment`,

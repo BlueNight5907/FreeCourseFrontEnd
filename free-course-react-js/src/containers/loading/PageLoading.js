@@ -7,20 +7,22 @@ const PageLoading = () => {
 
   const { promiseInProgress } = usePromiseTracker({ area: "general" });
   useEffect(() => {
-    const oldStyle = document.body.style.overflow;
+    const oldStyle = document.body.style;
     if (promiseInProgress) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "15px";
+      document.getElementById("root").style.overflow = "hidden";
+      document.getElementById("root").style.height = "100vh";
+      document.getElementById("root").style.paddingRight = "15px";
     } else {
-      document.body.style.overflow = oldStyle;
-      document.body.style.paddingRight = "unset";
+      document.getElementById("root").style.overflow = oldStyle;
+      document.getElementById("root").style.height = "";
+      document.getElementById("root").style.paddingRight = "unset";
     }
-    return () => (document.body.style.overflow = oldStyle);
+    return () => (document.getElementById("root").style = oldStyle);
   }, [promiseInProgress]);
   return (
     <Backdrop
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
+        zIndex: (theme) => theme.zIndex.drawer + 100,
         background:
           theme.palette.mode === "light"
             ? "#fff"

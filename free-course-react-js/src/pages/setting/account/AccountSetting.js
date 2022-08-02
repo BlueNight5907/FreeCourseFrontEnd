@@ -1,12 +1,5 @@
-import { Add, Save } from "@mui/icons-material";
-import {
-  Box,
-  Container,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Save } from "@mui/icons-material";
+import { Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import AvatarWrapper from "./avatar-wrapper/AvatarWrapper";
 import TextControl from "./../../../components/text-control/TextControl";
@@ -57,7 +50,6 @@ const AccountSetting = () => {
   );
 
   const updateInformation = useCallback(() => {
-    console.log(form);
     dispatch({ type: UPDATE_ACCOUNT, body: form });
   }, [dispatch, form]);
 
@@ -97,13 +89,6 @@ const AccountSetting = () => {
             alignItems="center"
           >
             <Typography>Thông tin cá nhân</Typography>
-            <Button
-              variant="contained"
-              startIcon={<Save />}
-              onClick={updateInformation}
-            >
-              Lưu lại
-            </Button>
           </Stack>
         </Grid>
         <Grid item xs={12}>
@@ -160,25 +145,7 @@ const AccountSetting = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              padding: 2,
-              borderRadius: 1.5,
-              border: (theme) => "1px dashed " + theme.palette.text.main,
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              mb: 4,
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: (theme) => theme.palette.hover.main,
-              },
-            }}
-          >
-            <Add /> Thêm một thông tin khác về bản thân
-          </Box>
-        </Grid>
+        <Grid item xs={12}></Grid>
       </Grid>
     </Container>
   );

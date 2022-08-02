@@ -32,11 +32,13 @@ import { useParams } from "react-router-dom";
 import {
   ADD_LESSON_COMMENT,
   COMPLETE_LESSON_REQUEST,
+  DELETE_LESSON_COMMENT,
   GET_ALL_LESSON_COMMENT_REQUEST,
 } from "store/types/data-types/learning-process-types";
 
 const Lesson = () => {
   const { teacher } = useSelector((s) => s.courseDetail);
+  const { user } = useSelector((s) => s.auth);
   const { comments } = useSelector((s) => s.learningProcess);
   const { courseId, stepId } = useParams();
   const { lessonDetail } = useSelector((state) => state.learningProcess);
@@ -54,7 +56,7 @@ const Lesson = () => {
   const toggleComment = () => setOpenComment((s) => !s);
 
   const handleProgressVideo = useCallback((progress) => {
-    console.log(progress);
+    // console.log(progress);
   }, []);
 
   useEffect(() => {
@@ -104,6 +106,14 @@ const Lesson = () => {
     setComment("");
   };
 
+  const deleteComment = useCallback(
+    (commentId) => {
+      const moduleId = lessonDetail?.moduleId;
+      dispatch({ type: DELETE_LESSON_COMMENT, moduleId, stepId, commentId });
+    },
+    [dispatch, lessonDetail, stepId]
+  );
+
   return (
     <>
       <Stack flexDirection="row" gap={2}>
@@ -112,11 +122,14 @@ const Lesson = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Box
-                  className={`xl:aspect-[${
-                    courseOpen ? "18/9" : "20/8"
-                  }] lg:aspect-[${
-                    courseOpen ? "18/8" : "18/9"
-                  }]  aspect-video overflow-hidden relative w-full`}
+                  className={`overflow-hidden relative w-full`}
+                  sx={{
+                    aspectRatio: {
+                      xs: "16/9",
+                      xl: courseOpen ? "18/9" : "20/8",
+                      lg: courseOpen ? "18/8" : "18/9",
+                    },
+                  }}
                   borderRadius={1}
                 >
                   <ReactPlayer
@@ -380,7 +393,12 @@ const Lesson = () => {
           </Box>
           <Stack gap={1}>
             {comments?.map((item, index) => (
-              <Comment key={index} data={item} />
+              <Comment
+                owner={user._id === item.accountId}
+                onDelete={() => deleteComment(item._id)}
+                key={index}
+                data={item}
+              />
             ))}
           </Stack>
         </Box>

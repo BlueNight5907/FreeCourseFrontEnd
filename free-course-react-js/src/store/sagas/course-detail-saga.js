@@ -1,6 +1,7 @@
 import { take, call, put, fork, delay, takeLatest } from "redux-saga/effects";
 import { getAccountInfor } from "services/api/accountAPI";
 import {
+  deleteCourseComment,
   getAllStudent,
   getCourseComments,
   getCourseDetail,
@@ -12,6 +13,7 @@ import {
 } from "services/api/courseAPI";
 import {
   ADD_COURSE_COMMENT_REQUEST,
+  DELETE_COURSE_COMMENT_REQUEST,
   GET_ALL_STUDENT_REQUEST,
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_REQUEST,
@@ -189,7 +191,16 @@ function* doJoinCourse(id, callback) {
     yield put({ type: GET_MY_COURSE_REQUEST });
     yield delay(1000);
     yield call(callback);
-  } catch (error) {}
+  } catch (error) {
+    yield put({
+      type: GET_COURSES_WITH_CATEGORY_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
 }
 
 function* watchJoinCourse() {
@@ -203,7 +214,16 @@ function* getStudents(courseId, callback) {
   try {
     const students = yield call(getAllStudent, courseId);
     yield call(callback, students);
-  } catch (error) {}
+  } catch (error) {
+    yield put({
+      type: GET_COURSES_WITH_CATEGORY_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
 }
 
 function* watchGetAllStudent() {
@@ -217,13 +237,45 @@ function* getNewStudents(courseId, callback) {
   try {
     const students = yield call(getNewStudent, courseId);
     yield call(callback, students);
-  } catch (error) {}
+  } catch (error) {
+    yield put({
+      type: GET_COURSES_WITH_CATEGORY_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
 }
 
 function* watchGetNewStudent() {
   while (true) {
     const { courseId, callback } = yield take(GET_NEW_STUDENT_REQUEST);
     yield fork(getNewStudents, courseId, callback);
+  }
+}
+
+function* doDeleteComment(courseId, commentId) {
+  try {
+    yield call(deleteCourseComment, courseId, commentId);
+    yield put({ type: GET_COURSE_COMMENTS_REQUEST, courseId });
+  } catch (error) {
+    yield put({
+      type: GET_COURSES_WITH_CATEGORY_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
+  }
+}
+
+function* watchDeleteComment() {
+  while (true) {
+    const { courseId, commentId } = yield take(DELETE_COURSE_COMMENT_REQUEST);
+    yield call(doDeleteComment, courseId, commentId);
   }
 }
 
@@ -237,5 +289,6 @@ const courseDetailSagaList = [
   fork(watchRatingCourse),
   fork(watchGetAllStudent),
   fork(watchGetNewStudent),
+  fork(watchDeleteComment),
 ];
 export default courseDetailSagaList;

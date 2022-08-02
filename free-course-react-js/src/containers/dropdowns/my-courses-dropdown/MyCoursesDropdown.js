@@ -12,6 +12,7 @@ import { differenceInDays } from "date-fns";
 function MyCourseDropdown(props) {
   const { learned } = useSelector((state) => state.learningProcess);
   const navigate = useNavigate();
+  const [close, setClose] = useState({ state: true });
 
   const learnedStatusList = useMemo(() => {
     return learned.reduce((arr, item) => {
@@ -34,7 +35,7 @@ function MyCourseDropdown(props) {
   }, [learned]);
 
   return (
-    <Dropdown>
+    <Dropdown closeDropdown={close}>
       <DropdownToggle
         height="100%"
         sx={{
@@ -73,6 +74,7 @@ function MyCourseDropdown(props) {
                 fontWeight: 500,
                 textDecoration: "none",
               }}
+              onClick={() => setClose({ state: true })}
             >
               Xem tất cả
             </MuiLink>
@@ -85,7 +87,6 @@ function MyCourseDropdown(props) {
           <DropdownItem
             key={index}
             onClick={() => {
-              console.log(course.courseId);
               navigate("/course/" + course.courseId);
             }}
           >

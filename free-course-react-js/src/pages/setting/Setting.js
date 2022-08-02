@@ -76,12 +76,6 @@ const Setting = () => {
           className="capitalize items-start"
           {...a11yProps(1)}
         />
-
-        <Tab
-          label="Chế độ nền tối"
-          className="capitalize items-start"
-          {...a11yProps(2)}
-        />
       </Tabs>
 
       <TabPanel value={selected} index={0}>
@@ -89,9 +83,6 @@ const Setting = () => {
       </TabPanel>
       <TabPanel value={selected} index={1}>
         <LoginAndSecuritySetting />
-      </TabPanel>
-      <TabPanel value={selected} index={2}>
-        Chế độ nền tối
       </TabPanel>
     </Wrapper>
   );

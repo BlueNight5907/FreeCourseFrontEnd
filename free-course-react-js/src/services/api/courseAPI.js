@@ -2,11 +2,15 @@ import { DELETE, GET, POST, PUT } from "constants/services-constant";
 import request from "services/axios-client/request";
 import apiPath from "services/sevices.config";
 
-export const getCoursesWithCategory = (category, params = { page: 1, page_size: 12 }) => {
+export const getCoursesWithCategory = (
+  category,
+  params = { page: 1, page_size: 12 }
+) => {
   return request(GET, apiPath.getCoursesWithCategory(category), { params });
 };
 
-export const getCourseDetail = (id) => request(GET, apiPath.getCourseDetail(id));
+export const getCourseDetail = (id) =>
+  request(GET, apiPath.getCourseDetail(id));
 
 export const removeCourse = (id) => request(DELETE, apiPath.getCourse(id));
 
@@ -15,15 +19,34 @@ export const getAllMyCourse = () => {
 };
 
 export const sendLessonComment = (moduleId, stepId, comment) => {
-  return request(POST, apiPath.getLessonComment(moduleId, stepId), {
-    body: { content: comment },
-  });
+  return request(
+    POST,
+    apiPath.getLessonComment(moduleId, stepId),
+    {
+      body: { content: comment },
+    },
+    {},
+    "comment"
+  );
 };
 
 export const sendCourseComment = (courseId, comment) => {
-  return request(POST, apiPath.addCourseComment(courseId), {
-    body: { content: comment },
-  });
+  return request(
+    POST,
+    apiPath.addCourseComment(courseId),
+    {
+      body: { content: comment },
+    },
+    {},
+    "comment"
+  );
+};
+
+export const deleteLessonCommentRequest = (moduleId, stepId, commentId) => {
+  return request(
+    DELETE,
+    apiPath.deleteLessonComment(moduleId, stepId, commentId)
+  );
 };
 
 export const ratingCourse = (courseId, point) => {
@@ -61,7 +84,17 @@ export const getStep = (module, step) => {
 };
 
 export const completeLesson = (module, step) => {
-  return request(POST, apiPath.completeLesson(module, step));
+  return request(
+    POST,
+    apiPath.completeLesson(module, step),
+    {},
+    {},
+    "lesson-complete"
+  );
+};
+
+export const deleteCourseComment = (courseId, commentId) => {
+  return request(DELETE, apiPath.deleteCourseComment(courseId, commentId));
 };
 
 export const createCourse = (body) => {
