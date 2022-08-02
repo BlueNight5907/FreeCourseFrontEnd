@@ -22,6 +22,7 @@ import {
   POST_COMMENT_SUCCESS,
   POST_COMMENT_ERROR,
   CLEAR_MESSAGE,
+  RESET_POST,
 } from "../../types/data-types/blog-type";
 
 export const checkEndFeed = (currentPage, page_size, totalFeed) => {
@@ -49,6 +50,11 @@ const BlogReducer = (state = initialState, action) => {
   const isEndFeed = checkEndFeed(state.nextPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
+    case RESET_POST:
+      return {
+        ...state,
+        posts: [],
+      };
     case CLEAR_MESSAGE:
       return {
         ...state,
@@ -58,18 +64,10 @@ const BlogReducer = (state = initialState, action) => {
       return {
         error: null,
       };
-    case GET_FEEDS_REQUEST:
-      return {
-        ...state,
-        loadingGetFeeds: true,
-      };
     case GET_FEEDS_SUCCESS:
       return {
         ...state,
-        loadingGetFeeds: false,
-        totalFeed: payload.totalSize,
         posts: [...state.posts, ...payload.feeds],
-        // nextPage: state.nextPage + 1,
       };
     case GET_FEEDS_ERROR:
       return {

@@ -61,6 +61,7 @@ const apiPath = {
   editTag: (id) => `/tag/update/${id}`,
   deleteCategory: (id) => `/category/delete/${id}`,
   deleteTag: (id) => `/tag/delete/${id}`,
+  getAllTeacher: `/account/teacher`,
 };
 
 export default apiPath;

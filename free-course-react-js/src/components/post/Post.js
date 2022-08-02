@@ -44,7 +44,7 @@ const Post = ({ post, isLast, nextPage }) => {
   const {
     _id,
     title,
-    createdAt,
+    updatedAt,
     backgroundUrl,
     description,
     comments,
@@ -149,13 +149,13 @@ const Post = ({ post, isLast, nextPage }) => {
           <UserCard
             name={creatorData.userInformation.fullName}
             subtitle={
-              differenceInDays(new Date(), new Date(createdAt)) <= 3
-                ? formatDistanceToNow(new Date(createdAt), {
+              differenceInDays(new Date(), new Date(updatedAt)) <= 3
+                ? formatDistanceToNow(new Date(updatedAt), {
                     locale: viLocale,
                     addSuffix: true,
                   })
-                : format(new Date(createdAt), "dd/MM/yyyy HH:mm:ss")
-              //differenceInDays(new Date(), new Date(createdAt))
+                : format(new Date(updatedAt), "dd/MM/yyyy HH:mm:ss")
+              //differenceInDays(new Date(), new Date(updatedAt))
             }
             avatar={creatorData.userInformation.avatar}
             headLink={`/user/profile/${creatorData.id}`}

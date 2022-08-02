@@ -35,21 +35,24 @@ import {
   GET_MORE_FEEDS_ERROR,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT_ERROR,
+  RESET_POST,
 } from "../types/data-types/blog-type";
+import { getNewFeeds } from "services/api/blogAPI";
 import * as firebase from "../../firebase";
 
-function* getNewFeeds({ time, page_size }) {
-  console.log("render first");
+function* getNewFeedAt(time) {
   try {
-    const { feeds, totalSize, size } = yield call(
-      blogAPI.getNewFeeds,
-      time,
-      page_size,
-      1
-    );
-    yield put({ type: GET_FEEDS_SUCCESS, payload: { feeds, totalSize, size } });
+    const data = yield call(getNewFeeds, time);
+    yield put({ type: GET_FEEDS_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: GET_FEEDS_ERROR, payload: error });
+    yield put({
+      type: GET_FEEDS_ERROR,
+      payload:
+        error.response?.data?.message ||
+        error.response?.data ||
+        error.message ||
+        error,
+    });
   }
 }
 
@@ -159,6 +162,8 @@ function* updateBlog(postId, title, description, content, url, backgroundUrl) {
     yield delay(500);
     let message = "Cập nhật bài viết thành công";
     yield put({ type: UPDATE_BLOG_SUCCESS, payload: { post, message } });
+    yield put({ type: RESET_POST });
+    yield put({ type: GET_FEEDS_REQUEST, time: new Date().toISOString() });
     console.log({ postId, title, description, content, backgroundUrl });
   } catch (error) {
     yield put({
@@ -266,12 +271,12 @@ function* deleteComment(postId, commentId) {
 
 // Watcher
 function* getFeedsFlow() {
-  // while (true) {
-  //   const { time, page_size } = yield take(GET_FEEDS_REQUEST);
-  //   yield call(getNewFeeds, time, page_size);
-  // }
-  yield takeLatest(GET_FEEDS_REQUEST, getNewFeeds);
-  yield takeEvery(GET_MORE_FEEDS_REQUEST, getMoreNewFeeds);
+  while (true) {
+    const { time } = yield take(GET_FEEDS_REQUEST);
+    yield call(getNewFeedAt, time);
+  }
+  // yield takeLatest(GET_FEEDS_REQUEST, getNewFeeds);
+  // yield takeEvery(GET_MORE_FEEDS_REQUEST, getMoreNewFeeds);
 }
 
 function* getBlogFlow() {

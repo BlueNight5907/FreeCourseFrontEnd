@@ -30,7 +30,7 @@ const UserFeed = (props) => {
   const nextPage = () => {
     setLastPostTime(
       feeds.length > 0
-        ? convertTime(feeds.at(-1)?.createdAt)
+        ? convertTime(feeds.at(-1)?.updatedAt)
         : new Date().toISOString()
     );
   };
