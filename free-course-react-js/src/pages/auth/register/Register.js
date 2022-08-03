@@ -8,15 +8,7 @@ import {
   Button,
   Divider,
   TextField,
-  Link,
-  FormControlLabel,
-  Checkbox,
   useTheme,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
   Alert,
 } from "@mui/material";
 import Image from "components/image/Image";
@@ -34,7 +26,7 @@ function Register() {
     fullName: "",
     password: "",
     confirmPassword: "",
-    type: "",
+    type: "student",
   });
   const [regisState, setRegisState] = useState({
     success: "",
@@ -226,22 +218,7 @@ function Register() {
                         setForm({ ...form, confirmPassword: e.target.value })
                       }
                     />
-                    <FormControl variant="standard" sx={{ width: "100%" }}>
-                      <InputLabel>Loại tài khoản</InputLabel>
-                      <Select
-                        value={form.type}
-                        label="Loại tài khoản"
-                        onChange={(e) =>
-                          setForm({ ...form, type: e.target.value })
-                        }
-                      >
-                        <MenuItem value="student">Người học</MenuItem>
-                        <MenuItem value="teacher">Giáo viên</MenuItem>
-                      </Select>
-                      <FormHelperText>
-                        Loại tài khoản mà bạn muốn đăng ký
-                      </FormHelperText>
-                    </FormControl>
+
                     {regisState.error && (
                       <Alert severity="error">{regisState.error}</Alert>
                     )}
