@@ -3,9 +3,9 @@ import {
   GET_FEEDS_REQUEST,
   GET_FEEDS_SUCCESS,
   GET_FEEDS_ERROR,
-  GET_MORE_FEEDS_REQUEST,
-  GET_MORE_FEEDS_SUCCESS,
-  GET_MORE_FEEDS_ERROR,
+  GET_USER_FEEDS_REQUEST,
+  GET_USER_FEEDS_SUCCESS,
+  GET_USER_FEEDS_ERROR,
   GET_BLOG_REQUEST,
   GET_BLOG_SUCCESS,
   GET_BLOG_ERROR,
@@ -23,6 +23,7 @@ import {
   POST_COMMENT_ERROR,
   CLEAR_MESSAGE,
   RESET_POST,
+  RESET_USER_POST,
 } from "../../types/data-types/blog-type";
 
 export const checkEndFeed = (currentPage, page_size, totalFeed) => {
@@ -31,6 +32,7 @@ export const checkEndFeed = (currentPage, page_size, totalFeed) => {
 
 const initialState = {
   posts: [],
+  user_posts: [],
   post: null,
   comments: [],
   loadingGetFeeds: false,
@@ -55,6 +57,11 @@ const BlogReducer = (state = initialState, action) => {
         ...state,
         posts: [],
       };
+    case RESET_USER_POST:
+      return {
+        ...state,
+        user_posts: [],
+      };
     case CLEAR_MESSAGE:
       return {
         ...state,
@@ -72,31 +79,17 @@ const BlogReducer = (state = initialState, action) => {
     case GET_FEEDS_ERROR:
       return {
         ...state,
-        loadingGetFeeds: false,
         error: payload,
       };
-    case GET_MORE_FEEDS_REQUEST:
-      if (isEndFeed) {
-        return {
-          ...state,
-          loadingGetFeeds: false,
-          isEndFeed: true,
-        };
-      }
+    case GET_USER_FEEDS_SUCCESS:
       return {
         ...state,
-        loadingGetFeeds: true,
+        user_posts: [...state.user_posts, ...payload.feeds],
       };
-    case GET_MORE_FEEDS_SUCCESS:
+    case GET_USER_FEEDS_ERROR:
       return {
         ...state,
-        posts: [...state.posts, ...payload.feeds],
-        // nextPage: state.nextPage + 1,
-        loadingGetFeeds: false,
-      };
-    case GET_MORE_FEEDS_ERROR:
-      return {
-        ...state,
+        error: payload,
       };
     case GET_BLOG_REQUEST:
       return {

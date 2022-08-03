@@ -1,13 +1,4 @@
-import {
-  take,
-  call,
-  put,
-  fork,
-  select,
-  delay,
-  takeLatest,
-  takeEvery,
-} from "redux-saga/effects";
+import { take, call, put, fork, delay } from "redux-saga/effects";
 import * as blogAPI from "../../services/api/blogAPI";
 import {
   GET_FEEDS_REQUEST,
@@ -30,14 +21,14 @@ import {
   POST_COMMENT_ERROR,
   LIKE_BLOG,
   LIKE_COMMENT,
-  GET_MORE_FEEDS_REQUEST,
-  GET_MORE_FEEDS_SUCCESS,
-  GET_MORE_FEEDS_ERROR,
+  GET_USER_FEEDS_REQUEST,
+  GET_USER_FEEDS_SUCCESS,
+  GET_USER_FEEDS_ERROR,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT_ERROR,
   RESET_POST,
 } from "../types/data-types/blog-type";
-import { getNewFeeds } from "services/api/blogAPI";
+import { getNewFeeds, getUserFeeds } from "services/api/blogAPI";
 import * as firebase from "../../firebase";
 
 function* getNewFeedAt(time) {
@@ -56,46 +47,13 @@ function* getNewFeedAt(time) {
   }
 }
 
-function* getMoreNewFeeds({ time, page_size }) {
-  // const { currentPage } = select((state) => state.blog);
-  console.log("render more");
+function* getUserFeedAt(time, id) {
   try {
-    const { nextPage, isEndFeed, totalFeed } = yield select(
-      (state) => state.blog
-    );
-
-    if (isEndFeed) {
-      console.log("end feeds");
-      const itemReminder = totalFeed % page_size;
-      if (itemReminder === 0) return;
-
-      const { feeds, totalSize, size } = yield call(
-        blogAPI.getNewFeeds,
-        time,
-        itemReminder,
-        nextPage
-      );
-      yield put({
-        type: GET_MORE_FEEDS_SUCCESS,
-        payload: { feeds, totalSize, size },
-      });
-    }
-    const { feeds, totalSize, size } = yield call(
-      blogAPI.getNewFeeds,
-      time,
-      page_size,
-      nextPage
-    );
-    yield put({
-      type: GET_MORE_FEEDS_SUCCESS,
-      payload: { feeds, totalSize, size },
-    });
-    // }
-    // console.log(time);
-    // console.log(page_size);
+    const data = yield call(getUserFeeds, time, id);
+    yield put({ type: GET_USER_FEEDS_SUCCESS, payload: data });
   } catch (error) {
     yield put({
-      type: GET_FEEDS_ERROR,
+      type: GET_USER_FEEDS_ERROR,
       payload:
         error.response?.data?.message ||
         error.response?.data ||
@@ -275,8 +233,13 @@ function* getFeedsFlow() {
     const { time } = yield take(GET_FEEDS_REQUEST);
     yield call(getNewFeedAt, time);
   }
-  // yield takeLatest(GET_FEEDS_REQUEST, getNewFeeds);
-  // yield takeEvery(GET_MORE_FEEDS_REQUEST, getMoreNewFeeds);
+}
+
+function* getUserFeedsFlow() {
+  while (true) {
+    const { time, id } = yield take(GET_USER_FEEDS_REQUEST);
+    yield call(getUserFeedAt, time, id);
+  }
 }
 
 function* getBlogFlow() {
@@ -352,6 +315,7 @@ const blogSagaList = [
   fork(postBlogFlow),
   fork(getBlogFlow),
   fork(getFeedsFlow),
+  fork(getUserFeedsFlow),
   fork(updateBlogFlow),
   fork(deleteBlogFlow),
   fork(likeBlogWatcher),
