@@ -1,7 +1,7 @@
-import { Box, Grid, Tabs, Tab } from "@mui/material";
+import { Box, Grid, Tabs, Tab, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getUserFeeds } from "services/api/blogAPI";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "components/post/Post";
 import TabPanel from "components/tab-panel/TabPanel";
 import {
@@ -10,6 +10,10 @@ import {
 } from "services/api/courseAPI";
 import CourseCard from "./course-card/CourseCard";
 import { convertTime } from "utils/number-utils";
+import {
+  GET_USER_FEEDS_REQUEST,
+  RESET_USER_POST,
+} from "store/types/data-types/blog-type";
 
 function a11yProps(index) {
   return {
@@ -19,6 +23,7 @@ function a11yProps(index) {
 }
 
 const UserFeed = (props) => {
+  const dispatch = useDispatch();
   const { user, userId } = props;
   const { sideOpen } = useSelector((state) => state.setting);
 
@@ -27,10 +32,12 @@ const UserFeed = (props) => {
   const [feeds, setFeeds] = useState([]);
   const [courses, setCourses] = useState([]);
 
+  const { user_posts } = useSelector((state) => state.blog);
+
   const nextPage = () => {
     setLastPostTime(
-      feeds.length > 0
-        ? convertTime(feeds.at(-1)?.updatedAt)
+      user_posts.length > 0
+        ? convertTime(user_posts.at(-1)?.updatedAt)
         : new Date().toISOString()
     );
   };
@@ -40,18 +47,16 @@ const UserFeed = (props) => {
   };
 
   useEffect(() => {
-    if (user) {
-      setFeeds([]);
-    }
-  }, [user]);
+    dispatch({ type: RESET_USER_POST });
+  }, [dispatch]);
 
   useEffect(() => {
-    if (user) {
-      getUserFeeds(lastPostTime, user.id).then((data) => {
-        setFeeds((prev) => [...new Set([...prev, ...data.feeds])]);
-      });
-    }
-  }, [lastPostTime, user]);
+    dispatch({
+      type: GET_USER_FEEDS_REQUEST,
+      time: lastPostTime,
+      id: userId,
+    });
+  }, [dispatch, lastPostTime, userId]);
 
   useEffect(() => {
     if (userId) {
@@ -90,14 +95,22 @@ const UserFeed = (props) => {
         )}
       </Tabs>
       <TabPanel index={0} value={selected}>
-        {feeds.map((post, index) => (
-          <Post
-            key={post._id}
-            post={post}
-            nextPage={nextPage}
-            isLast={index === feeds.length - 1}
-          />
-        ))}
+        <Box my={2}>
+          {user_posts?.map((post, index) => (
+            <Post
+              key={post._id}
+              post={post}
+              nextPage={nextPage}
+              isLast={index === user_posts.length - 1}
+            />
+          ))}
+          {user_posts.length === 0 && (
+            <Typography>
+              {user?.type?.name === "student" ? "Sinh viên" : "Giảng viên"} này
+              chưa có bài viết nào.
+            </Typography>
+          )}
+        </Box>
       </TabPanel>
       <TabPanel index={1} value={selected}>
         <Grid container spacing={1} my={2}>
@@ -113,6 +126,12 @@ const UserFeed = (props) => {
               <CourseCard gridView key={course._id} data={course} />
             </Grid>
           ))}
+          {courses.length === 0 && (
+            <Typography>
+              {user?.type?.name === "student" ? "Sinh viên" : "Giảng viên"} này
+              chưa có khóa học nào.
+            </Typography>
+          )}
         </Grid>
       </TabPanel>
       <Grid container spacing={2}></Grid>

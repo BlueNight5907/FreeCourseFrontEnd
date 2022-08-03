@@ -27,9 +27,8 @@ const UserProfile = () => {
   // useEffect(() => {
   //   if (userData) {
   //     console.log(userData);
-  //     console.log(user);
   //   }
-  // }, [userData, user]);
+  // }, [userData]);
 
   return (
     <>

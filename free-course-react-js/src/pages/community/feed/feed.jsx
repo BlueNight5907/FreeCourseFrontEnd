@@ -62,8 +62,8 @@ const Feed = () => {
 
   const nextPage = () => {
     setLastPostTime(
-      feeds.length > 0
-        ? convertTime(feeds.at(-1)?.updatedAt)
+      posts.length > 0
+        ? convertTime(posts.at(-1)?.updatedAt)
         : new Date().toISOString()
     );
   };
@@ -122,7 +122,7 @@ const Feed = () => {
             key={post._id}
             post={post}
             nextPage={nextPage}
-            isLast={index === feeds.length - 1}
+            isLast={index === posts.length - 1}
           />
         ))}
       </Grid>
