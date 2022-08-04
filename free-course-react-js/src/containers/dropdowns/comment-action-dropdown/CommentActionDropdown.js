@@ -31,7 +31,9 @@ const CommentActionDropDown = (props) => {
 
   const handleCopyLink = () => {
     navigator.clipboard
-      .writeText(`http://localhost:3000/community/post/${post._id}`)
+      .writeText(
+        `https://tdtu-learning.herokuapp.com/community/post/${post._id}`
+      )
       .then(() => {
         setSnackMessage("Sao chép địa chỉ thành công");
         setOpenSnack(true);
