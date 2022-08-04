@@ -101,7 +101,7 @@ const Header = () => {
         }}
       >
         <ButtonBase sx={styles.menu} onClick={() => navigate("/")}>
-          <img src={logo} alt="logo" />
+          <img src={logo} alt="logo" width={80} />
         </ButtonBase>
 
         <Button startIcon={<ArrowBackIosRounded />} onClick={handleGoBack}>
