@@ -50,7 +50,7 @@ const MessageLayout = (props) => {
         }}
       >
         <Typography zIndex={10} color={"black"} fontSize={50} fontWeight={500}>
-          Đang phát triển ...
+          Hệ thống đang phát triển ...
         </Typography>
       </Box>
       <RootWrapper className="Mui-FixedWrapper">
