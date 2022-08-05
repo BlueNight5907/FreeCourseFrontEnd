@@ -7,6 +7,7 @@ import UserFeed from "pages/user/user-page/UserFeed";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { CHANGE_USER } from "store/types/data-types/blog-type";
 import { GET_ACCOUNT_INFORMATION } from "store/types/data-types/common-types";
 
 const UserProfile = () => {
@@ -21,14 +22,11 @@ const UserProfile = () => {
         accountId: id,
         callback: (data) => setUserData(data),
       });
+      dispatch({
+        type: CHANGE_USER,
+      });
     }
   }, [dispatch, id]);
-
-  // useEffect(() => {
-  //   if (userData) {
-  //     console.log(userData);
-  //   }
-  // }, [userData]);
 
   return (
     <>

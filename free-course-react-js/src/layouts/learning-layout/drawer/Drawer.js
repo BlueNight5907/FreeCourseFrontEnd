@@ -49,6 +49,7 @@ const Drawer = () => {
       return arr;
     }, []);
   }, [courseDetail, courseId, process, stepId]);
+
   return (
     <MuiDrawer
       variant={matchMd ? "permanent" : "temporary"}
@@ -79,7 +80,7 @@ const Drawer = () => {
       >
         <Stack gap={1}>
           {courseModules.map((item, index) => (
-            <GroupList data={item} index={index} key={index} />
+            <GroupList data={item} index={index} key={index} learnLayout />
           ))}
         </Stack>
       </Box>

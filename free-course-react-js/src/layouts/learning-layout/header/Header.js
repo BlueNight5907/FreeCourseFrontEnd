@@ -22,6 +22,7 @@ import {
 import Button from "../../../components/button/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import logo from "../../../assets/icons/logo.png";
+import Image from "components/image/Image";
 const Header = () => {
   const dispatch = useDispatch();
   const { stepId, courseId } = useParams();
@@ -100,9 +101,13 @@ const Header = () => {
           justifyContent: "space-between",
         }}
       >
-        <ButtonBase sx={styles.menu} onClick={() => navigate("/")}>
-          <img src={logo} alt="logo" width={80} />
-        </ButtonBase>
+        <Image
+          src={logo}
+          alt="logo"
+          width={70}
+          className="cursor-pointer"
+          onClick={() => navigate("/")}
+        />
 
         <Button startIcon={<ArrowBackIosRounded />} onClick={handleGoBack}>
           Quay lại

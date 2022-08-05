@@ -4,15 +4,15 @@ import apiPath from "services/sevices.config";
 // import apiPath from "../sevices.config";
 
 export const getAllFeeds = async () => {
-  return await request(GET, apiPath.getAllFeeds);
+  return await request(GET, apiPath.getAllFeeds, {}, {}, "blog");
 };
 
 export const getNewFeeds = async (time) => {
-  return request(GET, apiPath.getNewFeeds(time));
+  return request(GET, apiPath.getNewFeeds(time), {}, {}, "blog");
 };
 
 export const getUserFeeds = async (time, userId) => {
-  return request(GET, apiPath.getUserFeeds(time, userId));
+  return request(GET, apiPath.getUserFeeds(time, userId), {}, {}, "blog");
 };
 
 export const postBlog = async (

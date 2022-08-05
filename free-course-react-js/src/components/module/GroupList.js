@@ -81,11 +81,12 @@ export default function GroupList(props) {
     move,
     remove,
     update,
+    learnLayout,
     isEnded,
     stepProps,
     createStep,
   } = props;
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(!!learnLayout);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   const [openStepForm, setOpenStepForm] = React.useState(false);

@@ -1,6 +1,7 @@
 import { Menu } from "@mui/icons-material";
-import { Box, Container } from "@mui/material";
-import React, { useEffect } from "react";
+import { Box, Container, Typography } from "@mui/material";
+import AlertDialog from "components/dialog/alert-dialog";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import {
@@ -10,6 +11,7 @@ import {
 import {
   GET_LEARNING_PROCESS_REQUEST,
   GET_LESSON_DETAIL_REQUEST,
+  SET_COMPLETED,
 } from "store/types/data-types/learning-process-types";
 import Button from "../../components/button/Button";
 import {
@@ -27,7 +29,8 @@ const HomeLayout = () => {
   const { courseOpen } = useSelector((state) => state.setting);
   const { user } = useSelector((state) => state.auth);
   const { courseDetail } = useSelector((s) => s.courseDetail);
-  const { process } = useSelector((state) => state.learningProcess);
+  const { process, completed } = useSelector((state) => state.learningProcess);
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,6 +39,14 @@ const HomeLayout = () => {
   const toggleDrawer = () => {
     dispatch({ type: TOGGLE_COURSE_DRAWER });
   };
+
+  const handleClose = () => {
+    dispatch({ type: SET_COMPLETED, payload: false });
+  };
+
+  useEffect(() => {
+    setOpen(completed);
+  }, [completed]);
 
   useEffect(() => {
     if (user && courseId) {
@@ -64,70 +75,93 @@ const HomeLayout = () => {
       }, []);
 
       const stepIndex = allSteps.findIndex((item) => item.step._id === stepId);
-      if (stepIndex <= learned.length) {
-        const selectedStep = allSteps[stepIndex];
-        if (selectedStep.step.type === "lesson") {
-          dispatch({
-            type: GET_LESSON_DETAIL_REQUEST,
-            moduleId: selectedStep.moduleId,
-            stepId,
-          });
-        }
-      } else {
+      if (stepIndex > learned.length) {
         navigate("/");
       }
     }
   }, [courseDetail, courseId, dispatch, navigate, process, stepId]);
 
-  return (
-    <Box
-      className="flex flex-row"
-      sx={{
-        minHeight: "inherit",
-      }}
-    >
-      <Header />
-      <Drawer />
-      <Container
-        maxWidth="xxl"
-        sx={{
-          width: {
-            xs: "100%",
-            md: `calc(100% - ${spacing}px)`,
-          },
+  useEffect(() => {
+    if (courseDetail) {
+      const allSteps = courseDetail.modules.reduce((steps, module) => {
+        return [
+          ...steps,
+          ...module.steps.map((item) => ({ step: item, moduleId: module._id })),
+        ];
+      }, []);
 
-          transition: (theme) =>
-            courseOpen
-              ? theme.transitions.create("width", {
-                  easing: theme.transitions.easing.sharp,
-                  duration: theme.transitions.duration.enteringScreen,
-                })
-              : theme.transitions.create("width", {
-                  easing: theme.transitions.easing.sharp,
-                  duration: theme.transitions.duration.leavingScreen,
-                }),
-          padding: (theme) => {
-            return {
-              md:
-                theme.spacing(NAVBAR_HEIGHT / 10, courseOpen ? 2 : 3, 0) +
-                "!important",
-              sm: theme.spacing(NAVBAR_HEIGHT / 10, 2, 0) + "!important",
-              xs: theme.spacing(NAVBAR_HEIGHT / 10 - 1, 1, 0) + "!important",
-            };
-          },
-          paddingTop: NAVBAR_HEIGHT + "px",
-          display: "flex",
-          flexDirection: "column",
+      const stepIndex = allSteps.findIndex((item) => item.step._id === stepId);
+
+      const selectedStep = allSteps[stepIndex];
+      if (selectedStep.step.type === "lesson") {
+        dispatch({
+          type: GET_LESSON_DETAIL_REQUEST,
+          moduleId: selectedStep.moduleId,
+          stepId,
+        });
+      }
+    }
+  }, [courseDetail, dispatch, stepId]);
+
+  return (
+    <>
+      <Box
+        className="flex flex-row"
+        sx={{
+          minHeight: "inherit",
         }}
       >
-        <Box className="my-[10px]">
-          <Button width={190} startIcon={<Menu />} onClick={toggleDrawer}>
-            Điều hướng Menu
-          </Button>
-        </Box>
-        <Outlet />
-      </Container>
-    </Box>
+        <Header />
+        <Drawer />
+        <Container
+          maxWidth="xxl"
+          sx={{
+            width: {
+              xs: "100%",
+              md: `calc(100% - ${spacing}px)`,
+            },
+
+            transition: (theme) =>
+              courseOpen
+                ? theme.transitions.create("width", {
+                    easing: theme.transitions.easing.sharp,
+                    duration: theme.transitions.duration.enteringScreen,
+                  })
+                : theme.transitions.create("width", {
+                    easing: theme.transitions.easing.sharp,
+                    duration: theme.transitions.duration.leavingScreen,
+                  }),
+            padding: (theme) => {
+              return {
+                md:
+                  theme.spacing(NAVBAR_HEIGHT / 10, courseOpen ? 2 : 3, 0) +
+                  "!important",
+                sm: theme.spacing(NAVBAR_HEIGHT / 10, 2, 0) + "!important",
+                xs: theme.spacing(NAVBAR_HEIGHT / 10 - 1, 1, 0) + "!important",
+              };
+            },
+            paddingTop: NAVBAR_HEIGHT + "px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box className="my-[10px]">
+            <Button width={190} startIcon={<Menu />} onClick={toggleDrawer}>
+              Điều hướng Menu
+            </Button>
+          </Box>
+          <Outlet />
+        </Container>
+      </Box>
+      <AlertDialog
+        title="Thông báo"
+        onClose={handleClose}
+        open={open}
+        setOpen={setOpen}
+      >
+        <Typography>Chúc mừng bạn đã hoàn thành khóa học này</Typography>
+      </AlertDialog>
+    </>
   );
 };
 

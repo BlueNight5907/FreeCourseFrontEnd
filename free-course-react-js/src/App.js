@@ -12,6 +12,8 @@ import theme from "./theme";
 import Routes from "./pages/routes";
 import PageLoading from "./containers/loading/PageLoading";
 import ErrorPage from "pages/error/ErrorPage";
+import BlockLoading from "containers/loading/BlogLoading";
+import CompleteLessonLoading from "containers/loading/CompleteLessonLoading";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,
@@ -63,7 +65,9 @@ function App() {
         <CssBaseline />
         <Box sx={boxStyle} className="app">
           <Routes />
+          <BlockLoading />
           <PageLoading />
+          <CompleteLessonLoading />
           <ErrorPage />
         </Box>
       </ThemeProvider>

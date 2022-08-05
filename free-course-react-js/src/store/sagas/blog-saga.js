@@ -34,6 +34,7 @@ import * as firebase from "../../firebase";
 function* getNewFeedAt(time) {
   try {
     const data = yield call(getNewFeeds, time);
+    yield delay(500);
     yield put({ type: GET_FEEDS_SUCCESS, payload: data });
   } catch (error) {
     yield put({
@@ -50,6 +51,7 @@ function* getNewFeedAt(time) {
 function* getUserFeedAt(time, id) {
   try {
     const data = yield call(getUserFeeds, time, id);
+    yield delay(500);
     yield put({ type: GET_USER_FEEDS_SUCCESS, payload: data });
   } catch (error) {
     yield put({

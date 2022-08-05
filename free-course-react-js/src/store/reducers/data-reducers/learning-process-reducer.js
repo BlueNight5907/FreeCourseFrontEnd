@@ -3,13 +3,13 @@ import {
   GET_ALL_LESSON_COMMENT_ERROR,
   GET_ALL_LESSON_COMMENT_SUCCESS,
   GET_LEARNING_PROCESS_ERROR,
-  GET_LEARNING_PROCESS_REQUEST,
   GET_LEARNING_PROCESS_SUCCESS,
   GET_LESSON_DETAIL_ERROR,
   GET_LESSON_DETAIL_REQUEST,
   GET_LESSON_DETAIL_SUCCESS,
   GET_MY_COURSE_ERROR,
   GET_MY_COURSE_SUCCESS,
+  SET_COMPLETED,
 } from "store/types/data-types/learning-process-types";
 
 const initState = {
@@ -18,11 +18,17 @@ const initState = {
   comments: [],
   process: null,
   error: null,
+  completed: false,
 };
 
 const learningProcessReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case SET_COMPLETED:
+      return {
+        ...state,
+        completed: payload,
+      };
     case RESET_ERROR:
       return {
         ...state,
@@ -40,12 +46,6 @@ const learningProcessReducer = (state = initState, action) => {
         error: payload,
       };
 
-    case GET_LEARNING_PROCESS_REQUEST:
-      return {
-        ...state,
-        process: null,
-        error: null,
-      };
     case GET_LEARNING_PROCESS_SUCCESS:
       return {
         ...state,

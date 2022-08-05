@@ -24,12 +24,13 @@ import {
   GET_MY_COURSE_ERROR,
   GET_MY_COURSE_REQUEST,
   GET_MY_COURSE_SUCCESS,
+  SET_COMPLETED,
 } from "store/types/data-types/learning-process-types";
 
 // Get teacher infor
-function* getAllMyCourses() {
+function* getAllMyCourses(area) {
   try {
-    const data = yield call(getAllMyCourse);
+    const data = yield call(getAllMyCourse, area);
     yield put({ type: GET_MY_COURSE_SUCCESS, payload: data });
   } catch (error) {
     yield put({
@@ -45,8 +46,8 @@ function* getAllMyCourses() {
 
 function* watchGetMyCourses() {
   while (true) {
-    yield take(GET_MY_COURSE_REQUEST);
-    yield fork(getAllMyCourses);
+    const { area } = yield take(GET_MY_COURSE_REQUEST);
+    yield fork(getAllMyCourses, area);
   }
 }
 
@@ -102,9 +103,9 @@ function* watchGetAllComment() {
   }
 }
 
-function* getProcess(courseId) {
+function* getProcess(courseId, area) {
   try {
-    const data = yield call(getLearningProcess, courseId);
+    const data = yield call(getLearningProcess, courseId, area);
     yield put({ type: GET_LEARNING_PROCESS_SUCCESS, payload: data });
   } catch (error) {
     yield put({
@@ -120,8 +121,8 @@ function* getProcess(courseId) {
 
 function* watchGetLearningProcess() {
   while (true) {
-    const { courseId } = yield take(GET_LEARNING_PROCESS_REQUEST);
-    yield fork(getProcess, courseId);
+    const { courseId, area } = yield take(GET_LEARNING_PROCESS_REQUEST);
+    yield fork(getProcess, courseId, area);
   }
 }
 
@@ -150,7 +151,10 @@ function* watchGetLesson() {
 
 function* doCompleteLesson(moduleId, stepId, callback) {
   try {
-    yield call(completeLesson, moduleId, stepId);
+    const { isCompleted } = yield call(completeLesson, moduleId, stepId);
+    if (isCompleted) {
+      yield put({ type: SET_COMPLETED, payload: isCompleted });
+    }
     callback(true);
   } catch (error) {
     callback(false);
@@ -163,8 +167,12 @@ function* watchCompleteLesson() {
       COMPLETE_LESSON_REQUEST
     );
     yield call(doCompleteLesson, moduleId, stepId, callback);
-    yield put({ type: GET_LEARNING_PROCESS_REQUEST, courseId });
-    yield put({ type: GET_MY_COURSE_REQUEST });
+    yield put({
+      type: GET_LEARNING_PROCESS_REQUEST,
+      courseId,
+      area: "nothing",
+    });
+    yield put({ type: GET_MY_COURSE_REQUEST, area: "nothing" });
   }
 }
 function* deleteLessonComment(moduleId, stepId, commentId) {

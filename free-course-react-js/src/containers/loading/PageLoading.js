@@ -6,6 +6,7 @@ const PageLoading = () => {
   const theme = useTheme();
 
   const { promiseInProgress } = usePromiseTracker({ area: "general" });
+
   useEffect(() => {
     const oldStyle = document.body.style;
     if (promiseInProgress) {

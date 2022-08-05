@@ -24,6 +24,7 @@ import {
   CLEAR_MESSAGE,
   RESET_POST,
   RESET_USER_POST,
+  CHANGE_USER,
 } from "../../types/data-types/blog-type";
 
 export const checkEndFeed = (currentPage, page_size, totalFeed) => {
@@ -80,6 +81,11 @@ const BlogReducer = (state = initialState, action) => {
       return {
         ...state,
         error: payload,
+      };
+    case CHANGE_USER:
+      return {
+        ...state,
+        user_posts: [],
       };
     case GET_USER_FEEDS_SUCCESS:
       return {

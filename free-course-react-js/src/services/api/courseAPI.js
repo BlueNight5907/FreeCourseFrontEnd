@@ -17,8 +17,8 @@ export const removeCourse = (id) => request(DELETE, apiPath.getCourse(id));
 export const getCoursesCreatedByUser = (id) =>
   request(GET, apiPath.teacherCourses(id));
 
-export const getAllMyCourse = () => {
-  return request(GET, apiPath.getAllMyCourse);
+export const getAllMyCourse = (area = "general") => {
+  return request(GET, apiPath.getAllMyCourse, {}, {}, area);
 };
 
 export const sendLessonComment = (moduleId, stepId, comment) => {
@@ -63,7 +63,13 @@ export const getCourseComments = (courseId) => {
 };
 
 export const getLessonComment = (moduleId, stepId) => {
-  return request(GET, apiPath.getLessonComment(moduleId, stepId));
+  return request(
+    GET,
+    apiPath.getLessonComment(moduleId, stepId),
+    {},
+    {},
+    "comment"
+  );
 };
 
 export const joinCourse = (id) => {
@@ -78,12 +84,12 @@ export const getNewStudent = (id) => {
   return request(GET, apiPath.newStudent(id));
 };
 
-export const getLearningProcess = (id) => {
-  return request(GET, apiPath.getLearningProcess(id));
+export const getLearningProcess = (id, area = "general") => {
+  return request(GET, apiPath.getLearningProcess(id), {}, {}, area);
 };
 
 export const getStep = (module, step) => {
-  return request(GET, apiPath.getStep(module, step), {}, {}, "get-step");
+  return request(GET, apiPath.getStep(module, step));
 };
 
 export const completeLesson = (module, step) => {
