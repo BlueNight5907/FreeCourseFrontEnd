@@ -81,7 +81,7 @@ export default function MainMenu(props) {
                 alignItems: "center",
                 gap: 2,
               }}
-              to="./"
+              to={"/user/profile/" + user._id}
             >
               <Avatar
                 src={userInformation.avatar}

@@ -25,10 +25,12 @@ import Protected from "guards/Protected";
 import MatchRoles from "guards/MatchRoles";
 import Register from "./auth/register/Register";
 import UserProfile from "./user/User";
+import Logout from "./auth/logout/Logout";
 
 const Routes = () => {
   const routes = useRoutes([
     { path: "/login", element: <Login /> },
+    { path: "/logout", element: <Logout /> },
     { path: "/register", element: <Register /> },
     {
       path: "/",
@@ -193,6 +195,10 @@ const Routes = () => {
           <MessageLayout />
         </MatchRoles>
       ),
+    },
+    {
+      path: "*",
+      element: <Navigate to="/" />,
     },
   ]);
   return routes;

@@ -29,6 +29,7 @@ import {
   GET_FEEDS_REQUEST,
   RESET_POST,
 } from "store/types/data-types/blog-type";
+import { LOGOUT } from "store/types/data-types/auth-types";
 
 const Feed = () => {
   const theme = useTheme();
@@ -157,7 +158,9 @@ const Feed = () => {
                   user?.userInformation?.avatar && user.userInformation.avatar
                 }
               />
-              <Button>Đăng xuất</Button>
+              <Button onClick={() => dispatch({ type: LOGOUT })}>
+                Đăng xuất
+              </Button>
             </Box>
             <Box
               sx={{

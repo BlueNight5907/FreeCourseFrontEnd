@@ -44,7 +44,6 @@ const PostDialog = (props) => {
         "& .MuiDialog-paper": { height: 700 },
       }}
       open={openCommentDialog}
-      setOpen={() => setOpenCommentDialog(true)}
       onClose={() => setOpenCommentDialog(false)}
       scroll={"paper"}
       {...(isMobile

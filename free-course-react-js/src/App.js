@@ -14,6 +14,7 @@ import PageLoading from "./containers/loading/PageLoading";
 import ErrorPage from "pages/error/ErrorPage";
 import BlockLoading from "containers/loading/BlogLoading";
 import CompleteLessonLoading from "containers/loading/CompleteLessonLoading";
+import { Navigate, Route } from "react-router-dom";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,

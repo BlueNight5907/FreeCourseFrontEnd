@@ -23,7 +23,7 @@ const PageLoading = () => {
   return (
     <Backdrop
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 100,
+        zIndex: (theme) => theme.zIndex.drawer + 1000,
         background:
           theme.palette.mode === "light"
             ? "#fff"

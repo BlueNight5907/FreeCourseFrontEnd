@@ -63,10 +63,22 @@ export const likeComment = async (postId, commentId) => {
 
 export const postComment = async (id, content, url) => {
   const body = { content, url };
-  const data = await request(POST, apiPath.postComment(id), { body });
+  const data = await request(
+    POST,
+    apiPath.postComment(id),
+    { body },
+    {},
+    "comment"
+  );
   return data;
 };
 
 export const deleteComment = async (postId, commentId) => {
-  return request(DELETE, apiPath.deleteComment(postId, commentId));
+  return request(
+    DELETE,
+    apiPath.deleteComment(postId, commentId),
+    {},
+    {},
+    "comment"
+  );
 };

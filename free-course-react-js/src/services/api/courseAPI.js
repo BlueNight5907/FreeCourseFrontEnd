@@ -53,13 +53,19 @@ export const deleteLessonCommentRequest = (moduleId, stepId, commentId) => {
 };
 
 export const ratingCourse = (courseId, point) => {
-  return request(POST, apiPath.ratingCourse(courseId), {
-    body: { point },
-  });
+  return request(
+    POST,
+    apiPath.ratingCourse(courseId),
+    {
+      body: { point },
+    },
+    {},
+    "rating"
+  );
 };
 
 export const getCourseComments = (courseId) => {
-  return request(GET, apiPath.getCourseComment(courseId));
+  return request(GET, apiPath.getCourseComment(courseId), {}, {}, "comment");
 };
 
 export const getLessonComment = (moduleId, stepId) => {
