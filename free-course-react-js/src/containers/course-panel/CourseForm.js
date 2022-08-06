@@ -49,7 +49,9 @@ const ResultBox = () => {
     <>
       <Divider className="mb-5" orientation="horizontal" />
       <Stack className="mb-5 flex-row items-center gap-5">
-        <Typography className="font-medium">Kết quả đạt được</Typography>
+        <Typography className="font-medium">
+          Kết quả đạt được(Không bắt buộc)
+        </Typography>
         <Button
           onClick={addNew}
           startIcon={<Add />}
@@ -208,7 +210,7 @@ const CourseForm = () => {
               }
             />
             <TextField
-              label="Mô tả ngắn cho khóa học(Không bắt buộc)"
+              label="Mô tả ngắn cho khóa học"
               multiline
               rows={4}
               fullWidth
