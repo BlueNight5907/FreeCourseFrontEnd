@@ -176,7 +176,10 @@ const Detail = () => {
             <Box>
               <Grid container spacing={1}>
                 <Grid item xs={12} md={sideOpen ? 12 : 6} lg={12}>
-                  <Paper sx={{ position: "relative", pb: "75%" }} elevation={0}>
+                  <Paper
+                    sx={{ position: "relative", pb: "100%" }}
+                    elevation={0}
+                  >
                     <Box
                       className="absolute inset-0 w-full h-full overflow-hidden flex flex-col"
                       padding={1}
