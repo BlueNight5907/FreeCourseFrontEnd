@@ -220,4 +220,8 @@ $i: 2;
     margin-inline-start: 40px;
     margin-inline-end: 40px;
   }
+  img {
+    max-width: 100%;
+    height: unset;
+  }
 }

@@ -75,6 +75,7 @@ const Post = (props) => {
       <Grid item xs={12}>
         <Paper
           elevation={0}
+          className="content"
           sx={{
             padding: theme.spacing(1.5, 4),
             lineHeight: 1.8,

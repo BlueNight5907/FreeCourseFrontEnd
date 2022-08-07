@@ -14,7 +14,7 @@ const columns = [
   {
     field: "fullName",
     headerName: "Họ và tên",
-    minWidth: 150,
+    minWidth: 310,
     flex: 1,
   },
   {
@@ -39,7 +39,7 @@ const columns = [
     field: "learningProgress",
     headerName: "Tiến độ học tập",
     minWidth: 200,
-    flex: 2,
+    flex: 1,
     renderCell: (params) => (
       <LearningProgress
         total={params.row.total}
@@ -60,8 +60,8 @@ const columns = [
   },
   {
     field: "action",
-    headerName: "Action",
-    minWidth: 300,
+    headerName: "Thao tác",
+    minWidth: 100,
     flex: 1,
     renderCell: (params) => (
       <Box>

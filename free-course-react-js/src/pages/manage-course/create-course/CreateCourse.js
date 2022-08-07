@@ -152,7 +152,21 @@ const CreateCourse = ({ type = "create" }) => {
         actions={
           selected !== 2 && (
             <Stack className="flex-row justify-end gap-3">
-              <Button>Hủy</Button>
+              <Button
+                onClick={() => {
+                  methods.setValue("tags", []);
+                  methods.setValue("title", "");
+                  methods.setValue("shortDesc", "");
+                  methods.setValue("content", "");
+                  methods.setValue("level", "");
+                  methods.setValue("category", "");
+                  methods.setValue("background", "");
+                  methods.setValue("gains", []);
+                  methods.setValue("modules", []);
+                }}
+              >
+                Hủy
+              </Button>
               <Button
                 variant="contained"
                 type="submit"

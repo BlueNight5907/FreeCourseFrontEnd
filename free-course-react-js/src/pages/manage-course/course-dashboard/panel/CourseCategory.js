@@ -44,7 +44,6 @@ const CourseCategory = () => {
         reject(error);
       }
     });
-    console.log({ data, totalRows });
     return { data, totalRows };
   }, [dispatch]);
 

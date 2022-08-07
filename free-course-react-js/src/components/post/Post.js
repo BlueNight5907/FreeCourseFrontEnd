@@ -118,7 +118,7 @@ const Post = ({ post, isLast, nextPage }) => {
 
   const handleClick = () => {
     navigator.clipboard
-      .writeText(`https://tdtu-learning.herokuapp.com/community/post/${_id}`)
+      .writeText(`${window.location.host}/community/post/${_id}`)
       .then(() => {
         setOpenSnack(true);
       });

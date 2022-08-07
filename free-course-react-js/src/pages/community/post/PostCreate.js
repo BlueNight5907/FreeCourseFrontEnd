@@ -8,7 +8,10 @@ import TabPanel from "components/tab-panel/TabPanel";
 import DescriptionForm from "containers/post-panel/Post.DescriptionForm";
 import ContentForm from "containers/post-panel/Post.ContentForm";
 import { useDispatch, useSelector } from "react-redux";
-import { POST_BLOG_REQUEST } from "store/types/data-types/blog-type";
+import {
+  CLEAR_MESSAGE,
+  POST_BLOG_REQUEST,
+} from "store/types/data-types/blog-type";
 import { useNavigate } from "react-router-dom";
 
 function a11yProps(index) {
@@ -45,8 +48,12 @@ const PostCreate = () => {
     if (message) {
       setSnackMessage(message);
       setOpenSnack(true);
+      setTimeout(() => {
+        setOpenSnack(false);
+        dispatch({ type: CLEAR_MESSAGE });
+      }, 2000);
     }
-  }, [message]);
+  }, [dispatch, message]);
   const handleUploadBlog = () => {
     dispatch({
       type: POST_BLOG_REQUEST,

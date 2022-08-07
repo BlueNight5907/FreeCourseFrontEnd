@@ -29,7 +29,6 @@ const ImageInput = ({ background, setBackground }) => {
       return;
     }
     setFile(file);
-    // setBackground(file);
   };
 
   useEffect(() => {
@@ -37,6 +36,8 @@ const ImageInput = ({ background, setBackground }) => {
       isCancel = false;
     let uploadTask;
     if (file) {
+      setBackground("");
+      // show file in background
       fileReader = new FileReader();
       fileReader.onload = (e) => {
         const { result } = e.target;
@@ -45,27 +46,15 @@ const ImageInput = ({ background, setBackground }) => {
         }
       };
       fileReader.readAsDataURL(file);
-      uploadTask = new Upload(
-        "course-bg",
-        file,
-        (res) => {
-          setBackground(res);
-          setFileDataURL(res);
-        },
-        (progress) => {}
-      );
+
+      // upload file
+      uploadTask = new Upload("course-bg", file, (res) => {
+        setBackground(res);
+        setFileDataURL(res);
+      });
       uploadTask.start();
-    } else {
-      setTimeout(() => {
-        if (!background) {
-          setFileDataURL();
-          setBackground();
-        } else {
-          setFileDataURL(background);
-          setBackground(background);
-        }
-      }, [500]);
     }
+
     return () => {
       isCancel = true;
       if (fileReader && fileReader.readyState === 1) {
@@ -73,30 +62,16 @@ const ImageInput = ({ background, setBackground }) => {
       }
       uploadTask?.stop();
     };
-  }, [background, file, setBackground]);
+  }, [file, setBackground]);
 
-  // useEffect(() => {
-  //   let fileReader,
-  //     isCancel = false;
-  //   if (file) {
-  //     fileReader = new FileReader();
-  //     fileReader.onload = (e) => {
-  //       const { result } = e.target;
-  //       if (result && !isCancel) {
-  //         setFileDataURL(result);
-  //       }
-  //     };
-  //     fileReader.readAsDataURL(file);
-  //   } else {
-  //     setFileDataURL();
-  //   }
-  //   return () => {
-  //     isCancel = true;
-  //     if (fileReader && fileReader.readyState === 1) {
-  //       fileReader.abort();
-  //     }
-  //   };
-  // }, [file, background]);
+  useEffect(() => {
+    if (!background) {
+      setFileDataURL();
+    } else {
+      setFileDataURL(background);
+    }
+  }, [background]);
+
   return (
     <Stack gap={1} width="100%" height="100%">
       <Paper
@@ -105,7 +80,7 @@ const ImageInput = ({ background, setBackground }) => {
           height: "100%",
           position: "relative",
           bgcolor: theme.palette.shadow.main,
-          backgroundImage: `url(${fileDataURL})`,
+          ...(fileDataURL && { backgroundImage: `url(${fileDataURL})` }),
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -190,7 +165,7 @@ const DescriptionForm = ({
             label="Mô tả tóm tắt bài viết"
             helperText="Giới thiệu sơ lược về nội dung của bài viết"
             multiline
-            rows={4}
+            rows={8}
             fullWidth
             margin="normal"
             onChange={(e) => {
