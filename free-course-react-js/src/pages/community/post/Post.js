@@ -8,6 +8,8 @@ import CommentField from "./CommentField";
 import Comment from "components/comment/Comment2";
 import FeatureCourseSlide from "containers/courses-slide/FeatureCourseSlide";
 import { format } from "date-fns";
+import ReactHtmlParser from "react-html-parser";
+import Prism from "prismjs";
 
 const Post = (props) => {
   const theme = useTheme();
@@ -21,6 +23,10 @@ const Post = (props) => {
   }, [id, dispatch]);
 
   const [listComment, setListComment] = useState([]);
+
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [post?.content]);
 
   useEffect(() => {
     if (post?.comments) {
@@ -81,7 +87,7 @@ const Post = (props) => {
             lineHeight: 1.8,
           }}
         >
-          <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+          <div className="content">{ReactHtmlParser(post?.content)}</div>
         </Paper>
       </Grid>
       <Grid item xs={12}>

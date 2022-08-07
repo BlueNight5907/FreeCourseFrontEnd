@@ -50,7 +50,6 @@ const initialState = {
 };
 
 const BlogReducer = (state = initialState, action) => {
-  const isEndFeed = checkEndFeed(state.nextPage, 10, state.totalFeed);
   const { type, payload } = action;
   switch (type) {
     case RESET_POST:
@@ -121,11 +120,9 @@ const BlogReducer = (state = initialState, action) => {
         loadingAddBlog: true,
       };
     case POST_BLOG_SUCCESS:
-      let newPost = payload.post;
       return {
         ...state,
         loadingAddBlog: false,
-        posts: [newPost, ...state.posts],
         message: payload.message,
       };
     case POST_BLOG_ERROR:
@@ -143,7 +140,6 @@ const BlogReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingUpdateBlog: false,
-        //posts: []
         message: payload.message,
       };
     case UPDATE_BLOG_ERROR:

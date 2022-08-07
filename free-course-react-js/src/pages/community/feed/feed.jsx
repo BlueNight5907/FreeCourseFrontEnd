@@ -8,7 +8,7 @@ import {
   Fab,
   Snackbar,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Button from "../../../components/button/Button";
 import Post from "components/post/Post";
 import UserCard from "components/user-card/UserCard";
@@ -59,15 +59,14 @@ const Feed = () => {
   };
 
   const [lastPostTime, setLastPostTime] = useState(new Date().toISOString());
-  const [feeds, setFeeds] = useState([]);
 
-  const nextPage = () => {
+  const nextPage = useCallback(() => {
     setLastPostTime(
       posts.length > 0
-        ? convertTime(posts.at(-1)?.updatedAt)
+        ? convertTime(posts.at(-1)?.createdAt)
         : new Date().toISOString()
     );
-  };
+  }, [posts]);
 
   useEffect(() => {
     dispatch({ type: RESET_POST });
@@ -102,6 +101,32 @@ const Feed = () => {
       setOpenSnack(true);
     }
   }, [message]);
+
+  const teacherArr = useMemo(
+    () =>
+      shuffleArray(teacherList)
+        .slice(0, 4)
+        .map((teacher) => (
+          <Box
+            key={teacher._id}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <UserCard
+              name={teacher.userInformation.fullName}
+              avatar={teacher.userInformation.avatar}
+              size="small"
+            />
+            <Button onClick={() => navigate(`/user/profile/${teacher._id}`)}>
+              Xem trang
+            </Button>
+          </Box>
+        )),
+    [navigate, teacherList]
+  );
   return (
     <Grid container spacing={3} sx={{ justifyContent: "flex-end" }}>
       {matchSm && (
@@ -173,29 +198,7 @@ const Feed = () => {
                 Giáo viên của hệ thống
               </Typography>
               <Stack padding={1} spacing={1}>
-                {shuffleArray(teacherList)
-                  .slice(0, 4)
-                  .map((teacher) => (
-                    <Box
-                      key={teacher._id}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <UserCard
-                        name={teacher.userInformation.fullName}
-                        avatar={teacher.userInformation.avatar}
-                        size="small"
-                      />
-                      <Button
-                        onClick={() => navigate(`/user/profile/${teacher._id}`)}
-                      >
-                        Xem trang
-                      </Button>
-                    </Box>
-                  ))}
+                {teacherArr}
               </Stack>
             </Box>
             <Box

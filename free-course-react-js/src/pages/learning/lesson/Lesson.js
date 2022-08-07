@@ -29,6 +29,8 @@ import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
 import Comment from "./../../../components/comment/Comment";
 import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
+import ReactHtmlParser from "react-html-parser";
+import Prism from "prismjs";
 import {
   ADD_LESSON_COMMENT,
   COMPLETE_LESSON_REQUEST,
@@ -61,15 +63,22 @@ const Lesson = () => {
   }, []);
 
   useEffect(() => {
-    const progressInterval = setInterval(() => {
-      setProgress(
-        videoRef.current.getCurrentTime() / videoRef.current.getDuration()
-      );
-    }, 1000);
+    let progressInterval;
+
+    if (
+      lessonDetail?.content?.type === "video" ||
+      lessonDetail?.content?.type === "youtube"
+    ) {
+      progressInterval = setInterval(() => {
+        setProgress(
+          videoRef.current.getCurrentTime() / videoRef.current.getDuration()
+        );
+      }, 1000);
+    }
     return () => {
-      clearInterval(progressInterval);
+      progressInterval && clearInterval(progressInterval);
     };
-  }, []);
+  }, [lessonDetail?.content?.type]);
 
   useEffect(() => {
     if (stepId && lessonDetail?._id === stepId) {
@@ -97,6 +106,55 @@ const Lesson = () => {
     setTimeout(() => setSubmit(false), 5000);
   }, [stepId]);
 
+  useEffect(() => {
+    Prism.highlightAll();
+  }, [lessonDetail?.content]);
+
+  useEffect(() => {
+    const isBottom = (el) => {
+      return el.getBoundingClientRect().bottom <= window.innerHeight;
+    };
+    const trackScrolling = () => {
+      const wrappedElement = document.getElementById("lesson-content");
+      if (isBottom(wrappedElement)) {
+        if (!submit) {
+          dispatch({
+            type: COMPLETE_LESSON_REQUEST,
+            courseId,
+            stepId,
+            moduleId: lessonDetail.moduleId,
+            callback: setSubmit,
+          });
+        }
+        document.removeEventListener("scroll", trackScrolling);
+      }
+    };
+    let timeOut;
+    if (lessonDetail?.content?.type === "default") {
+      timeOut = setTimeout(() => {
+        const { innerHeight: screenHeight } = window;
+        const { clientHeight: bodyHeight } = document.body;
+        if (bodyHeight / screenHeight > 0.9) {
+          if (!submit) {
+            dispatch({
+              type: COMPLETE_LESSON_REQUEST,
+              courseId,
+              stepId,
+              moduleId: lessonDetail.moduleId,
+              callback: setSubmit,
+            });
+          }
+        } else {
+          document.addEventListener("scroll", trackScrolling);
+        }
+      }, [4000]);
+    }
+    return () => {
+      document.removeEventListener("scroll", trackScrolling);
+      clearTimeout(timeOut);
+    };
+  }, [courseId, dispatch, lessonDetail, stepId, submit]);
+
   const sendComment = () => {
     dispatch({
       type: ADD_LESSON_COMMENT,
@@ -119,39 +177,42 @@ const Lesson = () => {
     <>
       <Stack flexDirection="row" gap={2}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Box
-                  className={`overflow-hidden relative w-full`}
-                  sx={{
-                    aspectRatio: {
-                      xs: "16/9",
-                      xl: courseOpen ? "18/9" : "20/8",
-                      lg: courseOpen ? "18/8" : "18/9",
-                    },
-                  }}
-                  borderRadius={1}
-                >
-                  <ReactPlayer
-                    className="absolute inset-0 bg-black rounded-sm"
-                    width="100%"
-                    height="100%"
-                    onProgress={handleProgressVideo}
-                    progressInterval={100}
-                    controls={true}
-                    url={lessonDetail?.content?.url}
-                    ref={videoRef}
-                    config={{
-                      youtube: {
-                        playerVars: { showinfo: 0 },
+          {(lessonDetail?.content?.type === "video" ||
+            lessonDetail?.content?.type === "youtube") && (
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Box
+                    className={`overflow-hidden relative w-full`}
+                    sx={{
+                      aspectRatio: {
+                        xs: "16/9",
+                        xl: courseOpen ? "18/9" : "20/8",
+                        lg: courseOpen ? "18/8" : "18/9",
                       },
                     }}
-                  />
-                </Box>
+                    borderRadius={1}
+                  >
+                    <ReactPlayer
+                      className="absolute inset-0 bg-black rounded-sm"
+                      width="100%"
+                      height="100%"
+                      onProgress={handleProgressVideo}
+                      progressInterval={100}
+                      controls={true}
+                      url={lessonDetail?.content?.url}
+                      ref={videoRef}
+                      config={{
+                        youtube: {
+                          playerVars: { showinfo: 0 },
+                        },
+                      }}
+                    />
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          )}
           <Grid item xs={12}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
@@ -164,7 +225,7 @@ const Lesson = () => {
                             {lessonDetail?.title}
                           </Typography>
                           <Typography variant="caption">
-                            287.623 lượt xem -{" "}
+                            Ngày tạo:{" "}
                             {lessonDetail?.createdAt &&
                               format(
                                 new Date(lessonDetail.createdAt),
@@ -217,8 +278,12 @@ const Lesson = () => {
               </Grid>
               {lessonDetail?.content?.content && (
                 <Grid item xs={12}>
-                  <Paper elevation={0} sx={{ p: 1, minHeight: 200, my: 1 }}>
-                    {lessonDetail.content.content}
+                  <Paper
+                    id="lesson-content"
+                    elevation={0}
+                    sx={{ p: 1, minHeight: 200, my: 1 }}
+                  >
+                    {ReactHtmlParser(lessonDetail.content.content)}
                   </Paper>
                 </Grid>
               )}

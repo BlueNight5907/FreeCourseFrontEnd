@@ -127,7 +127,7 @@ const Student = () => {
       console.log({ total, data, students, page, page_size });
       return { total, data };
     },
-    [students, total]
+    [courseDetail?.modules, students, total]
   );
 
   return (

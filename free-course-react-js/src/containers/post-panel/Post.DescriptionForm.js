@@ -108,14 +108,14 @@ const ImageInput = ({ background, setBackground }) => {
           <Button variant="contained" onClick={() => bgRef.current.click()}>
             {file ? "Thay ảnh bìa" : "Thêm ảnh bìa"}
           </Button>
-          {file && (
+          {(file || background) && (
             <Button
               sx={{ minWidth: 40 }}
               variant="contained"
               color="background"
               onClick={() => {
                 setFile();
-                setFileDataURL();
+                setBackground("");
               }}
             >
               <Delete color="error" />

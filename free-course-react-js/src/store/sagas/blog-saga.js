@@ -84,7 +84,7 @@ function* getBlog(postId) {
 
 function* uploadBlog(title, description, content, backgroundUrl) {
   try {
-    const data = yield call(
+    yield call(
       blogAPI.postBlog,
       title,
       description,
@@ -92,10 +92,9 @@ function* uploadBlog(title, description, content, backgroundUrl) {
       `/community/post/`,
       backgroundUrl
     );
-    const post = data.post;
     const message = "Đã đăng bài viết";
     yield delay(500);
-    yield put({ type: POST_BLOG_SUCCESS, payload: { post, message } });
+    yield put({ type: POST_BLOG_SUCCESS, payload: { message } });
   } catch (error) {
     yield put({
       type: POST_BLOG_ERROR,

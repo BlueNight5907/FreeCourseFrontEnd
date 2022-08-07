@@ -44,7 +44,7 @@ const Post = ({ post, isLast, nextPage }) => {
   const {
     _id,
     title,
-    updatedAt,
+    createdAt,
     backgroundUrl,
     description,
     comments,
@@ -99,7 +99,7 @@ const Post = ({ post, isLast, nextPage }) => {
     if (isLast && entry.isIntersecting) {
       nextPage();
     }
-  }, [postRef, isLast, entry]);
+  }, [postRef, isLast, entry, nextPage]);
 
   // Like react
   const [likeNum, setLikeNum] = useState(likes.length);
@@ -149,13 +149,13 @@ const Post = ({ post, isLast, nextPage }) => {
           <UserCard
             name={creatorData.userInformation.fullName}
             subtitle={
-              differenceInDays(new Date(), new Date(updatedAt)) <= 3
-                ? formatDistanceToNow(new Date(updatedAt), {
+              differenceInDays(new Date(), new Date(createdAt)) <= 3
+                ? formatDistanceToNow(new Date(createdAt), {
                     locale: viLocale,
                     addSuffix: true,
                   })
-                : format(new Date(updatedAt), "dd/MM/yyyy HH:mm:ss")
-              //differenceInDays(new Date(), new Date(updatedAt))
+                : format(new Date(createdAt), "dd/MM/yyyy HH:mm:ss")
+              //differenceInDays(new Date(), new Date(createdAt))
             }
             avatar={creatorData.userInformation.avatar}
             headLink={`/user/profile/${creatorData.id}`}

@@ -41,6 +41,17 @@ import {
 } from "store/types/data-types/manage-course-types";
 import { Upload } from "../../firebase";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 const UploadFile = ({ setValue }) => {
   const theme = useTheme();
   const fileRef = useRef();
@@ -345,6 +356,7 @@ function LessonForm({ goBack, open, moduleData, close }) {
                       <FormControl className="grow">
                         <InputLabel>Phút</InputLabel>
                         <Select
+                          MenuProps={MenuProps}
                           label="phút"
                           value={
                             millisecondsToMinutes(formData.time) -
@@ -360,11 +372,11 @@ function LessonForm({ goBack, open, moduleData, close }) {
                             setFormData({ ...formData, time });
                           }}
                         >
-                          {Array(12)
+                          {Array(60)
                             .fill(0)
                             .map((item, index) => (
-                              <MenuItem key={index} value={index * 5}>
-                                {index * 5} phút
+                              <MenuItem key={index} value={index}>
+                                {index} phút
                               </MenuItem>
                             ))}
                         </Select>
