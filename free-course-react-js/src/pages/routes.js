@@ -26,12 +26,14 @@ import MatchRoles from "guards/MatchRoles";
 import Register from "./auth/register/Register";
 import UserProfile from "./user/User";
 import Logout from "./auth/logout/Logout";
+import ErrorComponent from "./error/ErrorComponent";
 
 const Routes = () => {
   const routes = useRoutes([
     { path: "/login", element: <Login /> },
     { path: "/logout", element: <Logout /> },
     { path: "/register", element: <Register /> },
+    { path: "/error", element: <ErrorComponent /> },
     {
       path: "/",
       element: (

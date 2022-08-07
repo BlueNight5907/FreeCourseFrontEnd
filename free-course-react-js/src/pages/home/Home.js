@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import HeroSlide from "../../containers/courses-slide/HeroSLide";
 import CategorySlide from "../../containers/courses-slide/CategorySlide";
-import { Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import ChatGroupIntroduction from "../../containers/introduction/ChatGroupIntroduction";
 import SocialNetworkIntroduction from "../../containers/introduction/SocialNetworkIntroduction";
 import CourseSlide from "../../containers/courses-slide/CourseSlide";
-import TeacherRanking from "./teacher-ranking/TeacherRanking";
 import FeatureCourseSlide from "../../containers/courses-slide/FeatureCourseSlide";
 import TabsCourseSlide from "../../containers/courses-slide/TabsCourseSlide";
 import { useDispatch } from "react-redux";

@@ -15,6 +15,7 @@ import ErrorPage from "pages/error/ErrorPage";
 import BlockLoading from "containers/loading/BlogLoading";
 import CompleteLessonLoading from "containers/loading/CompleteLessonLoading";
 import { Navigate, Route } from "react-router-dom";
+import ErrorBoundary from "pages/error/ErrorBoundary";
 
 const boxStyle = {
   backgroundColor: (theme) => theme.palette.background.main,
@@ -65,11 +66,13 @@ function App() {
       <ThemeProvider theme={appTheme}>
         <CssBaseline />
         <Box sx={boxStyle} className="app">
-          <Routes />
-          <BlockLoading />
-          <PageLoading />
-          <CompleteLessonLoading />
-          <ErrorPage />
+          <ErrorBoundary>
+            <Routes />
+            <BlockLoading />
+            <PageLoading />
+            <CompleteLessonLoading />
+            <ErrorPage />
+          </ErrorBoundary>
         </Box>
       </ThemeProvider>
     </StyledEngineProvider>
