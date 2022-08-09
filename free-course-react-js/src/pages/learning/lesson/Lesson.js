@@ -279,7 +279,7 @@ const Lesson = () => {
               {lessonDetail?.content?.content && (
                 <Grid item xs={12}>
                   <Paper
-                    id="lesson-content"
+                    id="lesson-content content"
                     elevation={0}
                     sx={{ p: 1, minHeight: 200, my: 1 }}
                   >
