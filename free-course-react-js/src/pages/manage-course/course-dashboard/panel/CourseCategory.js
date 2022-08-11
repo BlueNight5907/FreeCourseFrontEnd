@@ -1,8 +1,8 @@
-import { Box, Chip, Paper, Stack } from "@mui/material";
+import { Box, Chip, IconButton, Paper, Stack } from "@mui/material";
 import RenderTable from "components/render-table/RenderTable";
 import React, { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Visibility, Edit } from "@mui/icons-material";
+import { Visibility, Edit, ContentCopyRounded } from "@mui/icons-material";
 import Button from "components/button/Button";
 import DeleteAction from "../table-cell/delete-action";
 import { GET_MY_CREATED_COURSES_REQUEST } from "store/types/data-types/manage-course-types";
@@ -89,6 +89,26 @@ const CourseCategory = () => {
         field: "participants",
         valueGetter: ({ row }) => row.participants.length,
         type: "number",
+      },
+      {
+        headerName: "Mật khẩu",
+        field: "password",
+        renderCell: (params) => (
+          <Box display="flex" flexDirection="row" alignItems="center">
+            Censored password{" "}
+            {!params.row.password && (
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  navigator.clipboard.writeText(`password`);
+                }}
+              >
+                <ContentCopyRounded />
+              </IconButton>
+            )}
+          </Box>
+        ),
+        minWidth: 300,
       },
       {
         headerName: "Hành động",

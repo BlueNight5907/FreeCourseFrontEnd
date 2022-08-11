@@ -1,5 +1,17 @@
 import { RateReview } from "@mui/icons-material";
-import { IconButton, Paper, Rating, Stack, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Paper,
+  Rating,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import ConfirmDialog from "components/dialog/confirm-dialog";
 import { differenceInDays } from "date-fns";
 import React, { useCallback, useEffect, useMemo } from "react";
@@ -18,6 +30,8 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
   const { courseId } = useParams();
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [rate, setRate] = React.useState(0);
+  const [openMoveStep, setOpenMoveStep] = React.useState(false);
+  const [password, setPassword] = React.useState("");
   const dispatch = useDispatch();
   const isRegistered =
     learned.findIndex((item) => item.courseId === courseDetail?._id) > -1;
@@ -90,6 +104,14 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
     }
   }, [courseDetail, user]);
 
+  const handleOpenMoveStep = () => {
+    setOpenMoveStep(true);
+  };
+
+  const handleCloseMoveStep = () => {
+    setOpenMoveStep(false);
+  };
+
   return (
     <>
       <Paper className="flex-grow max-w-[900px] p-3" elevation={0}>
@@ -114,7 +136,11 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
           />
           <Stack className="flex-row gap-4 flex-wrap items-center">
             {isRegistered ? (
-              <Button variant="contained" onClick={moveToStep} width="12rem">
+              <Button
+                variant="contained"
+                onClick={handleOpenMoveStep}
+                width="12rem"
+              >
                 Tiếp tục quá trình học
               </Button>
             ) : (
@@ -128,6 +154,31 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
           </Stack>
         </Stack>
       </Paper>
+      <Dialog open={openMoveStep} onClose={handleCloseMoveStep}>
+        <DialogTitle>Nhập mật khẩu để tiếp tục quá trình học</DialogTitle>
+        <DialogContent>
+          <DialogContentText className="mb-5">
+            Mật khẩu này được cấp sau khi bạn đã đăng ký khóa học. Nếu bạn quên
+            mật khẩu, vui lòng liên hệ giảng viên của khóa học.
+          </DialogContentText>
+          <TextField
+            label="Mật khẩu"
+            variant="outlined"
+            fullWidth
+            type={"password"}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            // {...register("title", { required: true })}
+            // error={errors.title ? true : false}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMoveStep}>Hủy</Button>
+          <Button onClick={moveToStep}>Tiếp tục</Button>
+        </DialogActions>
+      </Dialog>
       <ConfirmDialog
         open={openConfirm}
         setOpen={setOpenConfirm}
