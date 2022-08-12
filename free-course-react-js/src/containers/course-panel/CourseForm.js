@@ -18,7 +18,13 @@ import {
   LinearProgress,
   Alert,
 } from "@mui/material";
-import { TagFaces, Delete, DeleteOutline, Add } from "@mui/icons-material";
+import {
+  TagFaces,
+  Delete,
+  DeleteOutline,
+  Add,
+  AutorenewRounded,
+} from "@mui/icons-material";
 import Button, { buttonBg } from "components/button/Button";
 import { scrollSetting } from "utils/classUltis";
 import { useSelector } from "react-redux";
@@ -27,8 +33,41 @@ import TransferList from "./TransferList";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import colors from "utils/colors";
 import { Upload } from "../../firebase";
+import { generateRandomString } from "utils/number-utils";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+const PasswordGenerateField = () => {
+  const [password, setPassword] = useState("");
+  const handleGenerate = () => {
+    setPassword(generateRandomString(10));
+  };
+  return (
+    <>
+      <Stack className="mb-5 flex-row items-center gap-5">
+        <TextField
+          label="Mật khẩu khóa học"
+          variant="outlined"
+          fullWidth
+          value={password}
+          // {...register("title", { required: true })}
+          // error={errors.title ? true : false}
+        />
+        <Button
+          startIcon={<AutorenewRounded />}
+          sx={{
+            minWidth: 180,
+          }}
+          variant="contained"
+          color="primary"
+          onClick={handleGenerate}
+        >
+          Tạo mật khẩu
+        </Button>
+      </Stack>
+    </>
+  );
+};
 
 const ResultBox = () => {
   const [list, setList] = useState([]);
@@ -420,6 +459,7 @@ const CourseForm = () => {
 
           <Grid item xs={12}>
             <ResultBox />
+            <PasswordGenerateField />
           </Grid>
         </Grid>
       </Box>
