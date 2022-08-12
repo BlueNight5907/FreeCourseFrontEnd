@@ -69,6 +69,7 @@ const BlogReducer = (state = initialState, action) => {
       };
     case RESET_ERROR:
       return {
+        ...state,
         error: null,
       };
     case GET_FEEDS_SUCCESS:

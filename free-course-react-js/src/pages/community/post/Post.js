@@ -10,6 +10,7 @@ import FeatureCourseSlide from "containers/courses-slide/FeatureCourseSlide";
 import { format } from "date-fns";
 import ReactHtmlParser from "react-html-parser";
 import Prism from "prismjs";
+import { SET_GO_BACK_NAV_BAR } from "store/types/page-types/setting-types";
 
 const Post = (props) => {
   const theme = useTheme();
@@ -19,6 +20,15 @@ const Post = (props) => {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    dispatch({
+      type: SET_GO_BACK_NAV_BAR,
+      payload: {
+        value: true,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
     dispatch({ type: GET_BLOG_REQUEST, id });
   }, [id, dispatch]);
 
@@ -26,7 +36,7 @@ const Post = (props) => {
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [post?.content]);
+  }, [post]);
 
   useEffect(() => {
     if (post?.comments) {
