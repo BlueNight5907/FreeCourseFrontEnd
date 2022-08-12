@@ -1,4 +1,7 @@
-import { RESET_ERROR } from "store/types/data-types/common-types";
+import {
+  CLEAR_LESSON_DATA,
+  RESET_ERROR,
+} from "store/types/data-types/common-types";
 import {
   GET_COURSES_WITH_CATEGORY_ERROR,
   GET_COURSES_WITH_CATEGORY_SUCCESS,
@@ -28,6 +31,12 @@ const courseDetailReducer = (state = initState, action) => {
         ...state,
         error: null,
       };
+    case CLEAR_LESSON_DATA:
+      return {
+        ...state,
+        courseDetail: null,
+      };
+
     case GET_COURSE_DETAIL_REQUEST:
       return {
         teacher: null,

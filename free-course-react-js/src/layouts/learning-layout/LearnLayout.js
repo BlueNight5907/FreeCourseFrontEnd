@@ -68,7 +68,6 @@ const HomeLayout = () => {
   useEffect(() => {
     if (courseDetail && process) {
       const learned = process.learned;
-
       const isLearned =
         learned?.findIndex((item) => item.stepId === stepId) > -1;
 

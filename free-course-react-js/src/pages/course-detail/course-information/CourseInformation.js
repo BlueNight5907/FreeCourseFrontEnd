@@ -16,6 +16,7 @@ import ConfirmDialog from "components/dialog/confirm-dialog";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { CLEAR_LESSON_DATA } from "store/types/data-types/common-types";
 import {
   GET_COURSES_WITH_CATEGORY_ERROR,
   JOIN_COURSE_REQUEST,
@@ -39,6 +40,7 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
   const navigate = useNavigate();
 
   const moveToStep = useCallback(() => {
+    dispatch({ type: CLEAR_LESSON_DATA });
     const myCourseProcessIndex = learned.findIndex(
       (item) => item.courseId === courseDetail?._id
     );

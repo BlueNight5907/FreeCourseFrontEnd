@@ -1,4 +1,7 @@
-import { RESET_ERROR } from "store/types/data-types/common-types";
+import {
+  CLEAR_LESSON_DATA,
+  RESET_ERROR,
+} from "store/types/data-types/common-types";
 import {
   GET_ALL_LESSON_COMMENT_ERROR,
   GET_ALL_LESSON_COMMENT_SUCCESS,
@@ -26,6 +29,11 @@ const initState = {
 const learningProcessReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case CLEAR_LESSON_DATA:
+      return {
+        ...state,
+        process: null,
+      };
     case SET_LEARN:
       return {
         ...state,

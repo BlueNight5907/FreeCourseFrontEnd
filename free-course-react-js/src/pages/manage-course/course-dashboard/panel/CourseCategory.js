@@ -89,7 +89,7 @@ const CourseCategory = () => {
         field: "password",
         renderCell: (params) => (
           <Box display="flex" flexDirection="row" alignItems="center">
-            {params.row.password ?? "Không có mật khẩu"}
+            {params.row.password || "Không có mật khẩu"}
             {params.row.password && (
               <IconButton
                 color="primary"

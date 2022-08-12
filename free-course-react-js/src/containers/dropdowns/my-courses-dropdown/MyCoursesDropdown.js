@@ -8,6 +8,7 @@ import LearningProgress from "../../../components/learning-progress/LearningProg
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { differenceInDays } from "date-fns";
+import { maxLines } from "utils/classUltis";
 
 function MyCourseDropdown(props) {
   const { learned } = useSelector((state) => state.learningProcess);
@@ -52,6 +53,7 @@ function MyCourseDropdown(props) {
       <DropdownMenu
         shadow={8}
         width={{
+          xl: 450,
           md: 400,
           xs: 280,
         }}
@@ -97,6 +99,7 @@ function MyCourseDropdown(props) {
                 className="course-image"
                 sx={{
                   width: 110,
+                  height: 70,
                   borderRadius: 0.8,
                   display: {
                     xs: "none",
@@ -112,6 +115,7 @@ function MyCourseDropdown(props) {
                     fontWeight: 600,
                     color: (theme) => theme.palette.text.main,
                     fontSize: 14,
+                    ...maxLines(1),
                   }}
                 >
                   {course.name}
