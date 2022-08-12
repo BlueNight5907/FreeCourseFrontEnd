@@ -122,11 +122,7 @@ const AccountSetting = () => {
         </Grid>
         {form.type === "student" && (
           <Grid item xs={12}>
-            <TextControl
-              label="Mã số sinh viên"
-              value={form.sid}
-              onSave={(value) => setForm({ ...form, sid: value })}
-            />
+            <TextControl label="Mã số sinh viên" value={form.sid} />
           </Grid>
         )}
 

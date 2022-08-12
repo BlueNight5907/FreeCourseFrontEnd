@@ -24,6 +24,7 @@ import {
   DeleteOutline,
   Add,
   AutorenewRounded,
+  Remove,
 } from "@mui/icons-material";
 import Button, { buttonBg } from "components/button/Button";
 import { scrollSetting } from "utils/classUltis";
@@ -38,25 +39,43 @@ import { generateRandomString } from "utils/number-utils";
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const PasswordGenerateField = () => {
-  const [password, setPassword] = useState("");
   const handleGenerate = () => {
-    setPassword(generateRandomString(10));
+    setValue("password", generateRandomString(10));
   };
+  const clearPass = () => {
+    setValue("password", "");
+  };
+  const {
+    register,
+    formState: { errors },
+    getValues,
+    setValue,
+  } = useFormContext();
   return (
     <>
-      <Stack className="mb-5 flex-row items-center gap-5">
+      <Stack className="mb-5 flex-row items-center gap-3">
         <TextField
           label="Mật khẩu khóa học"
           variant="outlined"
           fullWidth
-          value={password}
-          // {...register("title", { required: true })}
-          // error={errors.title ? true : false}
+          value={getValues("password") ?? ""}
+          {...register("password")}
+          error={errors.password ? true : false}
         />
+        <Button
+          startIcon={<Remove />}
+          variant="contained"
+          color="error"
+          sx={{ height: 42 }}
+          onClick={clearPass}
+        >
+          Xóa
+        </Button>
         <Button
           startIcon={<AutorenewRounded />}
           sx={{
             minWidth: 180,
+            height: 42,
           }}
           variant="contained"
           color="primary"
@@ -458,8 +477,10 @@ const CourseForm = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <ResultBox />
             <PasswordGenerateField />
+          </Grid>
+          <Grid item xs={12}>
+            <ResultBox />
           </Grid>
         </Grid>
       </Box>

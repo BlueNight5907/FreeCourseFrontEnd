@@ -64,6 +64,7 @@ const CreateCourse = ({ type = "create" }) => {
     background: "",
     gains: [],
     modules: [],
+    password: "",
   });
   const dispatch = useDispatch();
   const methods = useForm({
@@ -97,6 +98,7 @@ const CreateCourse = ({ type = "create" }) => {
       methods.setValue("background", courseData.background);
       methods.setValue("gains", courseData.gains);
       methods.setValue("modules", courseData.modules);
+      methods.setValue("password", courseData.password ?? "");
     } else {
       methods.setValue("tags", []);
       methods.setValue("title", "");
@@ -107,6 +109,7 @@ const CreateCourse = ({ type = "create" }) => {
       methods.setValue("background", "");
       methods.setValue("gains", []);
       methods.setValue("modules", []);
+      methods.setValue("password", "");
     }
   }, [courseData, methods]);
 

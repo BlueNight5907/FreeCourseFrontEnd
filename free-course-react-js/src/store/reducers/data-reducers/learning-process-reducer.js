@@ -10,12 +10,14 @@ import {
   GET_MY_COURSE_ERROR,
   GET_MY_COURSE_SUCCESS,
   SET_COMPLETED,
+  SET_LEARN,
 } from "store/types/data-types/learning-process-types";
 
 const initState = {
   learned: [],
   lessonDetail: null,
   comments: [],
+  isLearned: false,
   process: null,
   error: null,
   completed: false,
@@ -24,6 +26,11 @@ const initState = {
 const learningProcessReducer = (state = initState, action) => {
   const { type, payload } = action;
   switch (type) {
+    case SET_LEARN:
+      return {
+        ...state,
+        isLearned: payload,
+      };
     case SET_COMPLETED:
       return {
         ...state,

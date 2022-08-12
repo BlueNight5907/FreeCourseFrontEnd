@@ -3,7 +3,6 @@ import {
   ClearRounded,
   DownloadRounded,
   DriveFileRenameOutline,
-  NoteAltRounded,
   Send,
 } from "@mui/icons-material";
 import ReactPlayer from "react-player";
@@ -14,7 +13,6 @@ import {
   Grid,
   IconButton,
   Paper,
-  Slide,
   Stack,
   TextField,
   Typography,
@@ -27,7 +25,7 @@ import Button, { buttonBg } from "../../../components/button/Button";
 import { scrollSetting } from "../../../utils/classUltis";
 import TeacherAvatar from "./../../../components/teacher-avatar/TeacherAvatar";
 import Comment from "./../../../components/comment/Comment";
-import { format } from "date-fns";
+import { format, millisecondsToMinutes } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
 import Prism from "prismjs";
@@ -37,30 +35,61 @@ import {
   DELETE_LESSON_COMMENT,
   GET_ALL_LESSON_COMMENT_REQUEST,
 } from "store/types/data-types/learning-process-types";
+import AlertDialog from "components/dialog/alert-dialog";
 
 const Lesson = () => {
   const { teacher } = useSelector((s) => s.courseDetail);
   const { user } = useSelector((s) => s.auth);
   const { comments } = useSelector((s) => s.learningProcess);
   const { courseId, stepId } = useParams();
-  const { lessonDetail } = useSelector((state) => state.learningProcess);
+  const { lessonDetail, isLearned } = useSelector(
+    (state) => state.learningProcess
+  );
   const { courseOpen } = useSelector((state) => state.setting);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState({ time: 0 });
   const [submit, setSubmit] = useState(false);
   const videoRef = useRef();
   const dispatch = useDispatch();
   const theme = useTheme();
   const matchSm = useMediaQuery(theme.breakpoints.up("sm"));
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [canOpen2, setCanOpen2] = useState(true);
   const [comment, setComment] = useState("");
   const [openComment, setOpenComment] = useState(false);
-  const handleClick = () => setOpen((s) => !s);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const [play, setPlay] = useState(false);
   const toggleComment = () => setOpenComment((s) => !s);
   const navigate = useNavigate();
+  const prevTime = useRef(0);
+  const learnTime = useRef(0);
 
-  const handleProgressVideo = useCallback((progress) => {
-    // console.log(progress);
-  }, []);
+  const handleProgressVideo = useCallback(
+    (progress) => {
+      if (isLearned) {
+        return;
+      }
+      if (
+        progress.playedSeconds - prevTime.current > 30 &&
+        learnTime.current <= prevTime.current
+      ) {
+        setPlay(false);
+        setOpen(true);
+      } else {
+        prevTime.current = progress.playedSeconds;
+        learnTime.current =
+          learnTime.current <= prevTime.current
+            ? prevTime.current
+            : learnTime.current;
+      }
+    },
+    [isLearned]
+  );
+
+  const handleGoback = () => {
+    videoRef.current.seekTo(prevTime.current, "seconds");
+    setPlay(true);
+  };
 
   useEffect(() => {
     let progressInterval;
@@ -70,15 +99,25 @@ const Lesson = () => {
       lessonDetail?.content?.type === "youtube"
     ) {
       progressInterval = setInterval(() => {
-        setProgress(
-          videoRef.current.getCurrentTime() / videoRef.current.getDuration()
-        );
+        const time =
+          videoRef.current.getCurrentTime() / videoRef.current.getDuration();
+        setProgress((s) => ({ time: time > s.time ? time : s.time }));
       }, 1000);
     }
     return () => {
       progressInterval && clearInterval(progressInterval);
     };
   }, [lessonDetail?.content?.type]);
+
+  useEffect(() => {
+    let timeOut;
+    if (lessonDetail?.time) {
+      timeOut = setTimeout(() => setCanSubmit(true), [lessonDetail.time * 0.5]);
+    }
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [lessonDetail]);
 
   useEffect(() => {
     if (stepId && lessonDetail?._id === stepId) {
@@ -91,19 +130,47 @@ const Lesson = () => {
   }, [dispatch, lessonDetail, stepId]);
 
   useEffect(() => {
-    if (!submit && progress > 0.95 && lessonDetail) {
-      dispatch({
-        type: COMPLETE_LESSON_REQUEST,
-        courseId,
-        stepId,
-        moduleId: lessonDetail.moduleId,
-        callback: setSubmit,
-      });
+    if (canSubmit) {
+      if (!submit && progress.time > 0.95 && lessonDetail && !isLearned) {
+        dispatch({
+          type: COMPLETE_LESSON_REQUEST,
+          courseId,
+          stepId,
+          moduleId: lessonDetail.moduleId,
+          callback: setSubmit,
+        });
+      }
     }
-  }, [courseId, dispatch, lessonDetail, progress, stepId, submit]);
+  }, [
+    canSubmit,
+    courseId,
+    dispatch,
+    isLearned,
+    lessonDetail,
+    progress,
+    stepId,
+    submit,
+  ]);
+
+  useEffect(() => {
+    if (!open) {
+      if (canOpen2) {
+        if (!isLearned && progress.time > 0.8 && !canSubmit) {
+          setOpen2(true);
+          setCanOpen2(false);
+        }
+      }
+    }
+  }, [canOpen2, canSubmit, isLearned, open, progress]);
 
   useEffect(() => {
     setTimeout(() => setSubmit(false), 5000);
+    setTimeout(() => setCanSubmit(false), 5000);
+    setTimeout(() => setCanOpen2(true), 5000);
+    setOpen2(false);
+    prevTime.current = 0;
+    learnTime.current = 0;
+    setProgress({ time: 0 });
   }, [stepId]);
 
   useEffect(() => {
@@ -202,6 +269,9 @@ const Lesson = () => {
                       controls={true}
                       url={lessonDetail?.content?.url}
                       ref={videoRef}
+                      playing={play}
+                      onPlay={() => setPlay(true)}
+                      onPause={() => setPlay(false)}
                       config={{
                         youtube: {
                           playerVars: { showinfo: 0 },
@@ -237,10 +307,7 @@ const Lesson = () => {
                           <Button startIcon={<DownloadRounded />}>
                             {matchSm && "Tải bài học"}
                           </Button>
-                          <Button
-                            startIcon={<DriveFileRenameOutline />}
-                            onClick={handleClick}
-                          >
+                          <Button startIcon={<DriveFileRenameOutline />}>
                             {matchSm && "Ghi chú"}
                           </Button>
                           <Button
@@ -477,6 +544,18 @@ const Lesson = () => {
           </Stack>
         </Box>
       </Drawer>
+      <AlertDialog
+        title="Thông báo"
+        open={open}
+        setOpen={setOpen}
+        onClose={handleGoback}
+      >
+        Bạn đang học quá nhanh!!!
+      </AlertDialog>
+      <AlertDialog title="Thông báo" open={open2} setOpen={setOpen2}>
+        Bạn đang học quá nhanh!!! Bài học này cần học trong{" "}
+        {millisecondsToMinutes(lessonDetail?.time ?? 0)} phút
+      </AlertDialog>
     </>
   );
 };

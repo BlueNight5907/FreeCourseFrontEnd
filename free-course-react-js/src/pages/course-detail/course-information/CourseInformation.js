@@ -13,11 +13,11 @@ import {
   Typography,
 } from "@mui/material";
 import ConfirmDialog from "components/dialog/confirm-dialog";
-import { differenceInDays } from "date-fns";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  GET_COURSES_WITH_CATEGORY_ERROR,
   JOIN_COURSE_REQUEST,
   RATING_COURSE_REQUEST,
 } from "store/types/data-types/course-detail-types";
@@ -78,6 +78,27 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
     }
   };
 
+  const checkCoursePassword = () => {
+    if (courseDetail.password) {
+      handleOpenMoveStep();
+    } else {
+      joinCourse();
+    }
+  };
+
+  const checkMatchPass = () => {
+    if (password === courseDetail.password) {
+      joinCourse();
+    } else {
+      dispatch({
+        type: GET_COURSES_WITH_CATEGORY_ERROR,
+        payload: "Sai mật khẩu, mui lòng kiểm tra lại",
+      });
+    }
+    setPassword("");
+    handleCloseMoveStep();
+  };
+
   const points = useMemo(() => {
     return (
       courseDetail?.rates.reduce((total, rating) => {
@@ -136,15 +157,15 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
           />
           <Stack className="flex-row gap-4 flex-wrap items-center">
             {isRegistered ? (
-              <Button
-                variant="contained"
-                onClick={handleOpenMoveStep}
-                width="12rem"
-              >
+              <Button variant="contained" onClick={moveToStep} width="12rem">
                 Tiếp tục quá trình học
               </Button>
             ) : (
-              <Button variant="contained" onClick={joinCourse} width="12rem">
+              <Button
+                variant="contained"
+                onClick={checkCoursePassword}
+                width="12rem"
+              >
                 Đăng ký
               </Button>
             )}
@@ -155,11 +176,11 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
         </Stack>
       </Paper>
       <Dialog open={openMoveStep} onClose={handleCloseMoveStep}>
-        <DialogTitle>Nhập mật khẩu để tiếp tục quá trình học</DialogTitle>
+        <DialogTitle>Nhập mật khẩu để đăng ký tham gia khóa học</DialogTitle>
         <DialogContent>
           <DialogContentText className="mb-5">
-            Mật khẩu này được cấp sau khi bạn đã đăng ký khóa học. Nếu bạn quên
-            mật khẩu, vui lòng liên hệ giảng viên của khóa học.
+            Khóa học này cần mật khẩu để đăng ký, vui lòng liên hệ giảng viên
+            của khóa học để được cấp mật khẩu.
           </DialogContentText>
           <TextField
             label="Mật khẩu"
@@ -170,13 +191,11 @@ const CourseInformation = ({ courseDetail, teacherDetail, toggleComment }) => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            // {...register("title", { required: true })}
-            // error={errors.title ? true : false}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseMoveStep}>Hủy</Button>
-          <Button onClick={moveToStep}>Tiếp tục</Button>
+          <Button onClick={checkMatchPass}>Tham gia</Button>
         </DialogActions>
       </Dialog>
       <ConfirmDialog

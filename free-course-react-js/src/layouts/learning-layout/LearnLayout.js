@@ -12,6 +12,7 @@ import {
   GET_LEARNING_PROCESS_REQUEST,
   GET_LESSON_DETAIL_REQUEST,
   SET_COMPLETED,
+  SET_LEARN,
 } from "store/types/data-types/learning-process-types";
 import Button from "../../components/button/Button";
 import {
@@ -67,6 +68,12 @@ const HomeLayout = () => {
   useEffect(() => {
     if (courseDetail && process) {
       const learned = process.learned;
+
+      const isLearned =
+        learned?.findIndex((item) => item.stepId === stepId) > -1;
+
+      dispatch({ type: SET_LEARN, payload: isLearned });
+
       const allSteps = courseDetail.modules.reduce((steps, module) => {
         return [
           ...steps,

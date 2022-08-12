@@ -39,6 +39,7 @@ function Login() {
     },
     authBtn: {
       minWidth: 140,
+      width: "100%",
       height: 42,
     },
   };
@@ -166,13 +167,6 @@ function Login() {
                       onClick={login}
                     >
                       Đăng nhập
-                    </Button>
-                    <Button
-                      sx={styles.authBtn}
-                      variant="outlined"
-                      onClick={() => navigate("/register")}
-                    >
-                      Đăng ký
                     </Button>
                   </Stack>
                 </Stack>

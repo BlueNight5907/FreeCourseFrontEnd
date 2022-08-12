@@ -85,22 +85,16 @@ const CourseCategory = () => {
         renderCell: ListTag,
       },
       {
-        headerName: "Học viên",
-        field: "participants",
-        valueGetter: ({ row }) => row.participants.length,
-        type: "number",
-      },
-      {
         headerName: "Mật khẩu",
         field: "password",
         renderCell: (params) => (
           <Box display="flex" flexDirection="row" alignItems="center">
-            Censored password{" "}
-            {!params.row.password && (
+            {params.row.password ?? "Không có mật khẩu"}
+            {params.row.password && (
               <IconButton
                 color="primary"
                 onClick={() => {
-                  navigator.clipboard.writeText(`password`);
+                  navigator.clipboard.writeText(params.row.password);
                 }}
               >
                 <ContentCopyRounded />
@@ -110,6 +104,13 @@ const CourseCategory = () => {
         ),
         minWidth: 300,
       },
+      {
+        headerName: "Học viên",
+        field: "participants",
+        valueGetter: ({ row }) => row.participants.length,
+        type: "number",
+      },
+
       {
         headerName: "Hành động",
         field: "action",
